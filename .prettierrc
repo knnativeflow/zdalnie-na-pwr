@@ -1,0 +1,13 @@
+{
+  "tabWidth": 2,
+  "singleQuote": true,
+  "semi": false,
+  "overrides": [
+    {
+      "files": [".prettierrc", ".babelrc", ".eslintrc", ".stylelintrc"],
+      "options": {
+        "parser": "json"
+      }
+    }
+  ]
+}
