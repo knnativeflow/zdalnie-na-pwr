@@ -8,34 +8,39 @@ import {
   Button,
   TextField,
 } from '@material-ui/core'
+import { Alert } from '@material-ui/lab'
+
+import studentMail from 'features/studentMail'
+import styles from './Login.scss'
 
 interface Props {
   open: boolean
-  onSubmit: (username: string, password: string) => void
+  onSuccess: () => void
   onClose: () => void
 }
 
-const LoginStudentMailModal = (props: Props): JSX.Element => {
-  const { open, onSubmit, onClose } = props
+const Login = (props: Props): JSX.Element => {
+  const { open, onSuccess, onClose } = props
   const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')
-  // TODO: add errors from login to student mail
+  const [error, setError] = useState<string>('')
 
-  const handleSubmit = () => {
-    onSubmit(username, password)
+  const handleSubmit = async () => {
+    try {
+      await studentMail.login(username, password)
+      onSuccess()
+    } catch (err) {
+      setError(err.message)
+    }
   }
 
   return (
-    <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">
-        Logowanie do poczty studenckiej
-      </DialogTitle>
+    <Dialog open={open} onClose={onClose}>
+      <DialogTitle>Logowanie do poczty studenckiej</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Operacja logowania, pobierania i analizowania wiadomości w celu
-          znalezienia linków do zajęć zdalnych odbywa się lokalnie na twoim
-          komputerze. Żadne dane nie zostaną przesłane na serwer twórcą
-          aplikacji.
+          Operacja logowania, pobierania i analizowania wiadomości w celu znalezienia linków do zajęć zdalnych odbywa
+          się lokalnie na twoim komputerze. Żadne dane nie zostaną przesłane na serwer twórcą aplikacji.
         </DialogContentText>
         <TextField
           autoFocus
@@ -47,25 +52,24 @@ const LoginStudentMailModal = (props: Props): JSX.Element => {
           onChange={(event) => setUsername(event.target.value)}
         />
         <TextField
-          autoFocus
           margin="dense"
           id="password"
           label="Hasło"
           fullWidth
           onChange={(event) => setPassword(event.target.value)}
         />
+        {!!error && (
+          <Alert severity="error" classes={{ root: styles.alert }}>
+            {error}
+          </Alert>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="primary" variant="outlined">
           Anuluj
         </Button>
         {/* TODO: handle press enter and esc buttons */}
-        <Button
-          onClick={handleSubmit}
-          color="primary"
-          variant="contained"
-          type="submit"
-        >
+        <Button onClick={handleSubmit} color="primary" variant="contained" type="submit">
           Zaloguj
         </Button>
       </DialogActions>
@@ -73,4 +77,4 @@ const LoginStudentMailModal = (props: Props): JSX.Element => {
   )
 }
 
-export default LoginStudentMailModal
+export default Login

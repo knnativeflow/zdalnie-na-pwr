@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import routes from 'constants/routes.json'
 import moment from 'moment'
 
 import Button from '@material-ui/core/Button'
 
-import mailer from 'features/mailer/Mailer'
 import Calendar from 'components/Calendar'
 
-import LoginStudentMailModal from 'components/LoginStudentMailModal'
+import StudentMailModal from 'components/StudentMailModal'
 import UploadICalendarFileModal from 'components/UploadICalendarFileModal'
 
 import styles from './HomePage.scss'
@@ -17,6 +14,8 @@ moment.locale('pl')
 
 const HomePage = () => {
   const [events, setEvents] = useState<IEvent[]>([])
+  const [isOpenStudentMailModal, setIsOpenStudentMailModal] = useState(false)
+
   const [courses, setCourses] = useState([])
 
   const getMails = async () => {
@@ -36,50 +35,19 @@ const HomePage = () => {
   //   getMails()
   // }, [])
 
-  useEffect(() => {
-    console.log(courses)
-
-    // if (courses[0]) {
-    // }
-    // console.log('date', moment('19 październik 2020 9:15', 'DD MMMM YYYY hh:mm'))
-  }, [courses])
-
-  const [
-    isOpenLoginStudentMailModal,
-    setIsOpenLoginStudentMailModal,
-  ] = useState(!events.length)
-
-  const handleSubmitLoginStudentMail = (username: string, password: string) => {
-    console.log('dane logowania', username, password)
-  }
-
-  const handleUploadICalendar = (eventsFromICS: IEvent[]) =>
-    setEvents(eventsFromICS)
+  const handleUploadICalendar = (eventsFromICS: IEvent[]) => setEvents(eventsFromICS)
 
   return (
     <div className={styles.root}>
-      <h1 className={styles.header}>Home view</h1>
-      <Link to={routes.CALENDAR}>To calendar</Link>
-      {/*<Button*/}
-      {/*  onClick={handleUploadICalendar}*/}
-      {/*  variant="contained"*/}
-      {/*  color="primary"*/}
-      {/*>*/}
-      {/*  Wgraj iCalendar*/}
-      {/*</Button>*/}
-      <div className={styles.container}>
-        {!!events.length && <Calendar events={events} />}
-        <UploadICalendarFileModal
-          open={!events.length}
-          onSubmit={handleUploadICalendar}
-          onClose={() => {}}
-        />
-        {/*<LoginStudentMailModal*/}
-        {/*  open={isOpenLoginStudentMailModal}*/}
-        {/*  onSubmit={handleSubmitLoginStudentMail}*/}
-        {/*  onClose={() => setIsOpenLoginStudentMailModal(false)}*/}
-        {/*/>*/}
+      <div className={styles.header}>
+        <h1>Zajęcia</h1>
+        <Button onClick={() => setIsOpenStudentMailModal(true)} variant="outlined" color="primary">
+          Pobierz dane z poczty
+        </Button>
       </div>
+      {!!events.length && <Calendar events={events} />}
+      <UploadICalendarFileModal open={!events.length} onSubmit={handleUploadICalendar} onClose={() => {}} />
+      <StudentMailModal open={isOpenStudentMailModal} onClose={() => setIsOpenStudentMailModal(false)} />
     </div>
   )
 }

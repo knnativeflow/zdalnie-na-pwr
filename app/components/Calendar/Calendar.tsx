@@ -1,6 +1,7 @@
 import React from 'react'
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
+import locale from '@fullcalendar/core/locales/pl'
 
 import styles from './Calendar.scss'
 
@@ -26,6 +27,7 @@ const Calendar = (props: Props) => {
         initialView="dayGridWeek"
         firstDay={1}
         events={events}
+        locale={locale}
         // eventClick={(event) =>
         //   console.log(event.event.extendedProps.resource)
         // }
