@@ -2,9 +2,14 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import { ConnectedRouter } from 'connected-react-router'
 import { hot } from 'react-hot-loader/root'
+
+import { ThemeProvider } from '@material-ui/core/styles'
+
 import { History } from 'history'
+import { Store } from 'store'
+
 import Routes from './Routes'
-import { Store } from '../store'
+import theme from './styles/theme'
 
 type Props = {
   store: Store
@@ -13,9 +18,11 @@ type Props = {
 
 const Root = ({ store, history }: Props) => (
   <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <Routes />
-    </ConnectedRouter>
+    <ThemeProvider theme={theme}>
+      <ConnectedRouter history={history}>
+        <Routes />
+      </ConnectedRouter>
+    </ThemeProvider>
   </Provider>
 )
 
