@@ -1,0 +1,11 @@
+.list {
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  margin-bottom: 10px;
+  & > b {
+    font-weight: bold;
+  }
+}

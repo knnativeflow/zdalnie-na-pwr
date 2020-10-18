@@ -14,8 +14,8 @@ interface Props {
 
 const FetchLink = (props: Props) => {
   const { open, onSuccess, onClose } = props
-  // TODO: handle all errors
-  // const [error, setError] = useState<string>('')
+  // TODO: handle all errors and display
+  const [, setError] = useState<string>('')
   const [isFetching, setIsFetching] = useState(true)
   const [links, setLinks] = useState<IEventZoomLink[]>([])
   const dispatch = useDispatch()
@@ -24,11 +24,10 @@ const FetchLink = (props: Props) => {
     try {
       const links = await studentMail.getZoomLinks()
 
-      console.log(links)
       dispatch(addZoomLinks(links))
       setLinks(links)
     } catch (err) {
-      console.log('err', err)
+      setError(err.message)
     } finally {
       setIsFetching(false)
     }

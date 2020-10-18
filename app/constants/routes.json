@@ -1,5 +1,6 @@
 {
-  "HOME": "/",
+  "INIT": "/init",
+  "HOME": "/home",
   "CALENDAR": "/calendar",
   "COURSE_LIST": "/course-list"
 }

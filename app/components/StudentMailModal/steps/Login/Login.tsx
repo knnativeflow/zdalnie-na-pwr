@@ -47,7 +47,7 @@ const Login = (props: Props): JSX.Element => {
           margin="dense"
           id="username"
           label="Indeks"
-          type="number"
+          type="text"
           fullWidth
           onChange={(event) => setUsername(event.target.value)}
         />
@@ -56,6 +56,7 @@ const Login = (props: Props): JSX.Element => {
           id="password"
           label="Hasło"
           fullWidth
+          type="password"
           onChange={(event) => setPassword(event.target.value)}
         />
         {!!error && (

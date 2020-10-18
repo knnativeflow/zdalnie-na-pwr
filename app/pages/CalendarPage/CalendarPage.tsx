@@ -12,10 +12,18 @@ const CalendarPage = (): JSX.Element => {
   const [isOpenStudentMailModal, setIsOpenStudentMailModal] = useState(false)
   const courses = useSelector((state: RootState) => state.courseList)
 
-  const events = useMemo<IEvent[]>(
+  const events = useMemo<IEventFullCalendar[]>(
     () =>
-      courses.reduce<IEvent[]>((events, course) => {
-        return [...events, ...course.events]
+      courses.reduce<IEventFullCalendar[]>((events, course) => {
+        return [
+          ...events,
+          ...course.events.map((event) => ({
+            start: event.start,
+            end: event.end,
+            title: event.title,
+            resource: event,
+          })),
+        ]
       }, []),
     [courses]
   )

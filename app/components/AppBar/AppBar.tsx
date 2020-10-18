@@ -16,9 +16,15 @@ const AppBar = () => {
         <NavLink to={routes.CALENDAR} activeStyle={{ color: '#fff', opacity: 1 }}>
           <Button color="inherit">Kalendarz</Button>
         </NavLink>
-        <NavLink to={routes.COURSE_LIST} activeStyle={{ color: '#fff', opacity: 1 }}>
-          <Button color="inherit">Lista kursów</Button>
-        </NavLink>
+        <Button color="inherit" disabled>
+          Lista kursów
+        </Button>
+        <Button color="inherit" disabled>
+          Poczta
+        </Button>
+        <Button color="inherit" disabled>
+          Wiadomości JSOS
+        </Button>
       </div>
     </AppBarMaterialUI>
   )

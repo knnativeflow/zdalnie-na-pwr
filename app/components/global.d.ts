@@ -37,3 +37,10 @@ interface IEventZoomLink {
   date: string
   link: string
 }
+
+interface IEventFullCalendar {
+  start: string
+  end: string
+  title: string
+  resource: IEvent
+}

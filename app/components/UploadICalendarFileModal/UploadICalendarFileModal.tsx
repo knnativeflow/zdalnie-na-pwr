@@ -53,12 +53,11 @@ const UploadICalendarFileModal = (props: Props): JSX.Element => {
           Wgraj plik iCalendar z JSOSa w celu uzupełnienia lokalnego kalendarza w aplikacji. Dane nie są przesyłane do
           twórców aplikacji.
         </DialogContentText>
+        <DialogContentText>
+          Nie możesz przejść dalej bez wgrania pliku. Aplikacja bez niego nie działa i nie będzie oferowała funkcjonalności.
+        </DialogContentText>
       </DialogContent>
       <DialogActions>
-        {/* TODO: display error */}
-        <Button onClick={onClose} color="primary" variant="outlined">
-          Anuluj
-        </Button>
         {/* TODO: handle press enter and esc buttons */}
         <Button onClick={handleUpload} color="primary" variant="contained" type="submit" disabled={isLoading}>
           {isLoading ? 'Loading...' : 'Wgraj'}
