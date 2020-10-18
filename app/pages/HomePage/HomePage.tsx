@@ -18,7 +18,7 @@ const HomePage = () => {
       <div className={styles.header}>
         <h1>Zajęcia</h1>
       </div>
-      {/*<UploadICalendarFileModal open={!courses.length} onSubmit={handleUploadICalendar} onClose={() => {}} />*/}
+      <UploadICalendarFileModal open={!courses.length} onSubmit={handleUploadICalendar} onClose={() => {}} />
     </div>
   )
 }

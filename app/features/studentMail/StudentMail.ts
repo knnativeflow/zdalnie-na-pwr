@@ -32,12 +32,6 @@ interface IFullMail {
   content: string
 }
 
-interface ICourseZoomLinkStudentMail {
-  name: string
-  date: Date
-  link: string
-}
-
 class StudentMail {
   private token = ''
 
@@ -51,22 +45,22 @@ class StudentMail {
       : Promise.reject(new Error('Unrecognized variable type.'))
   }
 
-  private static findZoomLink(contentMail: string): ICourseZoomLinkStudentMail {
+  private static findZoomLink(contentMail: string): IEventZoomLink {
     const startCourseNameIndex = contentMail.search('Zajęcia z ') + 10
     const endCourseNameIndex = contentMail.search(' w terminie ')
-    const name = contentMail.substring(startCourseNameIndex, endCourseNameIndex)
+    const courseName = contentMail.substring(startCourseNameIndex, endCourseNameIndex)
 
     const startDateCourse = endCourseNameIndex + 12
     const endDateCourse = contentMail.search(' odbędą się za')
     const stringDate = contentMail.substring(startDateCourse, endDateCourse)
-    const date = moment(stringDate, 'DD MMMM YYYY hh:mm').toDate()
+    const date = moment(stringDate, 'DD MMMM YYYY hh:mm').format('YYYY-MM-DDTkk:mm:ss')
 
     const startLinkIndex = contentMail.search('Link do spotkania:<BR><BR><A HREF="') + 35
     const endLinkIndex = contentMail.search('" target="l">https://pwr-edu.zoom.us')
     const link = contentMail.substring(startLinkIndex, endLinkIndex)
 
     return {
-      name,
+      courseName,
       date,
       link,
     }
@@ -102,7 +96,7 @@ class StudentMail {
     const baseMailList = await this.getMailList()
     const mailList = await Promise.all(baseMailList.map(async (mail) => this.getMail(mail)))
 
-    return mailList.reduce<ICourseZoomLinkStudentMail[]>((aggregate, mail) => {
+    return mailList.reduce<IEventZoomLink[]>((aggregate, mail) => {
       if (mail) {
         const foundLink = StudentMail.findZoomLink(mail.content)
 

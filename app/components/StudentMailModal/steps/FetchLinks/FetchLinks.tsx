@@ -1,31 +1,31 @@
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core'
 import studentMail from 'features/studentMail'
+import { addZoomLinks } from 'actions/courseList'
 
 import styles from './FetchLink.scss'
 
-interface ICourseZoomLinkStudentMail {
-  name: string
-  date: Date
-  link: string
-}
-
 interface Props {
   open: boolean
-  onSuccess: (courses: ICourseZoomLinkStudentMail[]) => void
+  onSuccess: () => void
   onClose: () => void
 }
 
 const FetchLink = (props: Props) => {
   const { open, onSuccess, onClose } = props
   // TODO: handle all errors
-  const [error, setError] = useState<string>('')
+  // const [error, setError] = useState<string>('')
   const [isFetching, setIsFetching] = useState(true)
-  const [links, setLinks] = useState<ICourseZoomLinkStudentMail[]>([])
+  const [links, setLinks] = useState<IEventZoomLink[]>([])
+  const dispatch = useDispatch()
 
   const getZoomLinks = async () => {
     try {
       const links = await studentMail.getZoomLinks()
+
+      console.log(links)
+      dispatch(addZoomLinks(links))
       setLinks(links)
     } catch (err) {
       console.log('err', err)
@@ -35,7 +35,8 @@ const FetchLink = (props: Props) => {
   }
 
   const handleAccept = () => {
-    onSuccess(links)
+    // onSuccess(links)
+    onSuccess()
   }
 
   useEffect(() => {

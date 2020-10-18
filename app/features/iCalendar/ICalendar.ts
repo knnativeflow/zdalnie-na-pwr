@@ -17,13 +17,11 @@ const parseEvents = (icalEvents: ical.FullCalendar): IEvent[] => {
           start: moment(start).format('YYYY-MM-DDTkk:mm:ss'),
           end: moment(end).format('YYYY-MM-DDTkk:mm:ss'),
           allDay: false,
-          resource: {
-            summary: summary || '',
-            description: description || '',
-            location: location || '',
-            uid,
-            platform: {},
-          },
+          summary: summary || '',
+          description: description || '',
+          location: location || '',
+          uid,
+          platform: {},
         },
       ]
     }
@@ -40,7 +38,7 @@ const normalizeCourse = (course: ICourse) => {
     end: { [date: string]: number }
   }>(
     (counter, event) => {
-      const lecturer = event.resource.description
+      const lecturer = event.description
       const start = moment(event.start).format('dddd, kk:mm')
       const end = moment(event.end).format('dddd, kk:mm')
 
@@ -80,7 +78,7 @@ const mapEventsToCourses = (events: IEvent[]): ICourse[] => {
         type: event.title.substring(0, 1) as CourseType,
         start: moment(event.start).format('dddd, kk:mm'),
         end: moment(event.end).format('dddd, kk:mm'),
-        lecturer: event.resource.description,
+        lecturer: event.description,
         events: [event],
         platforms: {},
       }

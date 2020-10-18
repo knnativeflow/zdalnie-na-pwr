@@ -3,16 +3,14 @@ interface IEvent {
   start: string
   end: string
   allDay: boolean
-  resource: {
-    summary: string
-    description: string
-    location: string
-    uid: string
-    platform: {
-      [key: string]: {
-        name: string
-        url: string
-      }
+  summary: string
+  description: string
+  location: string
+  uid: string
+  platform: {
+    [key: string]: {
+      name: string
+      url: string
     }
   }
 }
@@ -32,4 +30,10 @@ interface ICourse {
       url: string
     }
   }
+}
+
+interface IEventZoomLink {
+  courseName: string
+  date: string
+  link: string
 }

@@ -13,7 +13,7 @@ const Calendar = (props: Props) => {
   const { events } = props
 
   const handleClickEvent = (event: EventClickArg) => {
-    console.log(event.event.extendedProps.resource)
+    console.log(event.event.extendedProps)
   }
 
   return (
