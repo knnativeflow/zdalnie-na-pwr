@@ -1,0 +1,2 @@
+export const ADD_COURSE_LIST = 'ADD_COURSE_LIST'
+export const CLEAR_COURSE_LIST = 'CLEAR_COURSE_LIST'

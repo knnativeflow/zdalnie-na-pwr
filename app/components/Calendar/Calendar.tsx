@@ -1,36 +1,36 @@
 import React from 'react'
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
+import FullCalendar, { EventClickArg } from '@fullcalendar/react'
+import timeGridPlugin from '@fullcalendar/timegrid'
 import locale from '@fullcalendar/core/locales/pl'
 
 import styles from './Calendar.scss'
 
-interface Event {
-  title: string
-  start: Date
-  end: Date
-  allDay: boolean
-  resource: unknown // TODO: change
-}
-
 interface Props {
-  events: Event[]
+  events: IEvent[]
 }
 
 const Calendar = (props: Props) => {
   const { events } = props
 
+  const handleClickEvent = (event: EventClickArg) => {
+    console.log(event.event.extendedProps.resource)
+  }
+
   return (
     <div className={styles.root}>
       <FullCalendar
-        plugins={[dayGridPlugin]}
-        initialView="dayGridWeek"
-        firstDay={1}
+        height="auto"
+        timeZone="local"
+        plugins={[timeGridPlugin]}
+        initialView="timeGridWeek"
+        allDaySlot={false}
+        slotDuration="00:30:00"
+        slotMinTime="07:00:00"
+        slotMaxTime="21:30:00"
         events={events}
         locale={locale}
-        // eventClick={(event) =>
-        //   console.log(event.event.extendedProps.resource)
-        // }
+        eventClick={handleClickEvent}
+        duration={{ days: 5 }}
       />
     </div>
   )

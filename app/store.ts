@@ -4,7 +4,7 @@ import { routerMiddleware } from 'connected-react-router'
 import { createLogger } from 'redux-logger'
 import { ThunkAction } from 'redux-thunk'
 // eslint-disable-next-line import/no-cycle
-import createRootReducer from './rootReducer'
+import createRootReducer from 'reducers/rootReducer'
 
 export const history = createHashHistory()
 const rootReducer = createRootReducer(history)
@@ -14,9 +14,7 @@ const router = routerMiddleware(history)
 const middleware = [...getDefaultMiddleware(), router]
 
 const excludeLoggerEnvs = ['test', 'production']
-const shouldIncludeLogger = !excludeLoggerEnvs.includes(
-  process.env.NODE_ENV || ''
-)
+const shouldIncludeLogger = !excludeLoggerEnvs.includes(process.env.NODE_ENV || '')
 
 if (shouldIncludeLogger) {
   const logger = createLogger({
@@ -36,9 +34,9 @@ export const configuredStore = (initialState?: RootState) => {
 
   if (process.env.NODE_ENV === 'development' && module.hot) {
     module.hot.accept(
-      './rootReducer',
+      'reducers/rootReducer',
       // eslint-disable-next-line global-require
-      () => store.replaceReducer(require('./rootReducer').default)
+      () => store.replaceReducer(require('reducers/rootReducer').default)
     )
   }
   return store

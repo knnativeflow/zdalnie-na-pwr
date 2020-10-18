@@ -4,6 +4,7 @@ module.exports = {
     // A temporary hack related to IDE not resolving correct package.json
     'import/no-extraneous-dependencies': 'off',
     'no-shadow': 'off',
+    'react/jsx-one-expression-per-line': 'off'
   },
   parserOptions: {
     ecmaVersion: 2020,

@@ -1,7 +1,35 @@
 interface IEvent {
   title: string
-  start: Date
-  end: Date
+  start: string
+  end: string
   allDay: boolean
-  resource: unknown
+  resource: {
+    summary: string
+    description: string
+    location: string
+    uid: string
+    platform: {
+      [key: string]: {
+        name: string
+        url: string
+      }
+    }
+  }
+}
+
+type CourseType = 'W' | 'C' | 'S' | 'L' | 'P'
+
+interface ICourse {
+  name: string
+  type: CourseType
+  start: string
+  end: string
+  lecturer: string
+  events: IEvent[]
+  platforms: {
+    [platformName: string]: {
+      name: string
+      url: string
+    }
+  }
 }

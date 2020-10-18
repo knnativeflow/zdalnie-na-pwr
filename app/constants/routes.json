@@ -1,4 +1,5 @@
 {
   "HOME": "/",
-  "CALENDAR": "/calendar"
+  "CALENDAR": "/calendar",
+  "COURSE_LIST": "/course-list"
 }
