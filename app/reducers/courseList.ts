@@ -11,7 +11,7 @@ const reducerCourseList = (state = INIT_STATE, action: IActionCourseList) => {
       return state.reduce<ICourse[]>((courses, course) => {
         const events = course.events.map((event) => {
           const foundLink = action.payload.zoomLinks?.find(
-            (zoomLink) => zoomLink.date === event.start && zoomLink.courseName === event.title.substring(2)
+            (zoomLink) => zoomLink.date === event.start && zoomLink.courseName.startsWith(event.title.substring(2))
           )
 
           return foundLink
