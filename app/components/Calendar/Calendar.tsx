@@ -32,7 +32,7 @@ const Calendar = (props: Props) => {
         events={events}
         locale={locale}
         eventClick={handleClickEvent}
-        weekends={false}
+        weekends
         slotLabelFormat={{
           hour: 'numeric',
           minute: '2-digit',
