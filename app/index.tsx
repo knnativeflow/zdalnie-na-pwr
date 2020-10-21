@@ -4,7 +4,7 @@ import { AppContainer as ReactHotAppContainer } from 'react-hot-loader'
 import { history, configuredStore } from './store'
 import './app.global.css'
 
-const store = configuredStore()
+const { store, persistor } = configuredStore()
 
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer
 
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const Root = require('./base/Root').default
   render(
     <AppContainer>
-      <Root store={store} history={history} />
+      <Root store={store} history={history} persistor={persistor} />
     </AppContainer>,
     document.getElementById('root')
   )
