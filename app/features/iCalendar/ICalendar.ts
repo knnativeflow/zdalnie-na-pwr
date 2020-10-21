@@ -1,13 +1,17 @@
-import ical from 'ical'
+import ical, { VEvent } from 'node-ical'
 import moment from 'moment'
 
-const getEventsFromIcal = (path: string) => {
-  return ical.parseFile(path)
+const getEventsFromIcalFile = (path: string) => {
+  return ical.sync.parseFile(path)
 }
 
-const parseEvents = (icalEvents: ical.FullCalendar): IEvent[] => {
+const parseEvents = (icalEvents: ical.CalendarResponse): IEvent[] => {
   return Object.keys(icalEvents).reduce<IEvent[]>((aggregateEvents: IEvent[], eventKey: string) => {
-    const { start, end, summary, location, uid, description } = icalEvents[eventKey]
+    if (icalEvents[eventKey].type !== 'VEVENT') {
+      return aggregateEvents
+    }
+
+    const { start, end, summary, location, uid, description } = icalEvents[eventKey] as VEvent
 
     if (start && end && uid) {
       return [
@@ -97,7 +101,7 @@ const mapEventsToCourses = (events: IEvent[]): ICourse[] => {
 }
 
 const getCourses = (path: string) => {
-  const iCalendarEvents = getEventsFromIcal(path)
+  const iCalendarEvents = getEventsFromIcalFile(path)
   const events = parseEvents(iCalendarEvents)
 
   return mapEventsToCourses(events)

@@ -1,5 +1,6 @@
 import superagent from 'superagent'
 import moment from 'moment'
+import ical from 'node-ical'
 
 const STUDENT_MAIL_URL = 'https://s.student.pwr.edu.pl'
 
@@ -32,6 +33,8 @@ interface IFullMail {
   content: string
 }
 
+const promiseTimeout = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
 class StudentMail {
   private token = ''
 
@@ -45,24 +48,35 @@ class StudentMail {
       : Promise.reject(new Error('Unrecognized variable type.'))
   }
 
-  private static findZoomLink(contentMail: string): IEventZoomLink {
-    const startCourseNameIndex = contentMail.search('Zajęcia z ') + 10
-    const endCourseNameIndex = contentMail.search(' w terminie ')
-    const courseName = contentMail.substring(startCourseNameIndex, endCourseNameIndex)
+  private async getEventFromMail(mailId: number): Promise<IEventZoomLink> {
+    const response = await superagent.get(`${STUDENT_MAIL_URL}/iwc/svc/wmap/attach/ical.ics`).query({
+      token: this.token,
+      mbox: 'INBOX',
+      uid: mailId,
+      number: 2,
+      type: 'text',
+      subtype: 'calendar',
+      attachment: 1,
+    })
 
-    const startDateCourse = endCourseNameIndex + 12
-    const endDateCourse = contentMail.search(' odbędą się za')
-    const stringDate = contentMail.substring(startDateCourse, endDateCourse)
-    const date = moment(stringDate, 'DD MMMM YYYY hh:mm').format('YYYY-MM-DDTkk:mm:ss')
+    const events = ical.sync.parseICS(response.text)
 
-    const startLinkIndex = contentMail.search('Link do spotkania:<BR><BR><A HREF="') + 35
-    const endLinkIndex = contentMail.search('" target="l">https://pwr-edu.zoom.us')
-    const link = contentMail.substring(startLinkIndex, endLinkIndex)
+    const eventKeys = Object.keys(events)
+
+    if (eventKeys.length !== 1) {
+      throw new Error('Unexpected ical file')
+    }
+
+    const event = events[eventKeys[0]]
+
+    if (!(event.start instanceof Date) || typeof event.summary !== 'string' || typeof event.description !== 'string') {
+      throw new Error('Invalid data in ical')
+    }
 
     return {
-      courseName,
-      date,
-      link,
+      link: event.description.split('\n')[0],
+      courseName: event.summary,
+      date: moment(event.start).format('YYYY-MM-DDTkk:mm:ss'),
     }
   }
 
@@ -92,27 +106,24 @@ class StudentMail {
     this.token = json.iwcp.loginResponse?.appToken.split('=')[1] || ''
   }
 
-  public async getZoomLinks() {
-    const baseMailList = await this.getMailList()
-    const mailList = await Promise.all(baseMailList.map(async (mail) => this.getMail(mail)))
+  public async getZoomLinks(): Promise<IEventZoomLink[]> {
+    const baseMailList = await this.getMailListWithZoomLink()
 
-    return mailList.reduce<IEventZoomLink[]>((aggregate, mail) => {
-      if (mail) {
-        const foundLink = StudentMail.findZoomLink(mail.content)
+    return baseMailList.reduce<Promise<IEventZoomLink[]>>(async (promiseAgg, mail) => {
+      const agg = await promiseAgg
+      const event = await this.getEventFromMail(mail.id)
 
-        return foundLink ? [...aggregate, foundLink] : aggregate
-      }
-
-      return aggregate
-    }, [])
+      await promiseTimeout(200)
+      return [...agg, event]
+    }, Promise.resolve([]))
   }
 
-  private async getMailList(): Promise<IBaseMail[]> {
+  private async getMailListWithZoomLink(): Promise<IBaseMail[]> {
     const response = await superagent.get(`${STUDENT_MAIL_URL}/iwc/svc/wmap/mbox.mjs`).query({
       rev: 3,
       sid: '',
       mbox: 'INBOX',
-      count: 60,
+      count: 10,
       date: true,
       lang: 'pl',
       sortby: 'recv',
@@ -138,7 +149,8 @@ class StudentMail {
     }))
   }
 
-  private async getMail(mail: IBaseMail): Promise<IFullMail | null> {
+  // TODO: get attachments
+  public async getMail(mail: IBaseMail): Promise<IFullMail | null> {
     const response = await superagent.get(`${STUDENT_MAIL_URL}/iwc/svc/wmap/msg.mjs`).query({
       uid: mail.id,
       token: this.token,
@@ -160,7 +172,7 @@ class StudentMail {
 
     // TODO: fix after added decoder
     // @ts-ignore
-    const authorEmail = parsedResponse[8][0][5][10][1].match(/([\w\.]+@pwr\.edu\.pl)/g)[0]
+    const authorEmail = parsedResponse[8][0][5][10][1].match(/([\w.-_]+@pwr\.edu\.pl)/g)[0]
     // @ts-ignore
     const content = parsedResponse[8][1][6]
 
