@@ -10,22 +10,22 @@ import styles from './CalendarPage.scss'
 
 const CalendarPage = (): JSX.Element => {
   const [isOpenStudentMailModal, setIsOpenStudentMailModal] = useState(false)
-  const courses = useSelector((state: RootState) => state.courseList)
+  const events = useSelector((state: RootState) => state.events)
 
-  const events = useMemo<IEventFullCalendar[]>(
+  const parsedEvents = useMemo<IEventFullCalendar[]>(
     () =>
-      courses.reduce<IEventFullCalendar[]>((events, course) => {
+      events.reduce<IEventFullCalendar[]>((events, event) => {
         return [
           ...events,
-          ...course.events.map((event) => ({
+          {
             start: event.start,
             end: event.end,
-            title: event.title,
+            title: `${event.type} ${event.name}`,
             resource: event,
-          })),
+          },
         ]
       }, []),
-    [courses]
+    [events]
   )
 
   return (
@@ -36,7 +36,7 @@ const CalendarPage = (): JSX.Element => {
           Pobierz dane z poczty
         </Button>
       </div>
-      <Calendar events={events} />
+      <Calendar events={parsedEvents} />
       <StudentMailModal open={isOpenStudentMailModal} onClose={() => setIsOpenStudentMailModal(false)} />
     </div>
   )

@@ -1,12 +1,13 @@
 import ElectronStore from 'electron-store'
-import { configureStore, getDefaultMiddleware, Action } from '@reduxjs/toolkit'
+import { configureStore, Action } from '@reduxjs/toolkit'
 import { createHashHistory } from 'history'
 import { routerMiddleware } from 'connected-react-router'
 import { createLogger } from 'redux-logger'
 import { ThunkAction } from 'redux-thunk'
 
 import { persistStore, persistReducer } from 'redux-persist'
-import createElectronStorage from 'redux-persist-electron-storage'
+// import createElectronStorage from 'redux-persist-electron-storage' // TODO: turn on the prod
+import storage from 'redux-persist/lib/storage'
 
 // eslint-disable-next-line import/no-cycle
 import createRootReducer from 'reducers/rootReducer'
@@ -15,24 +16,26 @@ export const history = createHashHistory()
 const rootReducer = createRootReducer(history)
 export type RootState = ReturnType<typeof rootReducer>
 
+// const electronStore = new ElectronStore() // TODO: turn on the prod
+
 const router = routerMiddleware(history)
-const middleware = [...getDefaultMiddleware(), router]
+const middleware = [router]
 
 const excludeLoggerEnvs = ['test', 'production']
 const shouldIncludeLogger = !excludeLoggerEnvs.includes(process.env.NODE_ENV || '')
 
 const persistConfig = {
   key: 'root',
-  storage: createElectronStorage(),
+  // TODO: turn on the prod
+  // storage: createElectronStorage({
+  //   electronStore,
+  // }),
+  storage,
   blacklist: ['router'],
+  // migrate: // TODO: turn on when update app
 }
 
 const persistedReducer = persistReducer<RootState>(persistConfig, rootReducer)
-
-const electronStore = new ElectronStore()
-createElectronStorage({
-  electronStore,
-})
 
 if (shouldIncludeLogger) {
   const logger = createLogger({

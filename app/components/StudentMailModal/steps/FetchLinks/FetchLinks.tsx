@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core'
 import studentMail from 'features/studentMail'
-import { addZoomLinks } from 'actions/courseList'
+import { addZoomLinks } from 'actions/events'
 
 import styles from './FetchLink.scss'
 
@@ -34,7 +34,6 @@ const FetchLink = (props: Props) => {
   }
 
   const handleAccept = () => {
-    // onSuccess(links)
     onSuccess()
   }
 

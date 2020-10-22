@@ -4,11 +4,11 @@ import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, B
 
 import { remote } from 'electron'
 import iCalendar from 'features/iCalendar'
-import { addCourseList } from 'actions/courseList'
+import { addEvents } from 'actions/events'
 
 interface Props {
   open: boolean
-  onSubmit: (events: ICourse[]) => void
+  onSubmit: (events: IEvent[]) => void
   onClose: () => void
 }
 
@@ -34,13 +34,13 @@ const UploadICalendarFileModal = (props: Props): JSX.Element => {
         }
 
         const path = result.filePaths[0]
-        const courses = iCalendar.getCourses(path)
+        const events = iCalendar.getEvents(path)
 
-        dispatch(addCourseList(courses))
-        onSubmit(courses)
+        dispatch(addEvents(events))
+        onSubmit(events)
         onClose()
 
-        return courses
+        return events
       })
       .catch(() => setError('Wystąpił błąd z wgraniem pliku iCalendar'))
   }
@@ -54,7 +54,8 @@ const UploadICalendarFileModal = (props: Props): JSX.Element => {
           twórców aplikacji.
         </DialogContentText>
         <DialogContentText>
-          Nie możesz przejść dalej bez wgrania pliku. Aplikacja bez niego nie działa i nie będzie oferowała funkcjonalności.
+          Nie możesz przejść dalej bez wgrania pliku. Aplikacja bez niego nie działa i nie będzie oferowała
+          funkcjonalności.
         </DialogContentText>
       </DialogContent>
       <DialogActions>

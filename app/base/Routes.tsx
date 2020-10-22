@@ -8,13 +8,13 @@ import { CalendarPage, CourseListPage, HomePage, InitPage } from 'pages'
 import App from './App'
 
 const Routes = () => {
-  const courses = useSelector((state: RootState) => state.courseList)
+  const events = useSelector((state: RootState) => state.events)
 
   return (
     <App>
       <Switch>
         <Route path={routes.INIT} component={InitPage} />
-        {courses.length ? (
+        {events.length ? (
           <Switch>
             <Route path={routes.CALENDAR} component={CalendarPage} />
             <Route path={routes.COURSE_LIST} component={CourseListPage} />

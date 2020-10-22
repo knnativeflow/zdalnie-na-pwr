@@ -10,18 +10,20 @@ interface Props {
   onClose: () => void
 }
 
-const MS_TEAMS_URL = 'https://teams.microsoft.com/_#/school//?ctx=teamsGrid'
+// TODO: remove it
+// const MS_TEAMS_URL = 'https://teams.microsoft.com/_#/school//?ctx=teamsGrid'
 
 const EventModal = (props: Props) => {
   const { event, onClose } = props
-  const { title, start, end, description: lecturer, platform } = event
-  const hasZoomLink = !!platform.zoom
+  const { name, type, start, end, lecturer, platform } = event
 
   const handleOpenLink = (link: string) => shell.openExternal(link)
 
   return (
     <Dialog open>
-      <DialogTitle id="form-dialog-title">{title}</DialogTitle>
+      <DialogTitle id="form-dialog-title">
+        {type} {name}
+      </DialogTitle>
       <DialogContent>
         <ul className={styles.list}>
           <li className={styles.item}>
@@ -32,15 +34,11 @@ const EventModal = (props: Props) => {
             <b>Prowadzcy: </b>
             {lecturer}
           </li>
-          {Object.keys(platform).map((key) => (
-            <li key={key}>
-              <b>{platform[key].name}:</b> <a onClick={() => handleOpenLink(platform[key].url)}>{platform[key].url} </a>
-            </li>
-          ))}
-          {!hasZoomLink && (
-            <li className={styles.item}>
-              <b>Teams: </b><a onClick={() => handleOpenLink(MS_TEAMS_URL)}> przejdź do MS Teamsów</a>
-              <br />(nie znaleźliśmy linka do Zooma w twoich wiadmościach, prawdopodobnie masz zajęcia na Teamsach lub link do Zooma został wysłany przez wiadomość na JSOSie, którego jeszcze nie wspieramy #comingSoon)
+          {platform.zoom && (
+            <li>
+              <b>Zoom: </b>
+              <a onClick={() => platform?.zoom?.url && handleOpenLink(platform.zoom.url)}>{platform.zoom.url} </a>
+              {!platform.zoom.weekly && ' (nowy link co tydzień)'}
             </li>
           )}
         </ul>
