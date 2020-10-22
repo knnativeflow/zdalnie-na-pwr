@@ -285,12 +285,6 @@
     "url": "https://opencollective.com/electron-react-boilerplate-594"
   },
   "browserslist": [],
-  "stylelint": {
-    "extends": [
-      "stylelint-config-standard",
-      "stylelint-config-prettier"
-    ]
-  },
   "renovate": {
     "extends": [
       "bliss"

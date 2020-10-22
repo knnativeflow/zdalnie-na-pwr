@@ -38,7 +38,6 @@ const Calendar = (props: Props) => {
           minute: '2-digit',
           omitZeroMinute: false,
         }}
-        // eventContent={(props) => <div>TEST</div>}
       />
       {selectedEvent && <EventModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />}
     </div>

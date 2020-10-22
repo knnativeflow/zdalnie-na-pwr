@@ -2,6 +2,8 @@ import React, { ReactNode } from 'react'
 import AppBar from 'components/AppBar'
 import BottomAppBar from 'components/BottomAppBar'
 
+import styles from './App.scss'
+
 type Props = {
   children: ReactNode
 }
@@ -9,9 +11,9 @@ type Props = {
 export default function App(props: Props) {
   const { children } = props
   return (
-    <div>
+    <div className={styles.root}>
       <AppBar />
-      {children}
+      <div className={styles.content}>{children}</div>
       <BottomAppBar />
     </div>
   )

@@ -10,14 +10,16 @@ const BottomAppBar = () => {
   }
 
   return (
-    <AppBarMaterialUI position="fixed" color="primary" classes={{ root: styles.root }}>
+    <AppBarMaterialUI position="static" color="primary" classes={{ root: styles.root }}>
       <Typography variant="body1" align="left">
         Powered by{' '}
         <span onClick={handleLink} className={styles.link}>
           KN Native Flow
         </span>
       </Typography>
-      <Typography variant="body1" align="center">Prototype - version 0.0.1</Typography>
+      <Typography variant="body1" align="center">
+        Prototype - version 0.0.1
+      </Typography>
       <Typography variant="body1" classes={{ root: styles.link }} align="right">
         O aplikacji
       </Typography>

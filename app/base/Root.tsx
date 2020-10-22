@@ -12,7 +12,7 @@ import { History } from 'history'
 import { Store } from 'store'
 
 import Routes from './Routes'
-import theme from './styles/theme'
+import theme from './theme/theme'
 
 moment.locale('pl')
 
