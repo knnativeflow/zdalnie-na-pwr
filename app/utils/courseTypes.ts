@@ -1,4 +1,4 @@
-import { APP_COLORS } from '../base/theme/theme'
+import { APP_COLORS } from 'base/theme/theme'
 
 const DEFAULT_EVENT_NAME = 'Kurs'
 const EVENT_NAMES = {

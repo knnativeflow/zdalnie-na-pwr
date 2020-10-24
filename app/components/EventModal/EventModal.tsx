@@ -5,8 +5,8 @@ import moment from 'moment'
 import { shell } from 'electron'
 
 import { eventColor, eventFullText } from 'utils/courseTypes'
-import InfoWithIcon, { ButtonInfoWithIcon } from '../InfoWithIcon'
-import { APP_COLORS } from '../../base/theme/theme'
+import InfoWithIcon, { ButtonInfoWithIcon } from 'components/InfoWithIcon'
+import { APP_COLORS } from 'base/theme/theme'
 
 // START TEST DATA
 const platform: IPlatforms = {
