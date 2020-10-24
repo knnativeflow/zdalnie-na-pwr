@@ -1,11 +1,6 @@
 import { useState } from 'react'
 
-interface UseModalReturnValues<T> {
-  isModal: boolean
-  modalParams?: T
-  openModal: (params?: T) => void
-  closeModal: () => void
-}
+type UseModalReturnValues<T> = [boolean, (params?: T) => void, () => void, T?]
 
 interface UseModalState<T> {
   isOpen: boolean
@@ -30,12 +25,7 @@ const useModal = <T>(defaultValue?: T): UseModalReturnValues<T> => {
       params,
     }))
 
-  return {
-    isModal: isOpen,
-    modalParams: params,
-    openModal,
-    closeModal,
-  }
+  return [isOpen, openModal, closeModal, params]
 }
 
 export default useModal

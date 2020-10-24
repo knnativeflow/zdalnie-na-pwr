@@ -13,7 +13,7 @@ interface Props {
 
 const Calendar = (props: Props) => {
   const { events } = props
-  const { isModal, modalParams, openModal, closeModal } = useModal<IEvent>()
+  const [isModalOpen, openModal, closeModal, modalParams] = useModal<IEvent>()
 
   const handleClickEvent = (event: EventClickArg) => {
     openModal(event.event.extendedProps.resource)
@@ -40,7 +40,7 @@ const Calendar = (props: Props) => {
           omitZeroMinute: false,
         }}
       />
-      <EventModal isOpen={isModal} event={modalParams} onClose={closeModal} />
+      <EventModal isOpen={isModalOpen} event={modalParams} onClose={closeModal} />
     </div>
   )
 }
