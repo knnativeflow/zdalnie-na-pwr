@@ -10,6 +10,7 @@ import { ThemeProvider } from '@material-ui/core/styles'
 
 import { History } from 'history'
 import { Store } from 'store'
+import UniversalAnalyticsListener from 'components/UniversalAnalyticsListener'
 
 import Routes from './Routes'
 import theme from './theme/theme'
@@ -28,7 +29,9 @@ const Root = ({ store, persistor, history }: Props) => (
     <PersistGate loading={null} persistor={persistor}>
       <ThemeProvider theme={theme}>
         <ConnectedRouter history={history}>
-          <Routes />
+          <UniversalAnalyticsListener>
+            <Routes />
+          </UniversalAnalyticsListener>
         </ConnectedRouter>
       </ThemeProvider>
     </PersistGate>

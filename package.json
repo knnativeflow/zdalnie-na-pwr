@@ -175,6 +175,7 @@
     "@types/react-test-renderer": "^16.9.3",
     "@types/redux-logger": "^3.0.8",
     "@types/superagent": "^4.1.10",
+    "@types/universal-analytics": "^0.4.4",
     "@types/webpack": "^4.41.21",
     "@types/webpack-env": "^1.15.2",
     "@typescript-eslint/eslint-plugin": "^3.6.1",
@@ -255,6 +256,7 @@
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@reduxjs/toolkit": "^1.4.0",
     "connected-react-router": "^6.6.1",
+    "dotenv": "^8.2.0",
     "electron-debug": "^3.1.0",
     "electron-log": "^4.2.4",
     "electron-store": "^6.0.1",
@@ -274,7 +276,8 @@
     "regenerator-runtime": "^0.13.5",
     "source-map-support": "^0.5.19",
     "superagent": "^6.1.0",
-    "superagent-jsonp": "^0.2.1"
+    "superagent-jsonp": "^0.2.1",
+    "universal-analytics": "^0.4.23"
   },
   "devEngines": {
     "node": ">=7.x",

@@ -56,3 +56,7 @@ interface IEventFullCalendar {
   title: string
   resource: IEvent
 }
+
+interface IUser {
+  indeks?: string
+}

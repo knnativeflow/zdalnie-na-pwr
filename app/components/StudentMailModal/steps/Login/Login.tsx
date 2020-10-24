@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useDispatch } from 'react-redux'
 import {
   Dialog,
   DialogTitle,
@@ -10,6 +11,7 @@ import {
 } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 
+import { updateUser } from 'actions/user'
 import studentMail from 'features/studentMail'
 import styles from './Login.scss'
 
@@ -24,10 +26,12 @@ const Login = (props: Props): JSX.Element => {
   const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const [error, setError] = useState<string>('')
+  const dispatch = useDispatch()
 
   const handleSubmit = async () => {
     try {
       await studentMail.login(username, password)
+      dispatch(updateUser({ indeks: username }))
       onSuccess()
     } catch (err) {
       setError(err.message)

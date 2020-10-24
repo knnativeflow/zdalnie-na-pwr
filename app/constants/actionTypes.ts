@@ -4,3 +4,5 @@ export const CLEAR_COURSES = 'CLEAR_COURSES'
 export const ADD_EVENTS = 'ADD_EVENTS'
 export const CLEAR_EVENTS = 'CLEAR_EVENTS'
 export const ADD_EVENT_ZOOM_LINKS = 'ADD_EVENT_ZOOM_LINKS'
+
+export const UPDATE_USER = 'UPDATE_USER'
