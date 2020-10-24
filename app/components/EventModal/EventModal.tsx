@@ -62,17 +62,17 @@ const EventModal = (props: Props) => {
               </InfoWithIcon>
             </Grid>
             <Grid item xs={6}>
-              <InfoWithIcon icon={TurnedIn} title="Kod grupy" color="#888888">
+              <InfoWithIcon icon={TurnedIn} title="Kod grupy">
                 {code}
               </InfoWithIcon>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <InfoWithIcon icon={EventNote} title="Termin" color="#888888">
+              <InfoWithIcon icon={EventNote} title="Termin">
                 {moment(start).format('dddd, HH:mm')} - {moment(end).format('HH:mm')}
               </InfoWithIcon>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <InfoWithIcon icon={Person} title="Prowadzący" color="#888888">
+              <InfoWithIcon icon={Person} title="Prowadzący">
                 {lecturer?.split(', ').map((value) => (
                   <div key={value}>{value}</div>
                 ))}
@@ -165,7 +165,7 @@ const EventModal = (props: Props) => {
             <Grid container spacing={2}>
               {mappedAdditional.map(([key, value]) => (
                 <Grid key={key} item xs={12}>
-                  <InfoWithIcon title={key} color="#888888" icon={Notes}>
+                  <InfoWithIcon title={key} icon={Notes}>
                     {value}
                   </InfoWithIcon>
                 </Grid>

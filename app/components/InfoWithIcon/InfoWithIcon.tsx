@@ -3,11 +3,11 @@ import React from 'react'
 import { OverridableComponent } from '@material-ui/core/OverridableComponent'
 import { makeStyles } from '@material-ui/core/styles'
 
-type InfoProps = {
+interface InfoProps {
   icon: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>
   title: string
   children: React.ReactNode
-  color: string
+  color?: string
 }
 
 const InfoWithIcon = ({ icon: Icon, title, children, color }: InfoProps) => (
@@ -23,6 +23,10 @@ const InfoWithIcon = ({ icon: Icon, title, children, color }: InfoProps) => (
     </Box>
   </Box>
 )
+
+InfoWithIcon.defaultProps = {
+  color: '#888888',
+}
 
 export default InfoWithIcon
 
@@ -49,11 +53,15 @@ export const ButtonInfoWithIcon = (props: ButtonProps) => {
   const { button, ...classes } = useStyles(props)
   return (
     <ButtonBase focusRipple className={button} TouchRippleProps={{ classes }}>
-      <Box py={1} bgcolor={`${color}10`} borderRadius={8} style={{ cursor: 'pointer' }} onClick={onClick} width={1}>
+      <Box py={1} bgcolor={`${color}10`} borderRadius={8} onClick={onClick} width={1}>
         <InfoWithIcon icon={icon} title={title} color={color}>
           <Box fontSize="subtitle2.fontSize">{children}</Box>
         </InfoWithIcon>
       </Box>
     </ButtonBase>
   )
+}
+
+ButtonInfoWithIcon.defaultProps = {
+  color: '#888888',
 }
