@@ -31,8 +31,8 @@ class JsosAuth {
   oauthConsumerKey = {key: 'oauth_consumer_key', value: ''}
   csrfToken = {key: 'YII_CSRF_TOKEN', value: ''}
   jsosSessionId = {key: 'JSOSSESSID', value: ''}
-  // @ts-ignore
-  lastTimeRequest: Date = null
+
+  lastTimeRequest: Date | null = null
 
   public async requestWithAuthorization(requestOps: IRequestOptions): Promise<ResponseWithSelector> {
     try {
