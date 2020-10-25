@@ -1,5 +1,5 @@
 import ical, { VEvent } from 'node-ical'
-import { parseDateToString } from 'helpers/date'
+import { parseDateToString } from 'utils/date'
 
 const getEventsFromIcalFile = (path: string) => {
   return ical.sync.parseFile(path)

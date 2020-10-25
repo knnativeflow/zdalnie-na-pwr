@@ -9,5 +9,3 @@ export const parseStringToDate = (dateString: string) => moment(dateString, DEFA
 
 export const parseRecurringDateToString = (date: moment.MomentInput) =>
   moment(date).format(DEFAULT_FORMAT_RECURRING_DATE)
-
-// export const parseRecurringStringToDate = (dateString: string) => moment(dateString, DEFAULT_FORMAT_RECURRING_DATE).toDate()
