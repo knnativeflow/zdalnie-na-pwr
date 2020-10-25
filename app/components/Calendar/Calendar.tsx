@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import FullCalendar, { EventClickArg } from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import locale from '@fullcalendar/core/locales/pl'
 
 import EventModal from 'components/EventModal'
+import useModal from 'hooks/useModal'
 import styles from './Calendar.scss'
 
 interface Props {
@@ -12,10 +13,10 @@ interface Props {
 
 const Calendar = (props: Props) => {
   const { events } = props
-  const [selectedEvent, setSelectedEvent] = useState<IEvent | null>(null)
+  const [isModalOpen, openModal, closeModal, modalParams] = useModal<IEvent>()
 
   const handleClickEvent = (event: EventClickArg) => {
-    setSelectedEvent(event.event.extendedProps.resource)
+    openModal(event.event.extendedProps.resource)
   }
 
   return (
@@ -39,7 +40,7 @@ const Calendar = (props: Props) => {
           omitZeroMinute: false,
         }}
       />
-      {selectedEvent && <EventModal event={selectedEvent} onClose={() => setSelectedEvent(null)} />}
+      <EventModal isOpen={isModalOpen} event={modalParams} onClose={closeModal} />
     </div>
   )
 }
