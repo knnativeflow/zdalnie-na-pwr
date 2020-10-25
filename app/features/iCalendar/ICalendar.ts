@@ -40,6 +40,12 @@ const getEvents = (path: string): IEvent[] => {
   return parseEvents(iCalendarEvents)
 }
 
+const getEventsFromString = (icalBody: string): IEvent[] => {
+  const iCalendarEvents = ical.sync.parseICS(icalBody)
+  return parseEvents(iCalendarEvents)
+}
+
 export default {
   getEvents,
+  getEventsFromString,
 }

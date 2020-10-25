@@ -10,10 +10,11 @@ interface Props {
   open: boolean
   onSubmit: (events: IEvent[]) => void
   onClose: () => void
+  onJsos: () => void
 }
 
 const UploadICalendarFileModal = (props: Props): JSX.Element => {
-  const { open, onSubmit, onClose } = props
+  const { open, onSubmit, onClose, onJsos } = props
   const [, setError] = useState<string>('')
   const [isLoading, setIsLoading] = useState(false)
   const dispatch = useDispatch()
@@ -45,21 +46,27 @@ const UploadICalendarFileModal = (props: Props): JSX.Element => {
       .catch(() => setError('Wystąpił błąd z wgraniem pliku iCalendar'))
   }
 
+  const handleJsosSignInAndCalendarDownload = () => {
+    onJsos()
+  }
+
   return (
     <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">Wgrywanie pliku iCalendar</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Wgraj plik iCalendar z JSOSa w celu uzupełnienia lokalnego kalendarza w aplikacji. Dane nie są przesyłane do
-          twórców aplikacji.
+          Do poprawnego działania nasza aplikacja potrzebuje kalandarza z Twoimi kursami z portalu JSOS.
+          Żadne dane nie są przesyłane na zewnętrze serwery, wszystko dzieje się na Twoim komputerze.
         </DialogContentText>
         <DialogContentText>
-          Nie możesz przejść dalej bez wgrania pliku. Aplikacja bez niego nie działa i nie będzie oferowała
-          funkcjonalności.
+          Plik iCalendar zostanie automatycznie pobrany jeśli wybierzesz opcje "Zaloguj się i pobierz z JSOS" lub możesz pobrać i wgrać go ręcznie.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         {/* TODO: handle press enter and esc buttons */}
+        <Button onClick={handleJsosSignInAndCalendarDownload} color="primary" variant="contained" type="submit" disabled={isLoading}>
+          Zaloguj się i pobierz z JSOS
+        </Button>
         <Button onClick={handleUpload} color="primary" variant="contained" type="submit" disabled={isLoading}>
           {isLoading ? 'Loading...' : 'Wgraj'}
         </Button>
