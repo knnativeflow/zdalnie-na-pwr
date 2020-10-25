@@ -24,7 +24,7 @@ type Props = {
 }
 
 const Root = ({ store, persistor, history }: Props) => (
-  // TODO: fix type error
+  // @ts-ignore - TODO:  fix type error
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <ThemeProvider theme={theme}>

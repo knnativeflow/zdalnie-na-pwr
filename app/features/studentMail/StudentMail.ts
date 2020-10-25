@@ -76,7 +76,7 @@ class StudentMail {
     return {
       url: event.description.split('\n')[0],
       courseName: event.summary,
-      date: moment(event.start).format('YYYY-MM-DDTkk:mm:ss'),
+      date: moment(event.start).format('YYYY-MM-DDTHH:mm:ss'),
     }
   }
 
@@ -171,7 +171,7 @@ class StudentMail {
     }
 
     // TODO: fix after added decoder
-    // @ts-ignore
+    // @ts-ignore - remove after create decoder
     const authorEmail = parsedResponse[8][0][5][10][1].match(/([\w.-_]+@pwr\.edu\.pl)/g)[0]
     // @ts-ignore
     const content = parsedResponse[8][1][6]

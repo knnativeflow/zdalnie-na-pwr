@@ -1,7 +1,7 @@
 import { ADD_COURSES, ADD_EVENTS, CLEAR_COURSES, ADD_EVENT_ZOOM_LINKS } from 'constants/actionTypes'
 import { ActionCourses } from 'actions/courses'
 import { ActionEvents } from 'actions/events'
-import { mapEventsToCourses } from 'helpers/courses'
+import { mapEventsToCourses } from 'utils/courses'
 
 const INIT_STATE: ICourse[] = []
 
