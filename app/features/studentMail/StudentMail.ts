@@ -76,7 +76,7 @@ class StudentMail {
     return {
       url: event.description.split('\n')[0],
       courseName: event.summary,
-      date: moment(event.start).format('YYYY-MM-DDTkk:mm:ss'),
+      date: moment(event.start).format('YYYY-MM-DDTHH:mm:ss'),
     }
   }
 

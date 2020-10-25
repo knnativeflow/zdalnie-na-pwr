@@ -1,7 +1,7 @@
 import moment from 'moment'
 
-const DEFAULT_FORMAT_DATE = 'YYYY-MM-DDTkk:mm:ss'
-const DEFAULT_FORMAT_RECURRING_DATE = 'dddd, kk:mm'
+const DEFAULT_FORMAT_DATE = 'YYYY-MM-DDTHH:mm:ss'
+const DEFAULT_FORMAT_RECURRING_DATE = 'dddd, HH:mm'
 
 export const parseDateToString = (date: moment.MomentInput) => moment(date).format(DEFAULT_FORMAT_DATE)
 
