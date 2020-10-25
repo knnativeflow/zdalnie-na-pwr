@@ -52,7 +52,7 @@ const EventModal = (props: Props) => {
 
   return (
     <Dialog open={isOpen} onClose={onClose}>
-      <DialogTitle id="form-dialog-title">{name}</DialogTitle>
+      <DialogTitle>{name}</DialogTitle>
       <DialogContent>
         <Box mb={2}>
           <Grid container spacing={2}>
