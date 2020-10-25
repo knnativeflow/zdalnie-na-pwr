@@ -6,17 +6,8 @@ import StudentMailModal from 'components/StudentMailModal'
 import Calendar from 'components/Calendar'
 import { RootState } from 'store'
 
+import { eventColor } from 'utils/courseTypes'
 import styles from './CalendarPage.scss'
-
-const EVENTS_COLORS = {
-  W: '#00a65a',
-  C: '#f39c12',
-  L: '#3c8dbc',
-  S: '#45b6b0',
-  P: '#00c0ef',
-}
-
-const DEFAULT_EVENT_COLOR = '#aaa'
 
 const CalendarPage = (): JSX.Element => {
   const [isOpenStudentMailModal, setIsOpenStudentMailModal] = useState(false)
@@ -31,7 +22,7 @@ const CalendarPage = (): JSX.Element => {
             start: event.start,
             end: event.end,
             title: `${event.type} ${event.name}`,
-            color: EVENTS_COLORS[event.type] ?? DEFAULT_EVENT_COLOR,
+            color: eventColor(event.type),
             resource: event,
           },
         ]
