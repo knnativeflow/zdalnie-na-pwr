@@ -33,6 +33,9 @@ const JsosExtracting = (props: Props) => {
       const calendar = await jsosExtractor.downloadCalendar()
       const events = iCalendar.getEventsFromString(calendar)
       dispatch(addEvents(events))
+
+      const courses = await jsosExtractor.fetchCourseList()
+      console.log(courses)
       onSuccess()
     } catch (err) {
       setError(err.message)
