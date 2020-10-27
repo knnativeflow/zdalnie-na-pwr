@@ -34,6 +34,7 @@ const Calendar = (props: Props) => {
         locale={locale}
         eventClick={handleClickEvent}
         weekends
+        nowIndicator
         slotLabelFormat={{
           hour: 'numeric',
           minute: '2-digit',

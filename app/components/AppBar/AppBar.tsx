@@ -19,12 +19,6 @@ const AppBar = () => {
         <Button color="inherit" disabled>
           Lista kursów
         </Button>
-        <Button color="inherit" disabled>
-          Poczta
-        </Button>
-        <Button color="inherit" disabled>
-          Wiadomości JSOS
-        </Button>
       </div>
     </AppBarMaterialUI>
   )
