@@ -1,28 +1,31 @@
 import React from 'react'
-import { Redirect, Switch, Route } from 'react-router-dom'
+import { Switch, Route, Redirect } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import routes from 'constants/routes.json'
 import { RootState } from 'store'
-import { CalendarPage, CourseListPage, HomePage, InitPage } from 'pages'
+import { CalendarPage, CourseListPage, HomePage, ConfigurationPage, WelcomePage } from 'pages'
 import App from './App'
 
 const Routes = () => {
-  const events = useSelector((state: RootState) => state.events)
+  const configured = useSelector((state: RootState) => state.user.configured)
 
   return (
     <App>
       <Switch>
-        <Route path={routes.INIT} component={InitPage} />
-        {events.length ? (
-          <Switch>
-            <Route path={routes.CALENDAR} component={CalendarPage} />
-            <Route path={routes.COURSE_LIST} component={CourseListPage} />
-            <Route path={routes.HOME} component={HomePage} />
-          </Switch>
-        ) : (
-          <Redirect to={routes.INIT} />
-        )}
+        <Switch>
+          <Route path={routes.FIRST_CONFIGURATION} component={ConfigurationPage} exact />
+          <Route path={routes.WELCOME_PAGE} component={WelcomePage} exact />
+          {configured ? (
+            <>
+              <Route path={routes.CALENDAR} component={CalendarPage} exact />
+              <Route path={routes.COURSE_LIST} component={CourseListPage} exact />
+              <Route path={routes.HOME} component={HomePage} exact />
+            </>
+          ) : (
+            <Redirect to={routes.WELCOME_PAGE} />
+          )}
+        </Switch>
       </Switch>
     </App>
   )
