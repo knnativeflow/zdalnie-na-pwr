@@ -2,5 +2,7 @@
   "INIT": "/init",
   "HOME": "/home",
   "CALENDAR": "/calendar",
-  "COURSE_LIST": "/course-list"
+  "COURSE_LIST": "/course-list",
+  "WELCOME_PAGE": "/welcome",
+  "FIRST_CONFIGURATION": "/first-configuration"
 }
