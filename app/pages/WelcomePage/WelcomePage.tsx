@@ -8,7 +8,7 @@ import styles from './WelcomePage.scss'
 const WelcomePage = () => {
   return (
     <div className={styles.root}>
-      <h1>Zdalnie na PWr</h1>
+      <h1>Zdalnie na PWr 0.0.5</h1>
       <Typography variant="body1" className={styles.text}>
         Witaj w aplikacji, która mamy nadzieje pomoże ci podczas nauki zdalniej na polibudzie. Nie dajmy się uczelni i
         razem ogarnijmy wszechobecny chaos przez tą elitarną uczelnię...
