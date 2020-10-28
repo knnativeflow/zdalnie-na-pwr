@@ -30,6 +30,7 @@ const persistConfig = {
   // storage: createElectronStorage({
   //   electronStore,
   // }),
+  version: process.env.npm_package_versionNumber ? Number(process.env.npm_package_versionNumber) : 1,
   storage,
   blacklist: ['router'],
   // migrate: // TODO: turn on when update app

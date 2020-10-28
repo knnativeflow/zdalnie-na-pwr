@@ -12,17 +12,20 @@ import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 import './initSentry'
 import path from 'path'
-import { app, BrowserWindow } from 'electron'
-import { autoUpdater } from 'electron-updater'
+import { app, BrowserWindow, autoUpdater } from 'electron'
 import log from 'electron-log'
+
+import os from 'os'
 
 import MenuBuilder from './menu'
 
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info'
-    autoUpdater.logger = log
-    autoUpdater.checkForUpdatesAndNotify()
+    const platform = `${os.platform()}_${os.arch()}`
+    const version = app.getVersion()
+
+    autoUpdater.setFeedURL({ url: `http://zdalnie-na-pwr-update-app.herokuapp.com/update/${platform}/${version}` })
   }
 }
 
