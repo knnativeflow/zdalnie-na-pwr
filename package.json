@@ -54,6 +54,7 @@
   "build": {
     "productName": "Zdalnie na PWr",
     "appId": "pl.napwr.zdalnie",
+    "artifactName": "${name}-${version}-${os}.${ext}",
     "files": [
       "dist/",
       "node_modules/",
@@ -106,12 +107,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/electron-react-boilerplate/electron-react-boilerplate.git"
+    "url": "git+https://github.com/knnativeflow/zdalnie-na-pwr.git"
   },
   "author": {
     "name": "KN Native Flow - Wachu",
     "email": "knnativeflow@napwr.pl",
-    "url": "knnativeflow.napwr.pl"
+    "url": "https://knnativeflow.napwr.pl"
   },
   "license": "MIT",
   "jest": {
