@@ -22,7 +22,7 @@ async function request<T>(config:IRequestOptions): Promise<Response<T>> {
     .catch(err => {
       console.log(`Error response from ${config.method} [${config.url}]`)
       console.error(err)
-      return err
+      throw err
     })
 }
 

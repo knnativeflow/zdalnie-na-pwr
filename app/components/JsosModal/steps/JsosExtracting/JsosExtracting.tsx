@@ -11,7 +11,8 @@ import {jsosExtractor} from 'features/jsos'
 import styles from './JsosExtracting.scss'
 import {useDispatch} from 'react-redux'
 
-import {addEvents, } from 'actions/events'
+import {addEvents } from 'actions/events'
+import {addCourses } from 'actions/courses'
 import iCalendar from 'features/iCalendar/ICalendar'
 
 
@@ -30,12 +31,13 @@ const JsosExtracting = (props: Props) => {
   const fetchJsosData = async () => {
     try {
       setIsFetching(true)
+      const courses = await jsosExtractor.fetchCourseList()
+      dispatch(addCourses(courses))
+
+
       const calendar = await jsosExtractor.downloadCalendar()
       const events = iCalendar.getEventsFromString(calendar)
       dispatch(addEvents(events))
-
-      const courses = await jsosExtractor.fetchCourseList()
-      console.log(courses)
       onSuccess()
     } catch (err) {
       setError(err.message)

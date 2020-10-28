@@ -1,6 +1,7 @@
 import superagent from 'superagent'
 import moment from 'moment'
 import ical from 'node-ical'
+import { IEventZoomLink } from 'domain/event'
 
 const STUDENT_MAIL_URL = 'https://s.student.pwr.edu.pl'
 

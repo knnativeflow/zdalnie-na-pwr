@@ -5,6 +5,7 @@ import studentMail from 'features/studentMail'
 import { addZoomLinks } from 'actions/events'
 
 import styles from './FetchLink.scss'
+import { IEventZoomLink } from 'domain/event'
 
 interface Props {
   open: boolean

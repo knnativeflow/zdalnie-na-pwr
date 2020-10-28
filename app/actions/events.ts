@@ -1,4 +1,5 @@
 import { ADD_EVENT_ZOOM_LINKS, ADD_EVENTS, CLEAR_EVENTS } from 'constants/actionTypes'
+import { IEventZoomLink, IEvent } from 'domain/event'
 
 interface IActionAddEvents {
   type: typeof ADD_EVENTS
