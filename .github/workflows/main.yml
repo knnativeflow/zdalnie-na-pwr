@@ -1,18 +1,18 @@
-name: "tagged-release-app"
+name: 'tagged-release-app'
 
 on:
   push:
-    tags: 
-    - 'v*'
+    tags:
+      - 'v*'
 
 jobs:
   release:
-    name: "Pre Release"
+    name: 'Pre Release'
     runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
-        os: [ubuntu-latest] #[macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
       - name: Check out Git repository
@@ -28,6 +28,6 @@ jobs:
         with:
           github_token: ${{ secrets.github_token }}
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
-        env:  
+        env:
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           UNIVERSAL_ANALYTICS_ID: ${{ secrets.UNIVERSAL_ANALYTICS_ID }}
