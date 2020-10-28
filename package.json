@@ -1,5 +1,5 @@
 {
-  "name": "electron-react-boilerplate",
+  "name": "zdalnie-na-pwr",
   "productName": "Zdalnie na PWr",
   "version": "0.0.4",
   "description": "Aplikacja wspierająca e-learning na Politechnice Wrocławskiej",
@@ -99,9 +99,9 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "electron-react-boilerplate",
-      "repo": "electron-react-boilerplate",
-      "private": false
+      "owner": "knnativeflow",
+      "repo": "zdalnie-na-pwr",
+      "private": true
     }
   },
   "repository": {
