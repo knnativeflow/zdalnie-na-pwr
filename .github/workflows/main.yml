@@ -30,4 +30,4 @@ jobs:
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
         env:  
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          UNIVERSAL_ANALYTICS_ID: ${{ setcrets.UNIVERSAL_ANALYTICS_ID }}
+          UNIVERSAL_ANALYTICS_ID: ${{ secrets.UNIVERSAL_ANALYTICS_ID }}
