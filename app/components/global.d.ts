@@ -1,4 +1,12 @@
-type CourseType = 'W' | 'C' | 'S' | 'L' | 'P'
+// type CourseType = 'W' | 'C' | 'S' | 'L' | 'P'
+
+declare enum CourseType {
+  W='W',
+  C='C',
+  S='S',
+  L='L',
+  P='{'
+}
 
 interface IPlatforms {
   zoom?: {

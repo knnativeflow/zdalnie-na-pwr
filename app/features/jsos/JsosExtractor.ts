@@ -1,27 +1,58 @@
 import jsosAuth, { HttpMethod } from './JsosAuth'
 
+export class ExtractedCourse {
+  constructor(
+    readonly courseCode: string,
+    readonly title: string,
+    readonly tutor: string,
+    readonly classesCode: string,
+    readonly hoursInSemester: string,
+    readonly ECTSes: string,
+    readonly startDate: string,
+    readonly endDate: string,
+    readonly isTP: boolean,
+    readonly isTN: boolean
+  ) {
+  }
+}
+
 class JsosExtractor {
 
   public async fetchCourseList(): Promise<ExtractedCourse[]> {
     await this.switchToActiveStudentIfNecessary()
     const { selector } = await jsosAuth.requestWithAuthorization({
       method: HttpMethod.GET,
-      url: 'https://jsos.pwr.edu.pl/index.php/student/zajecia',
+      url: 'https://jsos.pwr.edu.pl/index.php/student/zajecia'
     })
 
     if (selector) {
       return selector('.dane-content tbody tr').map((_, element) => {
         const courseCodeAndTitle = selector(element).find('td').eq(0)
         const [courseCode] = courseCodeAndTitle.html().split('<br>')
-        const [, title] = courseCodeAndTitle.text().split(courseCode)
+        const [,title] = courseCodeAndTitle.text().split(courseCode)
         const tutor = selector(element).find('td').eq(1).text()
         const classesCode = selector(element).find('td').eq(2).text()
+        const [day] = selector(element).find('td').eq(3).text().split(',')
+        const [, hours] = selector(element).find('td').eq(3).html().replace(/<sup>/g, ':').replace(/<\/sup>/g, '').split(',')
+        const [isTP, isTN] = [hours.includes('TP'), hours.includes('TN')]
+        const [startHour, endHour] = hours.replace(/TP|TN/, '').trim().split('-')
         const hoursInSemester = selector(element).find('td').eq(4).text()
         const ECTSes = selector(element).find('td').eq(5).text()
-        return new ExtractedCourse(courseCode, title, tutor, classesCode, hoursInSemester, ECTSes)
+        return new ExtractedCourse(
+          courseCode,
+          title,
+          tutor,
+          classesCode,
+          hoursInSemester,
+          ECTSes,
+          `${day} ${startHour}`,
+          `${day} ${endHour}`,
+          isTP,
+          isTN
+          )
       }).get()
     } else {
-      throw new Error("Bład poczas parsowania strony z zajęciami.")
+      throw new Error('Bład poczas parsowania strony z zajęciami.')
     }
   }
 
@@ -63,18 +94,6 @@ class JsosExtractor {
       })
     }
 
-  }
-}
-
-export class ExtractedCourse {
-  constructor(
-    readonly courseCode: string,
-    readonly title: string,
-    readonly tutor: string,
-    readonly classesCode: string,
-    readonly hoursInSemester: string,
-    readonly ECTSes: string
-  ) {
   }
 }
 
