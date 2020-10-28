@@ -4,6 +4,7 @@
 
 import path from 'path'
 import webpack from 'webpack'
+import DotEnvWebpack from 'dotenv-webpack'
 import { dependencies as externals } from '../app/package.json'
 
 export default {
@@ -42,6 +43,7 @@ export default {
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production',
     }),
+    new DotEnvWebpack(),
 
     new webpack.NamedModulesPlugin(),
   ],

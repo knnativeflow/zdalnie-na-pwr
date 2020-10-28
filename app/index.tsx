@@ -11,8 +11,6 @@ const { store, persistor } = configuredStore()
 
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer
 
-dotenv.config()
-
 document.addEventListener('DOMContentLoaded', () => {
   // eslint-disable-next-line global-require
   const Root = require('./base/Root').default
