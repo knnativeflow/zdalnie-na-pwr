@@ -25,46 +25,43 @@ class JsosExtractor {
       method: HttpMethod.GET,
       url: 'https://jsos.pwr.edu.pl/index.php/student/zajecia'
     })
-    try {
-      if (selector) {
-        return selector('.dane-content tbody tr').map((_, element) => {
-          const courseCodeAndTitle = selector(element).find('td').eq(0)
-          const [courseCode] = courseCodeAndTitle.html().split('<br>')
-          const [,name] = courseCodeAndTitle.text().split(courseCode)
-          const lecturer = selector(element).find('td').eq(1).text()
-          const classesCode = selector(element).find('td').eq(2).text()
-          const {start, end, isTP, isTN} = this.extractDate(selector, element)
-          const hoursInSemester = selector(element).find('td').eq(4).text()
-          const ECTSes = selector(element).find('td').eq(5).text()
-          return {
-            name,
-            type: courseCode.slice(-1),
-            start,
-            end,
-            lecturer,
-            courseCode,
-            classesCode,
-            inWeeks: isTN ? WeekType.TN : isTP ? WeekType.TP : WeekType.ALL,
-            hoursInSemester,
-            ECTSes,
-            platforms: {},
-            additional: {}
-          }
-        }).get()
-      } else {
-        throw new Error('Bład poczas parsowania strony z zajęciami.')
-      }
-    } catch (e) {
-      console.error(e)
-      throw e
+    if (selector) {
+      return selector('.dane-content tbody tr').map((_, element) => {
+        const courseCodeAndTitle = selector(element).find('td').eq(0)
+        // @ts-ignore
+        const [courseCode] = courseCodeAndTitle.html().split('<br>')
+        const [, name] = courseCodeAndTitle.text().split(courseCode)
+        const lecturer = selector(element).find('td').eq(1).text()
+        const classesCode = selector(element).find('td').eq(2).text()
+        const { start, end, isTP, isTN } = this.extractDate(selector, element)
+        const hoursInSemester = selector(element).find('td').eq(4).text()
+        const ECTSes = selector(element).find('td').eq(5).text()
+        return {
+          name,
+          type: courseCode.slice(-1),
+          start,
+          end,
+          lecturer,
+          courseCode,
+          classesCode,
+          inWeeks: isTN ? WeekType.TN : isTP ? WeekType.TP : WeekType.ALL,
+          hoursInSemester,
+          ECTSes,
+          platforms: {},
+          additional: {}
+        }
+      }).get()
+    } else {
+      throw new Error('Bład poczas parsowania strony z zajęciami.')
     }
   }
 
-  private extractDate(selector: CheerioSelector, element:CheerioElement): { isTN: boolean; isTP: boolean; start: string; end: string } {
-    if(selector(element).find('td').eq(3).text().includes('Bez terminu')) {
-      return {start: 'Bez terminu', end: 'Bez terminu', isTP: false, isTN: false}
+  private extractDate(selector: CheerioSelector, element: CheerioElement): { isTN: boolean; isTP: boolean; start: string; end: string } {
+    if (selector(element).find('td').eq(3).text().includes('Bez terminu')) {
+      return { start: 'Bez terminu', end: 'Bez terminu', isTP: false, isTN: false }
     } else {
       const [day] = selector(element).find('td').eq(3).text().split(',')
+      // @ts-ignore
       const [, hours] = selector(element).find('td').eq(3).html().replace(/<sup>/g, ':').replace(/<\/sup>/g, '').split(',')
       const [isTP, isTN] = [hours.includes('TP'), hours.includes('TN')]
       const [startHour, endHour] = hours.replace(/TP|TN/, '').trim().split('-')

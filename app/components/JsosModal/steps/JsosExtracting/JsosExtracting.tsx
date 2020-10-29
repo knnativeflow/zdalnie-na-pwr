@@ -40,6 +40,7 @@ const JsosExtracting = (props: Props) => {
       dispatch(addEvents(events))
       onSuccess()
     } catch (err) {
+      console.error(err)
       setError(err.message)
     } finally {
       setIsFetching(false)

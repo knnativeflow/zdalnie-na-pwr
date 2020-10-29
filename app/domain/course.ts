@@ -1,3 +1,5 @@
+import { IEvent } from './event'
+
 export enum CourseType {
   W='W',
   C='C',
@@ -18,19 +20,6 @@ export interface IPlatforms {
   ePortal?: {
     name: string
     url: string
-  }
-}
-
-export interface IEvent {
-  type: CourseType
-  name: string
-  start: string
-  end: string
-  code: string | null
-  lecturer: string | null
-  platform: IPlatforms
-  additional: {
-    [key: string]: string
   }
 }
 
