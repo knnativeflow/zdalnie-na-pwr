@@ -1,7 +1,9 @@
 import superagent from 'superagent'
 import moment from 'moment'
+import cheerio from 'cheerio'
 import ical from 'node-ical'
 import { IEventZoomLink } from 'domain/event'
+import { ICourseTeamsLink } from 'domain/course'
 
 const STUDENT_MAIL_URL = 'https://s.student.pwr.edu.pl'
 
@@ -108,7 +110,7 @@ class StudentMail {
   }
 
   public async getZoomLinks(): Promise<IEventZoomLink[]> {
-    const baseMailList = await this.getMailListWithZoomLink()
+    const baseMailList = await this.getMailList(10, { subject: 'Planowany termin zdalnych zajęć' })
 
     return baseMailList.reduce<Promise<IEventZoomLink[]>>(async (promiseAgg, mail) => {
       const agg = await promiseAgg
@@ -119,22 +121,64 @@ class StudentMail {
     }, Promise.resolve([]))
   }
 
-  private async getMailListWithZoomLink(): Promise<IBaseMail[]> {
+  public async getTeamsLinks(): Promise<ICourseTeamsLink[]> {
+    const baseMailList = await this.getMailList(20, {
+      subject: 'You have been added to a class team in Microsoft Teams',
+      from: 'noreply@email.teams.microsoft.com',
+      since: '29-Sep-2020',
+    })
+
+    return baseMailList.reduce<Promise<ICourseTeamsLink[]>>(async (promiseAgg, mail) => {
+      const agg = await promiseAgg
+      const fullMail = await this.getMail(mail)
+
+      if (!fullMail) {
+        return agg
+      }
+
+      const selector = cheerio.load(fullMail.content)
+
+      const url = selector('a').attr('href') ?? ''
+      const name = selector('h3').eq(1).text() ?? ''
+      const code = name.match(/[A-Z]+[0-9]{2}-[0-9]{2}[a-z]+/g)?.[0] ?? ''
+
+      await promiseTimeout(200)
+      return [...agg, { name, code, url }]
+    }, Promise.resolve([]))
+  }
+
+  private async getMailList(
+    count: number,
+    query: { subject?: string; since?: string; from?: string }
+  ): Promise<IBaseMail[]> {
+    let queryString = 'UNDELETED'
+
+    if (query.subject) {
+      queryString += ` SUBJECT "${query.subject}"`
+    }
+
+    if (query.from) {
+      queryString += ` FROM "${query.from}"`
+    }
+
+    if (query.since) {
+      queryString += ` SINCE "${query.since}"`
+    }
+
     const response = await superagent.get(`${STUDENT_MAIL_URL}/iwc/svc/wmap/mbox.mjs`).query({
       rev: 3,
       sid: '',
       mbox: 'INBOX',
-      count: 10,
+      count: count || 15,
       date: true,
       lang: 'pl',
       sortby: 'recv',
       sortorder: 'R',
       start: 0,
-      srch: 'UNDELETED SUBJECT "Planowany termin zdalnych zajęć"',
+      srch: queryString,
       token: this.token,
     })
 
-    // TODO: add decoder
     const parsedResponse: Array<unknown> = await StudentMail.parseResponse(response.text)
     const mailList = parsedResponse[6]
 
@@ -172,8 +216,6 @@ class StudentMail {
     }
 
     // TODO: fix after added decoder
-    // @ts-ignore - remove after create decoder
-    const authorEmail = parsedResponse[8][0][5][10][1].match(/([\w.-_]+@pwr\.edu\.pl)/g)[0]
     // @ts-ignore
     const content = parsedResponse[8][1][6]
 
@@ -181,7 +223,7 @@ class StudentMail {
       id: mail.id,
       topic: mail.topic,
       authorName: mail.author,
-      authorEmail,
+      authorEmail: '',
       content,
     }
   }

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@material-ui/core'
 import studentMail from 'features/studentMail'
 import { addZoomLinks } from 'actions/events'
+import { IEventZoomLink } from 'domain/event'
 
 import styles from './FetchLink.scss'
-import { IEventZoomLink } from 'domain/event'
 
 interface Props {
   open: boolean
@@ -21,26 +21,27 @@ const FetchLink = (props: Props) => {
   const [links, setLinks] = useState<IEventZoomLink[]>([])
   const dispatch = useDispatch()
 
-  const getZoomLinks = async () => {
+  const getZoomLinks = useCallback(async () => {
     try {
-      const links = await studentMail.getZoomLinks()
+      const zoomLinks = await studentMail.getZoomLinks()
 
-      dispatch(addZoomLinks(links))
-      setLinks(links)
+      dispatch(addZoomLinks(zoomLinks))
+
+      setLinks(zoomLinks)
     } catch (err) {
       setError(err.message)
     } finally {
       setIsFetching(false)
     }
-  }
+  }, [dispatch])
 
   const handleAccept = () => {
     onSuccess()
   }
 
   useEffect(() => {
-    getZoomLinks()
-  }, [])
+    void getZoomLinks()
+  }, [getZoomLinks])
 
   return (
     <Dialog open={open} onClose={onClose} classes={{ paper: styles.root }}>

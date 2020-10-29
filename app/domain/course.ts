@@ -49,3 +49,9 @@ export interface ICourse {
 export interface ICourseWithEvents extends ICourse {
   events: IEvent[]
 }
+
+export interface ICourseTeamsLink {
+  name: string
+  code: string
+  url: string
+}

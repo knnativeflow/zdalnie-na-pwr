@@ -1,4 +1,4 @@
-import { ADD_COURSES, CLEAR_COURSES, ADD_EVENT_ZOOM_LINKS } from 'constants/actionTypes'
+import { ADD_COURSES, CLEAR_COURSES, ADD_EVENT_ZOOM_LINKS, ADD_COURSE_TEAMS_LINKS } from 'constants/actionTypes'
 import { ActionCourses } from 'actions/courses'
 import { ActionEvents } from 'actions/events'
 import { ICourse } from 'domain/course'
@@ -16,6 +16,17 @@ const reducerCourseList = (state = INIT_STATE, action: Action) => {
         const foundLink = action.payload.find((zoomLink) => zoomLink.courseName.startsWith(course.name))
 
         return foundLink ? { ...course, platforms: { ...course.platforms, zoom: { weekly: false } } } : course
+      })
+    case ADD_COURSE_TEAMS_LINKS:
+      return state.map((course) => {
+        const foundLink = action.payload.find((teamsLink) => teamsLink.code === course.classesCode)
+
+        return foundLink
+          ? {
+              ...course,
+              platforms: { ...course.platforms, teams: { weekly: true, url: foundLink.url, name: foundLink.name } },
+            }
+          : course
       })
     case CLEAR_COURSES:
       return []

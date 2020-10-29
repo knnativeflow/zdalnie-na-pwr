@@ -7,6 +7,7 @@ import studentMail from 'features/studentMail'
 import { jsosAuth, jsosExtractor } from 'features/jsos'
 import iCalendar from 'features/iCalendar'
 import { addEvents, addZoomLinks } from 'actions/events'
+import { addCourses, addTeamsLinks } from 'actions/courses'
 import { updateUser } from 'actions/user'
 import routes from 'constants/routes.json'
 import LoginForm from 'components/LoginForm'
@@ -108,8 +109,30 @@ const ConfigurationPage = () => {
 
     setJsosDataLogin({ login, password })
     const iCalendarString = await jsosExtractor.downloadCalendar()
+    const courses = await jsosExtractor.fetchCourseList()
     const events = iCalendar.getEventsFromString(iCalendarString)
+
+    // TODO: remove after done task
+    const temp = [
+      ...courses,
+      {
+        name: 'Matematyka dyskretna',
+        type: 'C',
+        start: 'Poniedziałek 9:15',
+        end: 'Poniedziałek 11:00',
+        lecturer: 'Prof. dr hab. inż. Jerzy Józefczyk',
+        courseCode: 'INZ001819W',
+        classesCode: 'Z02-13b',
+        inWeeks: '',
+        hoursInSemester: '30',
+        ECTSes: '3',
+        platforms: {},
+        additional: {},
+      },
+    ]
+
     dispatch(addEvents(events))
+    dispatch(addCourses(temp))
 
     goToNextStep()
   }
@@ -119,7 +142,10 @@ const ConfigurationPage = () => {
     setMailDataLogin({ login, password })
 
     const zoomLinks = await studentMail.getZoomLinks()
+    const teamsLinks = await studentMail.getTeamsLinks()
+
     dispatch(addZoomLinks(zoomLinks))
+    dispatch(addTeamsLinks(teamsLinks))
     dispatch(updateUser({ indeks: login }))
 
     goToNextStep()
