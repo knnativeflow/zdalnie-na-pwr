@@ -2,25 +2,12 @@ import superagent from 'superagent'
 import moment from 'moment'
 import cheerio from 'cheerio'
 import ical from 'node-ical'
+import { isRight } from 'fp-ts/Either'
 import { IEventZoomLink } from 'domain/event'
 import { ICourseTeamsLink } from 'domain/course'
+import { loginResponseDecoder } from './decoders'
 
 const STUDENT_MAIL_URL = 'https://s.student.pwr.edu.pl'
-
-interface ILoginResponse {
-  iwcp: {
-    'error-code': string
-    message?: string | undefined
-    loginResponse?: {
-      message: string
-      sessionIdKey: string
-      appToken: string
-      userLang: string
-      cacheBustId: string
-      nextURI: string
-    }
-  }
-}
 
 interface IBaseMail {
   id: number
@@ -92,21 +79,25 @@ class StudentMail {
         password,
         'fmt-out': 'text/json',
       })
-    const json: ILoginResponse = JSON.parse(response.text)
 
-    // TODO: add decoder
+    const json: unknown = JSON.parse(response.text)
+    const decoded = loginResponseDecoder.decode(json)
 
-    const errorCode = json.iwcp['error-code']
+    if (!isRight(decoded)) {
+      throw new Error('Błędna odpowiedź serwera poczty studenckiej')
+    }
+
+    const errorCode = decoded.right.iwcp['error-code']
+
+    if (errorCode === '1') {
+      throw new Error('Błędy login lub hasło')
+    }
 
     if (errorCode !== '0') {
-      if (errorCode === '1') {
-        throw new Error('Błędy login lub hasło')
-      }
-
       throw new Error('Nieznany błąd')
     }
 
-    this.token = json.iwcp.loginResponse?.appToken.split('=')[1] || ''
+    this.token = decoded.right.iwcp.loginResponse?.appToken.split('=')[1] || ''
   }
 
   public async getZoomLinks(): Promise<IEventZoomLink[]> {
@@ -182,7 +173,6 @@ class StudentMail {
     const parsedResponse: Array<unknown> = await StudentMail.parseResponse(response.text)
     const mailList = parsedResponse[6]
 
-    // TODO: remove after added decoder
     if (!Array.isArray(mailList)) {
       return Promise.reject(new Error('Unrecognized variable type.'))
     }
@@ -194,7 +184,6 @@ class StudentMail {
     }))
   }
 
-  // TODO: get attachments
   public async getMail(mail: IBaseMail): Promise<IFullMail | null> {
     const response = await superagent.get(`${STUDENT_MAIL_URL}/iwc/svc/wmap/msg.mjs`).query({
       uid: mail.id,
@@ -207,15 +196,12 @@ class StudentMail {
       security: false,
     })
 
-    // TODO: add decoder
     const parsedResponse: Array<unknown> = await StudentMail.parseResponse(response.text)
 
-    // TODO: handle case where length === 1
     if (Array.isArray(parsedResponse[8]) && parsedResponse[8].length !== 3) {
       return null
     }
 
-    // TODO: fix after added decoder
     // @ts-ignore
     const content = parsedResponse[8][1][6]
 
