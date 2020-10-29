@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react'
-import AppBar from 'components/AppBar'
 import BottomAppBar from 'components/BottomAppBar'
+import TitleBar from 'components/TitleBar'
 
 import styles from './App.scss'
 
@@ -12,9 +12,18 @@ export default function App(props: Props) {
   const { children } = props
   return (
     <div className={styles.root}>
-      <AppBar />
-      <div className={styles.content}>{children}</div>
-      <BottomAppBar />
+      <TitleBar />
+      <div>{children}</div>
     </div>
+  )
+}
+
+export function AppView(props: Props) {
+  const { children } = props
+  return (
+    <App>
+      <div>{children}</div>
+      <BottomAppBar />
+    </App>
   )
 }

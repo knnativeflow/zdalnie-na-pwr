@@ -17,8 +17,6 @@ import log from 'electron-log'
 
 import os from 'os'
 
-import MenuBuilder from './menu'
-
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info'
@@ -65,7 +63,10 @@ const createWindow = async () => {
     show: false,
     width: 1024,
     height: 728,
+    minHeight: 500,
+    minWidth: 900,
     icon: getAssetPath('icon.png'),
+    frame: false,
     webPreferences:
       (process.env.NODE_ENV === 'development' || process.env.E2E_BUILD === 'true') && process.env.ERB_SECURE !== 'true'
         ? {
@@ -75,6 +76,8 @@ const createWindow = async () => {
             preload: path.join(__dirname, 'dist/renderer.prod.js'),
           },
   })
+
+  mainWindow.setMenu(null)
 
   mainWindow.loadURL(`file://${__dirname}/app.html`)
 
@@ -95,9 +98,6 @@ const createWindow = async () => {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
-
-  const menuBuilder = new MenuBuilder(mainWindow)
-  menuBuilder.buildMenu()
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line

@@ -1,0 +1,36 @@
+.appBar {
+  flex-direction: row !important;
+  justify-content: space-between;
+  padding: 10px 20px;
+}
+.topBar {
+  width: 100%;
+  height: 1.5rem;
+  background: #0001;
+  display: flex;
+  align-items: center;
+  -webkit-app-region: drag;
+}
+.topBarButtons {
+  height: 100%;
+  margin-left: auto;
+  display: flex;
+}
+.topBarButton {
+  -webkit-app-region: no-drag;
+  height: 100%;
+  width: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  outline: none;
+  &:hover {
+    background: #0001;
+  }
+  &:active {
+    background: #0002;
+  }
+}
