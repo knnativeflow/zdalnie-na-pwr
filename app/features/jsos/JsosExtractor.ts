@@ -1,10 +1,81 @@
-import jsosAuth, {HttpMethod} from './JsosAuth'
+import jsosAuth, { HttpMethod } from './JsosAuth'
+import { ICourse, WeekType } from 'domain/course'
+
+export class ExtractedCourse {
+  constructor(
+    readonly courseCode: string,
+    readonly title: string,
+    readonly tutor: string,
+    readonly classesCode: string,
+    readonly hoursInSemester: string,
+    readonly ECTSes: string,
+    readonly startDate: string,
+    readonly endDate: string,
+    readonly isTP: boolean,
+    readonly isTN: boolean
+  ) {
+  }
+}
 
 class JsosExtractor {
 
+  public async fetchCourseList(): Promise<ICourse[]> {
+    await this.switchToActiveStudentIfNecessary()
+    const { selector } = await jsosAuth.requestWithAuthorization({
+      method: HttpMethod.GET,
+      url: 'https://jsos.pwr.edu.pl/index.php/student/zajecia'
+    })
+    if (selector) {
+      return selector('.dane-content tbody tr').map((_, element) => {
+        const courseCodeAndTitle = selector(element).find('td').eq(0)
+        // @ts-ignore
+        const [courseCode] = courseCodeAndTitle.html().split('<br>')
+        const [, name] = courseCodeAndTitle.text().split(courseCode)
+        const lecturer = selector(element).find('td').eq(1).text()
+        const classesCode = selector(element).find('td').eq(2).text()
+        const { start, end, isTP, isTN } = this.extractDate(selector, element)
+        const hoursInSemester = selector(element).find('td').eq(4).text()
+        const ECTSes = selector(element).find('td').eq(5).text()
+        return {
+          name,
+          type: courseCode.slice(-1),
+          start,
+          end,
+          lecturer,
+          courseCode,
+          classesCode,
+          inWeeks: isTN ? WeekType.TN : isTP ? WeekType.TP : WeekType.ALL,
+          hoursInSemester,
+          ECTSes,
+          platforms: {},
+          additional: {}
+        }
+      }).get()
+    } else {
+      throw new Error('Bład poczas parsowania strony z zajęciami.')
+    }
+  }
+
+  private extractDate(selector: CheerioSelector, element: CheerioElement): { isTN: boolean; isTP: boolean; start: string; end: string } {
+    if (selector(element).find('td').eq(3).text().includes('Bez terminu')) {
+      return { start: 'Bez terminu', end: 'Bez terminu', isTP: false, isTN: false }
+    } else {
+      const [day] = selector(element).find('td').eq(3).text().split(',')
+      // @ts-ignore
+      const [, hours] = selector(element).find('td').eq(3).html().replace(/<sup>/g, ':').replace(/<\/sup>/g, '').split(',')
+      const [isTP, isTN] = [hours.includes('TP'), hours.includes('TN')]
+      const [startHour, endHour] = hours.replace(/TP|TN/, '').trim().split('-')
+      return {
+        start: `${day} ${startHour}`,
+        end: `${day} ${endHour}`,
+        isTP,
+        isTN
+      }
+    }
+  }
 
   public async downloadCalendar(): Promise<string> {
-    await this.switchToActiveStudentIfNessecery()
+    await this.switchToActiveStudentIfNecessary()
 
     const response = await jsosAuth.requestWithAuthorization({
       method: HttpMethod.GET,
@@ -13,9 +84,9 @@ class JsosExtractor {
     return response.body
   }
 
-  private async switchToActiveStudentIfNessecery() {
+  private async switchToActiveStudentIfNecessary() {
 
-    const {selector} = await jsosAuth.requestWithAuthorization({
+    const { selector } = await jsosAuth.requestWithAuthorization({
       method: HttpMethod.GET,
       url: 'https://jsos.pwr.edu.pl/index.php/student/zajecia'
     })
@@ -25,7 +96,7 @@ class JsosExtractor {
       const selectedOption = selector('#wyborPK option').filter((_, element) => !!selector(element).attr('selected'))
       const isCurrentStudentActive = selector(selectedOption).text().includes('Aktywny')
       console.log(isCurrentStudentActive)
-      const activeStudents = selector('#wyborPK option').filter((_,element) => selector(element).text().includes('Aktywny')).map((_, el)=> selector(el).attr('value'))
+      const activeStudents = selector('#wyborPK option').filter((_, element) => selector(element).text().includes('Aktywny')).map((_, el) => selector(el).attr('value'))
       console.log(activeStudents[0], typeof activeStudents[0])
 
       const activeStudentId = activeStudents[0]

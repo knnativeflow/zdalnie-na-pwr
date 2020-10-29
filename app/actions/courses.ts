@@ -1,4 +1,5 @@
 import { ADD_COURSES, CLEAR_COURSES } from 'constants/actionTypes'
+import { ICourse } from 'domain/course'
 
 interface IActionAddCourses {
   type: typeof ADD_COURSES
