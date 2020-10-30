@@ -292,18 +292,6 @@
     "npm": ">=4.x",
     "yarn": ">=0.21.3"
   },
-  "collective": {
-    "url": "https://opencollective.com/electron-react-boilerplate-594"
-  },
-  "browserslist": [],
-  "renovate": {
-    "extends": [
-      "bliss"
-    ],
-    "baseBranches": [
-      "next"
-    ]
-  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
