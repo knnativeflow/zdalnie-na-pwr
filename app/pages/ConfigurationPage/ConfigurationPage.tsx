@@ -112,27 +112,8 @@ const ConfigurationPage = () => {
     const courses = await jsosExtractor.fetchCourseList()
     const events = iCalendar.getEventsFromString(iCalendarString)
 
-    // TODO: remove after done task
-    const temp = [
-      ...courses,
-      {
-        name: 'Matematyka dyskretna',
-        type: 'C',
-        start: 'Poniedziałek 9:15',
-        end: 'Poniedziałek 11:00',
-        lecturer: 'Prof. dr hab. inż. Jerzy Józefczyk',
-        courseCode: 'INZ001819W',
-        classesCode: 'Z02-13b',
-        inWeeks: '',
-        hoursInSemester: '30',
-        ECTSes: '3',
-        platforms: {},
-        additional: {},
-      },
-    ]
-
     dispatch(addEvents(events))
-    dispatch(addCourses(temp))
+    dispatch(addCourses(courses))
 
     goToNextStep()
   }
