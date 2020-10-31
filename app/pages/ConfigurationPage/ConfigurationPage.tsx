@@ -10,6 +10,7 @@ import { addCourses, addTeamsLinks } from 'actions/courses'
 import { updateUser } from 'actions/user'
 import LoginForm from 'components/LoginForm'
 import Button from 'components/Button'
+import { LoginFormProps } from 'components/LoginForm/LoginForm'
 import { APP_COLORS } from 'base/theme/theme'
 import { FaChevronLeft } from 'react-icons/all'
 import Text from 'components/Text'
@@ -30,9 +31,7 @@ const StyledSidebar = styled('div')({
   },
 })
 
-type LoginProps = {
-  handleSubmit: (login: string, password: string) => Promise<void>
-}
+type StepWithLoginProps = Omit<LoginFormProps, 'color'> & { prevStep: () => void }
 
 type GoBackProps = {
   count: number
@@ -86,14 +85,14 @@ const StartStep = ({ nextStep }: { nextStep: () => void }) => (
   </Box>
 )
 
-const JsosStep = ({ handleSubmit, prevStep }: LoginProps & { prevStep: () => void }) => (
+const JsosStep = ({ onSubmit, defaultValues, prevStep }: StepWithLoginProps) => (
   <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
     <StyledSidebar>
       <GoBackButton color={APP_COLORS.purple} count={1} onClick={prevStep} />
       <Space size={2} />
       <h3>Zaloguj się do JSOS</h3>
       <Space size={2} />
-      <LoginForm onSubmit={handleSubmit} color={APP_COLORS.purple} />
+      <LoginForm color={APP_COLORS.purple} {...{ onSubmit, defaultValues }} />
       <Space size={2} />
       <FooterInfo color={APP_COLORS.purple.light}>
         Aktualnie jedyną informacją pobieraną z JSOS jest siatka zajęć. Cały proces wykonywany jest wewnątrz aplikacji i
@@ -104,14 +103,14 @@ const JsosStep = ({ handleSubmit, prevStep }: LoginProps & { prevStep: () => voi
   </Box>
 )
 
-const MailStep = ({ handleSubmit, prevStep }: LoginProps & { prevStep: () => void }) => (
+const MailStep = ({ onSubmit, defaultValues, prevStep }: StepWithLoginProps) => (
   <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
     <StyledSidebar>
       <GoBackButton color={APP_COLORS.blue} count={2} onClick={prevStep} />
       <Space size={2} />
       <h3>Zaloguj się do poczty studenckiej</h3>
       <Space size={2} />
-      <LoginForm onSubmit={handleSubmit} color={APP_COLORS.blue} />
+      <LoginForm color={APP_COLORS.blue} {...{ onSubmit, defaultValues }} />
       <Space size={2} />
       <FooterInfo color={APP_COLORS.blue.light}>
         Logowanie do poczty wymagane jest do pobierania automatycznie linków do Zooma oraz linków do Teamsów. Po co
@@ -123,9 +122,9 @@ const MailStep = ({ handleSubmit, prevStep }: LoginProps & { prevStep: () => voi
   </Box>
 )
 
-const SavePasswordStep = (props: { prevStep: () => void; handleSavePassword: (hasAgreed: boolean) => void }) => {
+const SavePasswordStep = (props: { prevStep: () => void; onPasswordSave: (hasAgreed: boolean) => void }) => {
   const [hasAgreed, setHasAgreed] = useState(true)
-  const { handleSavePassword, prevStep } = props
+  const { onPasswordSave, prevStep } = props
   return (
     <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
       <StyledSidebar>
@@ -145,7 +144,7 @@ const SavePasswordStep = (props: { prevStep: () => void; handleSavePassword: (ha
           label="Nie pamiętaj"
         />
         <Space size={2} />
-        <Button onClick={() => handleSavePassword(hasAgreed)} glow color={APP_COLORS.teal.main} primary fullWidth>
+        <Button onClick={() => onPasswordSave(hasAgreed)} glow color={APP_COLORS.teal.main} primary fullWidth>
           Gotowe
         </Button>
         <Space size={2} />
@@ -158,7 +157,7 @@ const SavePasswordStep = (props: { prevStep: () => void; handleSavePassword: (ha
   )
 }
 
-const CongratulationsStep = ({ handleExitConfiguration }: { handleExitConfiguration: () => void }) => (
+const CongratulationsStep = ({ onConfigurationExit }: { onConfigurationExit: () => void }) => (
   <Box
     width="100vw"
     height="100vh"
@@ -177,7 +176,7 @@ const CongratulationsStep = ({ handleExitConfiguration }: { handleExitConfigurat
     </Text>
     <Text>Możesz już zacząć korzystać z aplikacji.</Text>
     <Space size={2} />
-    <Button color={APP_COLORS.pink.main} primary glow onClick={handleExitConfiguration}>
+    <Button color={APP_COLORS.pink.main} primary glow onClick={onConfigurationExit}>
       Przejdź do aplikacji
     </Button>
   </Box>
@@ -238,10 +237,10 @@ const ConfigurationPage = () => {
 
   return [
     <StartStep key={0} nextStep={goToNextStep} />,
-    <JsosStep key={1} handleSubmit={handleJsosLogin} prevStep={goToPrevStep} />,
-    <MailStep key={2} handleSubmit={handleMailLogin} prevStep={goToPrevStep} />,
-    <SavePasswordStep key={3} handleSavePassword={handleSavePassword} prevStep={goToPrevStep} />,
-    <CongratulationsStep key={4} handleExitConfiguration={handleExitConfiguration} />,
+    <JsosStep key={1} onSubmit={handleJsosLogin} defaultValues={jsosDataLogin} prevStep={goToPrevStep} />,
+    <MailStep key={2} onSubmit={handleMailLogin} defaultValues={mailDataLogin} prevStep={goToPrevStep} />,
+    <SavePasswordStep key={3} onPasswordSave={handleSavePassword} prevStep={goToPrevStep} />,
+    <CongratulationsStep key={4} onConfigurationExit={handleExitConfiguration} />,
   ][activeStepIndex]
 }
 

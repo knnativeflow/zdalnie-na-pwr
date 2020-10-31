@@ -4,8 +4,9 @@ import Input from 'components/Input'
 import Button from 'components/Button'
 import Space from 'components/Space'
 
-interface Props {
+export type LoginFormProps = {
   onSubmit: (login: string, password: string) => Promise<void>
+  defaultValues?: { login: string; password: string }
   color: {
     light: string
     main: string
@@ -13,7 +14,7 @@ interface Props {
   }
 }
 
-const LoginForm = ({ onSubmit, color }: Props) => {
+const LoginForm = ({ onSubmit, defaultValues, color }: LoginFormProps) => {
   const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -37,6 +38,7 @@ const LoginForm = ({ onSubmit, color }: Props) => {
         textColor={color.dark}
         autoFocus
         onChange={(event: ChangeEvent<HTMLInputElement>) => setLogin(event.target.value)}
+        defaultValue={defaultValues?.login}
       >
         Login
       </Input>
@@ -45,6 +47,7 @@ const LoginForm = ({ onSubmit, color }: Props) => {
         type="password"
         textColor={color.dark}
         onChange={(event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
+        defaultValue={defaultValues?.password}
       >
         Hasło
       </Input>
