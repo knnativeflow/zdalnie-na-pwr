@@ -3,35 +3,49 @@ import FullCalendar, { EventClickArg } from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import locale from '@fullcalendar/core/locales/pl'
 
-import EventModal from 'components/EventModal'
-import useModal from 'hooks/useModal'
 import { IEvent, IEventFullCalendar } from 'domain/event'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/all'
-import { IconType } from 'react-icons'
-import styles from './Calendar.scss'
+import styled from '@emotion/styled'
 
 interface Props {
   events: IEventFullCalendar[]
+  onEventClick: (arg: IEvent) => void
 }
 
-const CalendarButton = ({ icon: Icon }: { icon: IconType }) => (
-  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '1.5rem' }}>
-    <Icon />
-  </div>
-)
+// DO DOKOŃCZENIA
 
-const Calendar = (props: Props) => {
-  const { events } = props
-  const [isModalOpen, openModal, closeModal, modalParams] = useModal<IEvent>()
+const CalendarWrapper = styled.div`
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+
+  .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 10px;
+  }
+  .fc-toolbar-chunk {
+    display: flex;
+  }
+  .fc-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .fc-view-harness {
+    overflow-y: auto;
+  }
+`
+
+const Calendar = ({ events, onEventClick }: Props) => {
   const calendarRef = useRef<FullCalendar | null>(null)
 
   const handleClickEvent = (event: EventClickArg) => {
-    openModal(event.event.extendedProps.resource)
+    onEventClick(event.event.extendedProps.resource)
   }
 
   const customButtons = {
     prevButton: {
-      text: <CalendarButton icon={FaChevronLeft} />,
+      text: <FaChevronLeft />,
       click: () => {
         if (!calendarRef.current) return
         const cal = calendarRef.current.getApi()
@@ -40,7 +54,7 @@ const Calendar = (props: Props) => {
       },
     },
     nextButton: {
-      text: <CalendarButton icon={FaChevronRight} />,
+      text: <FaChevronRight />,
       click: () => {
         if (!calendarRef.current) return
         const cal = calendarRef.current.getApi()
@@ -52,11 +66,9 @@ const Calendar = (props: Props) => {
 
   // @ts-ignore
   return (
-    <div className={styles.root}>
+    <CalendarWrapper>
       <FullCalendar
-        ref={(ref) => {
-          calendarRef.current = ref
-        }}
+        ref={calendarRef}
         height="auto"
         timeZone="local"
         plugins={[timeGridPlugin]}
@@ -75,14 +87,16 @@ const Calendar = (props: Props) => {
           minute: '2-digit',
           omitZeroMinute: false,
         }}
+        viewHeight="500px"
         buttonIcons={false}
         customButtons={customButtons}
         headerToolbar={{
+          left: '',
+          center: '',
           right: 'today prevButton nextButton',
         }}
       />
-      <EventModal isOpen={isModalOpen} event={modalParams} onClose={closeModal} />
-    </div>
+    </CalendarWrapper>
   )
 }
 

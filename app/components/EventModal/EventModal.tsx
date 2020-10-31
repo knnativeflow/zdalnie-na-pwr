@@ -5,7 +5,7 @@ import moment from 'moment'
 import { shell } from 'electron'
 
 import { eventColor, eventFullText } from 'utils/courseTypes'
-import InfoWithIcon, { ButtonInfoWithIcon } from 'components/InfoWithIcon'
+import InfoWithIcon from 'components/InfoWithIcon'
 import { APP_COLORS } from 'base/theme/theme'
 
 // START TEST DATA
@@ -104,38 +104,38 @@ const EventModal = (props: Props) => {
             <Grid container spacing={1}>
               {platform?.zoom?.url && (
                 <Grid item xs={12} sm={6}>
-                  <ButtonInfoWithIcon
+                  <InfoWithIcon
                     onClick={handleOpenLink(platform.zoom.url)}
                     icon={Videocam}
                     title="ZOOM"
                     color={APP_COLORS.brand.zoom}
                   >
                     {platform.zoom.weekly ? 'spotkanie cotygodniowe' : 'spotkanie jednorazowe'}
-                  </ButtonInfoWithIcon>
+                  </InfoWithIcon>
                 </Grid>
               )}
               {platform.teams && (
                 <Grid item xs={12} sm={6}>
-                  <ButtonInfoWithIcon
+                  <InfoWithIcon
                     onClick={handleOpenLink(platform.teams.url)}
                     icon={People}
                     title="Teams"
                     color={APP_COLORS.brand.teams}
                   >
                     {platform.teams.name}
-                  </ButtonInfoWithIcon>
+                  </InfoWithIcon>
                 </Grid>
               )}
               {platform.ePortal && (
                 <Grid item xs={12} sm={6}>
-                  <ButtonInfoWithIcon
+                  <InfoWithIcon
                     onClick={handleOpenLink(platform.ePortal.url)}
                     icon={LocalLibrary}
                     title="EPortal"
                     color={APP_COLORS.brand.ePortal}
                   >
                     {platform.ePortal.name}
-                  </ButtonInfoWithIcon>
+                  </InfoWithIcon>
                 </Grid>
               )}
             </Grid>

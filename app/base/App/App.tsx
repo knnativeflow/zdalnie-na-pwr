@@ -16,6 +16,11 @@ const AppWrapper = styled.div`
   width: 100%;
 `
 
+const PageLayout = styled.div`
+  overflow: hidden;
+  flex: 1;
+`
+
 export default function App(props: Props) {
   const { children } = props
 
@@ -32,7 +37,7 @@ export function AppWithNavigation(props: Props) {
   return (
     <App>
       <AppBar />
-      {children}
+      <PageLayout>{children}</PageLayout>
     </App>
   )
 }

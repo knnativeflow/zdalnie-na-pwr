@@ -17,7 +17,8 @@ body {
   position: relative;
   height: 100vh;
   background-color: white;
-  overflow-y: hidden;
+
+  /* overflow-y: hidden; */
   margin: 0;
 }
 

@@ -1,15 +1,40 @@
 import React, { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import Button from '@material-ui/core/Button'
+import styled from '@emotion/styled'
 
 import StudentMailModal from 'components/StudentMailModal'
 import Calendar from 'components/Calendar'
 import { RootState } from 'store'
 
+import { IEvent, IEventFullCalendar } from 'domain/event'
 import { eventColor } from 'utils/courseTypes'
-import styles from './CalendarPage.scss'
+// import EventModal from 'components/EventModal'
+import useModal from 'hooks/useModal'
+import EventInfo from 'components/EventInfo'
+
+const CalendarPageWrapper = styled.div`
+  display: flex;
+  height: 100%;
+`
+
+const CalendarWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  height: 100%;
+  overflow-y: auto;
+`
+
+const EventDetailsWrapper = styled.div`
+  flex: 1;
+  min-width: 500px;
+  display: flex;
+  flex-direction: column;
+  background: #f5f9fd;
+`
 
 const CalendarPage = (): JSX.Element => {
+  const [isModalOpen, openModal, closeModal, modalParams] = useModal<IEvent>()
   const [isOpenStudentMailModal, setIsOpenStudentMailModal] = useState(false)
   const events = useSelector((state: RootState) => state.events)
 
@@ -30,17 +55,22 @@ const CalendarPage = (): JSX.Element => {
     [events]
   )
 
+  // TODO: add clear btn for EventInfo
+  // TODO: we can still use modal for small screens
   return (
-    <div className={styles.root}>
-      <div className={styles.header}>
-        <h1>Kalendarz</h1>
-        <Button onClick={() => setIsOpenStudentMailModal(true)} variant="outlined" color="primary">
-          Pobierz dane z poczty
-        </Button>
-      </div>
-      <Calendar events={parsedEvents} />
+    <>
+      <CalendarPageWrapper>
+        <CalendarWrapper>
+          <Calendar events={parsedEvents} onEventClick={openModal} />
+        </CalendarWrapper>
+        <EventDetailsWrapper>
+          <EventInfo event={modalParams} />
+        </EventDetailsWrapper>
+      </CalendarPageWrapper>
+
       <StudentMailModal open={isOpenStudentMailModal} onClose={() => setIsOpenStudentMailModal(false)} />
-    </div>
+      {/* <EventModal isOpen={isModalOpen} event={modalParams} onClose={closeModal} /> */}
+    </>
   )
 }
 

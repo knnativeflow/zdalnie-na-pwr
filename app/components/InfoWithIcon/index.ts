@@ -1,1 +1,1 @@
-export { default, ButtonInfoWithIcon } from './InfoWithIcon'
+export { default } from './InfoWithIcon'

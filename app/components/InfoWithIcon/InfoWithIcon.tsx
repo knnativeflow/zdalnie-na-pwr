@@ -1,67 +1,82 @@
-import { Box, ButtonBase, SvgIconTypeMap } from '@material-ui/core'
 import React from 'react'
+import { SvgIconTypeMap } from '@material-ui/core'
 import { OverridableComponent } from '@material-ui/core/OverridableComponent'
-import { makeStyles } from '@material-ui/core/styles'
+import styled from '@emotion/styled'
+import { css } from '@emotion/core'
 
 interface InfoProps {
   icon: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>
   title: string
   children: React.ReactNode
   color?: string
+  onClick?: () => void
 }
 
-const InfoWithIcon = ({ icon: Icon, title, children, color }: InfoProps) => (
-  <Box px={1} display="flex" alignItems="start" width={1}>
-    <Box bgcolor={`${color}40`} color={color} display="inline-flex" p={0.5} mr={1.5} borderRadius="borderRadius">
-      <Icon fontSize="small" />
-    </Box>
-    <Box flexGrow={1}>
-      <Box fontSize="subtitle2.fontSize" color="grey.800" fontWeight="bold" mb={0.5}>
-        {title}
-      </Box>
-      <Box fontSize="subtitle1.fontSize">{children}</Box>
-    </Box>
-  </Box>
-)
+const InfoWithIconWrapper = styled.div<{ as: 'button' | 'div'; color: string }>`
+  display: flex;
+  justify-content: left;
+  text-align: left;
+  border: none;
+  border-radius: 8px;
+  padding: 4px;
+  width: 100%;
+
+  ${({ as, color }) =>
+    as === 'button' &&
+    css`
+      background: ${color}20;
+    `}
+`
+
+const IconWrapper = styled.div<{ color?: string }>`
+  margin-right: 10px;
+  border-radius: 8px;
+  width: 35px;
+  height: 35px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: ${({ color }) => `${color}40`};
+  color: ${({ color }) => color};
+`
+
+const InfoWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+const InfoLabel = styled.p`
+  font-size: 10px;
+  font-weight: 700;
+  margin: 0;
+  margin-bottom: 2px;
+`
+
+const InfoText = styled.p`
+  margin: 0;
+  font-size: 13px;
+  line-height: 1;
+`
+
+const InfoWithIcon = ({ icon: Icon, title, children, color, onClick }: InfoProps) => {
+  const WrapperComp = onClick ? 'button' : 'div'
+
+  return (
+    <InfoWithIconWrapper onClick={onClick} as={WrapperComp} color={color}>
+      <IconWrapper color={color}>
+        <Icon fontSize="small" />
+      </IconWrapper>
+      <InfoWrapper>
+        <InfoLabel>{title}</InfoLabel>
+        <InfoText>{children}</InfoText>
+      </InfoWrapper>
+    </InfoWithIconWrapper>
+  )
+}
 
 InfoWithIcon.defaultProps = {
   color: '#888888',
 }
 
 export default InfoWithIcon
-
-type ButtonProps = InfoProps & {
-  onClick: () => void
-}
-
-const useStyles = makeStyles({
-  button: {
-    width: '100%',
-    textAlign: 'left',
-    borderRadius: 8,
-    '&:hover': {
-      backgroundColor: (props: ButtonProps) => `${props.color}10`,
-    },
-  },
-  child: {
-    backgroundColor: (props: ButtonProps) => props.color,
-  },
-})
-
-export const ButtonInfoWithIcon = (props: ButtonProps) => {
-  const { onClick, icon, title, children, color } = props
-  const { button, ...classes } = useStyles(props)
-  return (
-    <ButtonBase focusRipple className={button} TouchRippleProps={{ classes }}>
-      <Box py={1} bgcolor={`${color}10`} borderRadius={8} onClick={onClick} width={1}>
-        <InfoWithIcon icon={icon} title={title} color={color}>
-          <Box fontSize="subtitle2.fontSize">{children}</Box>
-        </InfoWithIcon>
-      </Box>
-    </ButtonBase>
-  )
-}
-
-ButtonInfoWithIcon.defaultProps = {
-  color: '#888888',
-}
