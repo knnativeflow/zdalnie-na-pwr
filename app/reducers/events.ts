@@ -1,5 +1,6 @@
 import { ADD_EVENT_ZOOM_LINKS, ADD_EVENTS, CLEAR_EVENTS } from 'constants/actionTypes'
 import { ActionEvents } from 'actions/events'
+import { IEvent } from 'domain/event'
 
 const INIT_STATE: IEvent[] = []
 
@@ -18,7 +19,7 @@ const eventsReducer = (state = INIT_STATE, action: ActionEvents) => {
         return foundLink
           ? {
               ...event,
-              platform: { ...event.platform, zoom: { weekly: false, url: foundLink.url } },
+              platform: { ...event.platform, zoom: { recurrent: false, url: foundLink.url } },
             }
           : event
       })

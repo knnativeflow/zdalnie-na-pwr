@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from '@material-ui/core'
 import { EventNote, LocalLibrary, MenuBook, Notes, People, Person, TurnedIn, Videocam } from '@material-ui/icons'
 import moment from 'moment'
@@ -7,32 +8,9 @@ import { shell } from 'electron'
 import { eventColor, eventFullText } from 'utils/courseTypes'
 import InfoWithIcon, { ButtonInfoWithIcon } from 'components/InfoWithIcon'
 import { APP_COLORS } from 'base/theme/theme'
-
-// START TEST DATA
-const platform: IPlatforms = {
-  zoom: {
-    weekly: true,
-    url: 'http://google.com',
-  },
-  teams: {
-    name: 'Oracle - projekt, Z00-21g',
-    url: 'http://google.com',
-  },
-  ePortal: {
-    name: 'Baza danych Oracle - programowanie',
-    url: 'http://google.com',
-  },
-}
-
-const additional: { [key: string]: string } = {
-  Konsultacje: 'wt 16-18 227 B-2, czw 17-19 168 C-3',
-  'Czy ziomek jest spoko': 'W sumie git',
-  'Test emoji 😶🤐😗✌😐🤙': 'Idk chyba działa',
-}
-
-const code = 'Z00-21g'
-
-// END TEST DATA
+import { ICourse } from 'domain/course'
+import { IEvent } from 'domain/event'
+import { RootState } from 'store'
 
 interface Props {
   event?: IEvent
@@ -42,11 +20,19 @@ interface Props {
 
 const EventModal = (props: Props) => {
   const { event, onClose, isOpen } = props
+  const courses = useSelector((state: RootState) => state.courses)
+
   if (!event) return null
 
-  const { name, type, start, end, lecturer /* , code, additional, platform */ } = event
-  const mappedAdditional = Object.entries(additional)
-  const hasPlatforms = !!Object.values(platform).length
+  const eventCourse: ICourse | undefined = courses.find(
+    (course) => course.name.startsWith(event.name) && course.type === event.type
+  )
+
+  const { name, type, start, end, lecturer, platform, additional } = event
+  const mergedPlatforms = { ...eventCourse?.platforms, ...platform }
+  const mergedAdditional = { ...eventCourse?.additional, ...additional }
+  const mappedAdditional = Object.entries(mergedAdditional)
+  const hasPlatforms = !!Object.values(mergedPlatforms).length
 
   const handleOpenLink = (url: string) => () => shell.openExternal(url)
 
@@ -63,7 +49,7 @@ const EventModal = (props: Props) => {
             </Grid>
             <Grid item xs={6}>
               <InfoWithIcon icon={TurnedIn} title="Kod grupy">
-                {code}
+                {eventCourse?.classesCode}
               </InfoWithIcon>
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -102,39 +88,40 @@ const EventModal = (props: Props) => {
 
           {hasPlatforms && (
             <Grid container spacing={1}>
-              {platform?.zoom?.url && (
+              {/* TODO: handle a zoom box with no link found - Karol */}
+              {mergedPlatforms?.zoom?.url && (
                 <Grid item xs={12} sm={6}>
                   <ButtonInfoWithIcon
-                    onClick={handleOpenLink(platform.zoom.url)}
+                    onClick={handleOpenLink(mergedPlatforms.zoom.url)}
                     icon={Videocam}
                     title="ZOOM"
                     color={APP_COLORS.brand.zoom}
                   >
-                    {platform.zoom.weekly ? 'spotkanie cotygodniowe' : 'spotkanie jednorazowe'}
+                    {mergedPlatforms.zoom.recurrent ? 'spotkanie cotygodniowe' : 'spotkanie jednorazowe'}
                   </ButtonInfoWithIcon>
                 </Grid>
               )}
-              {platform.teams && (
+              {mergedPlatforms.teams && (
                 <Grid item xs={12} sm={6}>
                   <ButtonInfoWithIcon
-                    onClick={handleOpenLink(platform.teams.url)}
+                    onClick={handleOpenLink(mergedPlatforms.teams.url)}
                     icon={People}
                     title="Teams"
                     color={APP_COLORS.brand.teams}
                   >
-                    {platform.teams.name}
+                    {mergedPlatforms.teams.name}
                   </ButtonInfoWithIcon>
                 </Grid>
               )}
-              {platform.ePortal && (
+              {mergedPlatforms.ePortal && (
                 <Grid item xs={12} sm={6}>
                   <ButtonInfoWithIcon
-                    onClick={handleOpenLink(platform.ePortal.url)}
+                    onClick={handleOpenLink(mergedPlatforms.ePortal.url)}
                     icon={LocalLibrary}
                     title="EPortal"
                     color={APP_COLORS.brand.ePortal}
                   >
-                    {platform.ePortal.name}
+                    {mergedPlatforms.ePortal.name}
                   </ButtonInfoWithIcon>
                 </Grid>
               )}
@@ -157,7 +144,7 @@ const EventModal = (props: Props) => {
               fontSize="subtitle2.fontSize"
               py={1}
             >
-              Nie znaleziono pozostałych informacji w tym kursie
+              Nie dodano dodatkowych danych o zajęciach lub kursie.
             </Box>
           )}
 
