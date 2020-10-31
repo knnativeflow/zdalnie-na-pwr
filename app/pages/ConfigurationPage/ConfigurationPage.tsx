@@ -235,6 +235,7 @@ const ConfigurationPage = () => {
   const handleExitConfiguration = () => {
     dispatch(updateUser({ configured: true }))
   }
+
   return [
     <StartStep key={0} nextStep={goToNextStep} />,
     <JsosStep key={1} handleSubmit={handleJsosLogin} prevStep={goToPrevStep} />,
