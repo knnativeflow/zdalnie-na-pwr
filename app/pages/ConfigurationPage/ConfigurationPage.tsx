@@ -5,6 +5,7 @@ import { Box, FormControlLabel, Radio, styled } from '@material-ui/core'
 import studentMail from 'features/studentMail'
 import { jsosAuth, jsosExtractor } from 'features/jsos'
 import iCalendar from 'features/iCalendar'
+import PasswordManager from 'features/passwords'
 import { addEvents, addZoomLinks } from 'actions/events'
 import { addCourses, addTeamsLinks } from 'actions/courses'
 import { updateUser } from 'actions/user'
@@ -195,12 +196,12 @@ const ConfigurationPage = () => {
     await jsosAuth.signIn(login, password)
 
     setJsosDataLogin({ login, password })
-    const iCalendarString = await jsosExtractor.downloadCalendar()
     const courses = await jsosExtractor.fetchCourseList()
-    const events = iCalendar.getEventsFromString(iCalendarString)
-
-    dispatch(addEvents(events))
     dispatch(addCourses(courses))
+
+    const iCalendarString = await jsosExtractor.downloadCalendar()
+    const events = iCalendar.getEventsFromString(iCalendarString)
+    dispatch(addEvents(events))
 
     goToNextStep()
   }
@@ -219,15 +220,13 @@ const ConfigurationPage = () => {
     goToNextStep()
   }
 
-  const handleSavePassword = (hasAgreed: boolean) => {
+  const handleSavePassword = async (hasAgreed: boolean) => {
     if (hasAgreed) {
-      console.log('zapisuje hasła', jsosDataLogin, mailDataLogin)
-    } else {
-      console.log('nie zapisuje haseł')
+      await PasswordManager.saveJsosCredentials(jsosDataLogin.login, jsosDataLogin.password)
+      await PasswordManager.saveSmailCredentials(mailDataLogin.login, mailDataLogin.password)
+
+      dispatch(updateUser({ configured: true }))
     }
-
-    // TODO: add save password
-
     goToNextStep()
   }
 

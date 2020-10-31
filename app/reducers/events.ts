@@ -11,12 +11,15 @@ const eventsReducer = (state = INIT_STATE, action: ActionEvents) => {
     case CLEAR_EVENTS:
       return INIT_STATE
     case ADD_EVENT_ZOOM_LINKS:
+      const { zoomLinks, overwriteExisting } = action.payload
       return state.map((event) => {
-        const foundLink = action.payload.find(
+        const foundLink = zoomLinks.find(
           (zoomLink) => zoomLink.courseName.startsWith(event.name) && zoomLink.date === event.start
         )
 
-        return foundLink
+        const updateEventWithLink = !event.platform.zoom?.url || overwriteExisting
+
+        return foundLink && updateEventWithLink
           ? {
               ...event,
               platform: { ...event.platform, zoom: { recurrent: false, url: foundLink.url } },
