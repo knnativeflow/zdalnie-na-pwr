@@ -5,12 +5,18 @@
 @import '~@fullcalendar/common/main.css';
 @import '~@fullcalendar/daygrid/main.css';
 @import '~@fullcalendar/timegrid/main.css';
+@import '../resources/fonts/fonts.css';
+
+*,
+::after,
+::before {
+  font-family: 'Open Sans', Arial, Helvetica, Helvetica Neue, sans-serif !important;
+}
 
 body {
   position: relative;
   height: 100vh;
   background-color: white;
-  font-family: Arial, Helvetica, Helvetica Neue, serif;
   overflow-y: hidden;
   margin: 0;
 }

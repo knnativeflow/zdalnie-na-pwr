@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { remote } from 'electron'
 import { VscChromeClose, VscChromeMaximize, VscChromeMinimize, VscChromeRestore } from 'react-icons/all'
 import { IconType } from 'react-icons'
+import { Box } from '@material-ui/core'
+import Text from 'components/Text'
 import styles from './TitleBar.scss'
 
 type TitleButtonType = {
@@ -36,7 +38,22 @@ const TitleBar = () => {
 
   return (
     <div className={styles.topBar}>
-      <div>logo</div>
+      <Box
+        display="flex"
+        alignItems="center"
+        height={1}
+        paddingX={1}
+        color="text.disabled"
+        style={{ pointerEvents: 'none' }}
+      >
+        <Text fontWeight={900} size={0.75}>
+          ZDALNIE
+        </Text>
+        &nbsp;
+        <Text fontWeight={500} size={0.75}>
+          NA PWR
+        </Text>
+      </Box>
       <div className={styles.topBarButtons}>
         <TitleButton icon={VscChromeMinimize} alt="Minimalizuj" onClick={() => win.minimize()} />
         {isMaximized ? (

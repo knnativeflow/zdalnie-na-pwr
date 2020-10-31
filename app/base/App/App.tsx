@@ -13,7 +13,7 @@ export default function App(props: Props) {
   return (
     <div className={styles.root}>
       <TitleBar />
-      <div>{children}</div>
+      {children}
     </div>
   )
 }
@@ -22,7 +22,7 @@ export function AppView(props: Props) {
   const { children } = props
   return (
     <App>
-      <div>{children}</div>
+      {children}
       <BottomAppBar />
     </App>
   )

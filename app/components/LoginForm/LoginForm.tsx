@@ -1,28 +1,26 @@
-import React, { useState } from 'react'
-import { Button, TextField, CircularProgress } from '@material-ui/core'
-import { Alert } from '@material-ui/lab'
-
-import styles from './LoginForm.scss'
-
-interface InputProps {
-  label: string
-  placeholder?: string
-}
+import React, { ChangeEvent, FormEvent, useState } from 'react'
+import { CircularProgress, Typography } from '@material-ui/core'
+import Input from 'components/Input'
+import Button from 'components/Button'
+import Space from 'components/Space'
 
 interface Props {
-  loginInput: InputProps
-  passwordInput: InputProps
   onSubmit: (login: string, password: string) => Promise<void>
+  color: {
+    light: string
+    main: string
+    dark: string
+  }
 }
 
-const LoginForm = (props: Props) => {
-  const { loginInput, passwordInput, onSubmit } = props
+const LoginForm = ({ onSubmit, color }: Props) => {
   const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     try {
       setIsLoading(true)
       await onSubmit(login, password)
@@ -34,30 +32,34 @@ const LoginForm = (props: Props) => {
   }
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
-      <TextField
-        type="text"
-        label={loginInput.label}
-        placeholder={loginInput.placeholder}
-        margin="dense"
+    <form onSubmit={handleSubmit}>
+      <Input
+        textColor={color.dark}
         autoFocus
-        onChange={(event) => setLogin(event.target.value)}
-      />
-      <TextField
+        onChange={(event: ChangeEvent<HTMLInputElement>) => setLogin(event.target.value)}
+      >
+        Login
+      </Input>
+      <Space size={0.5} />
+      <Input
         type="password"
-        label={passwordInput.label}
-        placeholder={passwordInput.placeholder}
-        margin="dense"
-        onChange={(event) => setPassword(event.target.value)}
-      />
-      {!!error && (
-        <Alert severity="error" classes={{ root: styles.alert }}>
-          {error}
-        </Alert>
-      )}
-      <Button type="submit" variant="contained" color="primary" disabled={isLoading}>
-        {isLoading ? <CircularProgress size={23} /> : 'Zaloguj'}
+        textColor={color.dark}
+        onChange={(event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
+      >
+        Hasło
+      </Input>
+      <Space size={1} />
+      <Button type="submit" onClick={() => {}} glow color={color.main} primary fullWidth disabled={isLoading}>
+        {isLoading ? <CircularProgress size="2em" color="inherit" /> : 'Zaloguj'}
       </Button>
+      {!!error && (
+        <>
+          <Space size={1} />
+          <Typography color="error" align="center">
+            {error}
+          </Typography>
+        </>
+      )}
     </form>
   )
 }
