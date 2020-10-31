@@ -44,7 +44,7 @@ const MenuBar = () => {
   return (
     <MenuBarWrapper>
       <Title>
-        <span>Zdalnie</span> na PWr
+        <span>Zdalnie</span>&nbsp;na PWr
       </Title>
       <ActionButtonsContainer>
         <ActionButton icon={VscChromeMinimize} alt="Minimalizuj" onClick={win.minimize} />

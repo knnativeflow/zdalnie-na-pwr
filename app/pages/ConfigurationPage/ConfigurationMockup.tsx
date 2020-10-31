@@ -1,8 +1,8 @@
 import React from 'react'
 import { styled, Theme } from '@material-ui/core'
 import { getPaletteColor, PaletteOrString } from 'utils/theme'
-// @ts-ignore
-import mockup from '../../../resources/images/stepper-mockup-1.png'
+
+import mockup from 'assets/images/stepper-mockup-1.png'
 
 type FeatureProps = {
   src: string
