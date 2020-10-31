@@ -1,18 +1,30 @@
 import styled from '@emotion/styled'
+import { css } from '@emotion/core'
 
-const TITLE_BAR_HEIGHT = '30px'
+export const MENU_BAR_HEIGHT = '30px'
 const ACTION_ICON_SIZE = '15px'
 
-export const MenuBarWrapper = styled.div`
+type TMenuBarWrapper = {
+  isConfigured?: boolean
+}
+
+export const MenuBarWrapper = styled.div<TMenuBarWrapper>`
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
-  height: ${TITLE_BAR_HEIGHT};
+  height: ${MENU_BAR_HEIGHT};
   display: flex;
   align-items: center;
   -webkit-app-region: drag;
   z-index: 10000;
+
+  ${({ isConfigured }) =>
+    isConfigured &&
+    css`
+      color: #fff; // TODO: use variables
+      background: #3a5574; // TODO: use variables
+    `}
 `
 export const ActionButton = styled.button`
   height: 100%;
@@ -56,7 +68,6 @@ export const Title = styled.p`
   height: 100%;
   pointer-events: none;
   text-transform: uppercase;
-  color: #000000; // TODO: use variables
 
   span {
     font-weight: 900;

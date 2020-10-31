@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { remote } from 'electron'
+import { useSelector } from 'react-redux'
 import { VscChromeClose, VscChromeMaximize, VscChromeMinimize, VscChromeRestore } from 'react-icons/all'
 import { IconType } from 'react-icons'
 import {
@@ -8,6 +9,7 @@ import {
   ActionButtonsContainer,
   Title,
 } from 'components/Menubar/Menubar.styled'
+import { RootState } from 'store'
 
 type ActionButtonProps = {
   icon: IconType
@@ -23,6 +25,7 @@ const ActionButton = ({ icon: Icon, alt, onClick }: ActionButtonProps) => (
 
 // TODO: add mac controls
 const MenuBar = () => {
+  const isAppConfigured = useSelector(({ user }: RootState) => user.configured)
   const win = remote.getCurrentWindow()
   const [isMaximized, setMaximized] = useState<boolean>(win.isMaximized())
 
@@ -42,7 +45,7 @@ const MenuBar = () => {
   }, [win])
 
   return (
-    <MenuBarWrapper>
+    <MenuBarWrapper isConfigured={isAppConfigured}>
       <Title>
         <span>Zdalnie</span>&nbsp;na PWr
       </Title>

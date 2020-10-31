@@ -1,32 +1,38 @@
 import React, { ReactNode } from 'react'
-import { Box } from '@material-ui/core'
 
+import styled from '@emotion/styled'
 import AppBar from 'components/AppBar'
 import MenuBar from 'components/MenuBar'
-import styles from './App.scss'
 
 type Props = {
   children: ReactNode
 }
 
+const AppWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  height: 100%;
+  width: 100%;
+`
+
 export default function App(props: Props) {
   const { children } = props
+
   return (
-    <div className={styles.root}>
+    <AppWrapper>
       <MenuBar />
       {children}
-    </div>
+    </AppWrapper>
   )
 }
 
-export function AppView(props: Props) {
+export function AppWithNavigation(props: Props) {
   const { children } = props
   return (
     <App>
       <AppBar />
-      <Box display="flex" flex={1} style={{ overflowY: 'auto', overflowX: 'hidden' }}>
-        {children}
-      </Box>
+      {children}
     </App>
   )
 }

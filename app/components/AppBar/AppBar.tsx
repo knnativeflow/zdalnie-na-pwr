@@ -1,26 +1,47 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { AppBar as AppBarMaterialUI, Typography, Button } from '@material-ui/core'
+import { Button } from '@material-ui/core'
+import styled from '@emotion/styled'
 
 import routes from 'constants/routes.json'
-import styles from './AppBar.scss'
+import { MENU_BAR_HEIGHT } from 'components/MenuBar/MenuBar.styled'
 
+const AppBarWrapper = styled.div`
+  background: #759ccb;
+  height: 60px;
+  margin-top: ${MENU_BAR_HEIGHT};
+  flex-shrink: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+`
+
+const ActionsWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`
+// TODO: style nav buttons, remove material btns
 const AppBar = () => {
   return (
-    <AppBarMaterialUI position="static" classes={{ root: styles.appBar }}>
-      <Typography variant="h6">Zdalnie na PWr</Typography>
-      <div>
-        <NavLink to={routes.INDEX} activeStyle={{ color: '#fff', opacity: 1 }}>
-          <Button color="inherit">Panel</Button>
-        </NavLink>
-        <NavLink to={routes.CALENDAR} activeStyle={{ color: '#fff', opacity: 1 }}>
-          <Button color="inherit">Kalendarz</Button>
-        </NavLink>
-        <NavLink to={routes.SETTINGS} activeStyle={{ color: '#fff', opacity: 1 }}>
-          <Button color="inherit">Ustawienia</Button>
-        </NavLink>
-      </div>
-    </AppBarMaterialUI>
+    <>
+      <AppBarWrapper>
+        <ActionsWrapper>
+          <NavLink to={routes.INDEX} activeStyle={{ color: '#fff', opacity: 1 }} exact>
+            <Button color="inherit">Panel</Button>
+          </NavLink>
+          <NavLink to={routes.CALENDAR} activeStyle={{ color: '#fff', opacity: 1 }}>
+            <Button color="inherit">Kalendarz</Button>
+          </NavLink>
+        </ActionsWrapper>
+        <ActionsWrapper>
+          <NavLink to={routes.SETTINGS} activeStyle={{ color: '#fff', opacity: 1 }}>
+            <Button color="inherit">Ustawienia</Button>
+          </NavLink>
+        </ActionsWrapper>
+      </AppBarWrapper>
+    </>
   )
 }
 

@@ -15,8 +15,8 @@ export type LoginFormProps = {
 }
 
 const LoginForm = ({ onSubmit, defaultValues, color }: LoginFormProps) => {
-  const [login, setLogin] = useState('')
-  const [password, setPassword] = useState('')
+  const [login, setLogin] = useState(defaultValues?.login ?? '')
+  const [password, setPassword] = useState(defaultValues?.password ?? '')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -27,7 +27,10 @@ const LoginForm = ({ onSubmit, defaultValues, color }: LoginFormProps) => {
       await onSubmit(login, password)
     } catch (error) {
       setError(error.message)
-    } finally {
+      /*
+       * It's here beacuse there is page change triggered after success in onSubmit func
+       * so component is unmounted and we can't perform setIsLoading
+       */
       setIsLoading(false)
     }
   }
