@@ -10,12 +10,13 @@ import { AppView } from './App/App'
 
 const Routes = () => {
   const configured = useSelector((state: RootState) => state.user.configured)
-  if (!configured)
+  if (!configured) {
     return (
       <App>
         <Route component={ConfigurationPage} />
       </App>
     )
+  }
 
   return (
     <AppView>

@@ -12,15 +12,15 @@ import { APP_COLORS } from 'base/theme/theme'
 const platform: IPlatforms = {
   zoom: {
     weekly: true,
-    url: 'http://google.com',
+    url: 'https://google.com',
   },
   teams: {
     name: 'Oracle - projekt, Z00-21g',
-    url: 'http://google.com',
+    url: 'https://google.com',
   },
   ePortal: {
     name: 'Baza danych Oracle - programowanie',
-    url: 'http://google.com',
+    url: 'https://google.com',
   },
 }
 
