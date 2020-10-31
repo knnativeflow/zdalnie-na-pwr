@@ -1,10 +1,10 @@
 import React from 'react'
-import { Switch, Route } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import routes from 'constants/routes.json'
 import { RootState } from 'store'
-import { CalendarPage, CourseListPage, HomePage, ConfigurationPage, WelcomePage } from 'pages'
+import { CalendarPage, ConfigurationPage, DashboardPage, SettingsPage } from 'pages'
 import App from './App'
 import { AppView } from './App/App'
 
@@ -20,10 +20,9 @@ const Routes = () => {
   return (
     <AppView>
       <Switch>
-        <Route path={routes.WELCOME_PAGE} component={WelcomePage} exact />
         <Route path={routes.CALENDAR} component={CalendarPage} exact />
-        <Route path={routes.COURSE_LIST} component={CourseListPage} exact />
-        <Route path={routes.HOME} component={HomePage} exact />
+        <Route path={routes.SETTINGS} component={SettingsPage} exact />
+        <Route path={routes.INDEX} component={DashboardPage} exact />
       </Switch>
     </AppView>
   )

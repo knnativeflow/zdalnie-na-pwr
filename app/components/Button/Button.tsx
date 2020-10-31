@@ -1,17 +1,18 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react'
-import { Palette } from '@material-ui/core/styles/createPalette'
 import { ButtonBaseProps } from '@material-ui/core'
+import { PaletteOrString } from 'utils/theme'
 import StyledButton from './Button.styled'
 
 export type Props = {
-  color: ((palette: Palette) => string) | string
+  color: PaletteOrString
   fullWidth?: boolean
   primary?: boolean
   shadow?: boolean
   glow?: boolean
   compact?: boolean
-} & ButtonBaseProps
+  even?: boolean
+} & Omit<ButtonBaseProps, 'color'>
 
 const Button = (props: Props) => {
   const { children, color, ...rest } = props
@@ -28,6 +29,7 @@ Button.defaultProps = {
   shadow: false,
   glow: false,
   compact: false,
+  even: false,
 }
 
 export default Button

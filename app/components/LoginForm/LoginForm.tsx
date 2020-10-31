@@ -49,8 +49,8 @@ const LoginForm = ({ onSubmit, color }: Props) => {
         Hasło
       </Input>
       <Space size={1} />
-      <Button type="submit" onClick={() => {}} glow color={color.main} primary fullWidth disabled={isLoading}>
-        {isLoading ? <CircularProgress size="2em" color="inherit" /> : 'Zaloguj'}
+      <Button type="submit" glow color={color.main} primary fullWidth disabled={isLoading}>
+        {isLoading ? <CircularProgress size="1em" color="inherit" /> : 'Zaloguj'}
       </Button>
       {!!error && (
         <>

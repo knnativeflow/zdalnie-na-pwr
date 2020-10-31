@@ -1,8 +1,5 @@
 {
-  "INIT": "/init",
-  "HOME": "/home",
+  "INDEX": "/",
   "CALENDAR": "/calendar",
-  "COURSE_LIST": "/course-list",
-  "WELCOME_PAGE": "/welcome",
-  "FIRST_CONFIGURATION": "/first-configuration"
+  "SETTINGS": "/settings"
 }

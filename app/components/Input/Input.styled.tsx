@@ -1,17 +1,17 @@
 import { styled, Theme } from '@material-ui/core/styles'
 import { InputBase, InputBaseProps } from '@material-ui/core'
-import { Palette } from '@material-ui/core/styles/createPalette'
+import { getPaletteColor, PaletteOrString } from 'utils/theme'
 
 export type Props = {
   theme: Theme
-  textColor: ((palette: Palette) => string) | string
-  bgColor?: ((palette: Palette) => string) | string
+  textColor: PaletteOrString
+  bgColor?: PaletteOrString
   maxWidth?: string | number
 } & InputBaseProps
 
 const StyledInput = styled(InputBase)(({ theme, ...props }: Props) => {
-  const textColor = typeof props.textColor === 'function' ? props.textColor(theme.palette) : props.textColor
-  const bgColor = (typeof props.bgColor === 'function' ? props.bgColor(theme.palette) : props.bgColor) ?? textColor + 20
+  const textColor = getPaletteColor(theme.palette)(props.textColor)
+  const bgColor = props.bgColor ? getPaletteColor(theme.palette)(props.bgColor) : textColor + 20
   return {
     border: 0,
     borderRadius: 8,
@@ -24,6 +24,7 @@ const StyledInput = styled(InputBase)(({ theme, ...props }: Props) => {
     maxWidth: props.maxWidth,
     transition: 'box-shadow 0.2s ease',
     boxShadow: `0 0 0 1px transparent, 0 0 0 1px transparent inset`,
+    width: '100%',
 
     '& input': {
       outline: 'none',

@@ -1,24 +1,29 @@
 import { styled, Theme } from '@material-ui/core/styles'
 import { ButtonBase, ButtonBaseProps } from '@material-ui/core'
-import { Palette } from '@material-ui/core/styles/createPalette'
+import { getPaletteColor, PaletteOrString } from 'utils/theme'
 
 export type Props = {
-  btnColor: ((palette: Palette) => string) | string
+  btnColor: PaletteOrString
   theme: Theme
   fullWidth?: boolean
   primary?: boolean
   shadow?: boolean
   glow?: boolean
   compact?: boolean
+  even?: boolean
 } & ButtonBaseProps
 
 const StyledButton = styled(ButtonBase)(({ theme, ...props }: Props) => {
-  const bgColor = typeof props.btnColor === 'function' ? props.btnColor(theme.palette) : props.btnColor
+  const bgColor = getPaletteColor(theme.palette)(props.btnColor)
+  const spacing = props.compact ? 1 : 2
   return {
     border: 0,
     borderRadius: theme.shape.borderRadius,
-    padding: theme.spacing(2),
-    fontWeight: 900,
+    paddingTop: theme.spacing(spacing),
+    paddingBottom: theme.spacing(spacing),
+    paddingLeft: theme.spacing(spacing * 2),
+    paddingRight: theme.spacing(spacing * 2),
+    fontWeight: 700,
     cursor: 'pointer',
     backgroundColor: bgColor + 40,
     color: bgColor,
@@ -54,29 +59,15 @@ const StyledButton = styled(ButtonBase)(({ theme, ...props }: Props) => {
     }),
 
     ...(props.compact && {
-      padding: theme.spacing(1),
       fontSize: '0.85em',
+      borderRadius: (theme.shape.borderRadius * 2) / 3,
+    }),
+
+    ...(props.even && {
+      paddingLeft: theme.spacing(spacing),
+      paddingRight: theme.spacing(spacing),
     }),
   }
 })
 
 export default StyledButton
-
-type CircleProps = {
-  theme: Theme
-  color: ((palette: Palette) => string) | string
-}
-
-export const BackgroundCircle = styled('div')(({ theme, ...props }: CircleProps) => {
-  const color = typeof props.color === 'function' ? props.color(theme.palette) : props.color
-  return {
-    borderRadius: '50%',
-    width: '130vmax',
-    height: '130vmax',
-    right: '-70vmax',
-    bottom: '-35vmax',
-    background: color,
-    position: 'absolute',
-    zIndex: -100,
-  }
-})

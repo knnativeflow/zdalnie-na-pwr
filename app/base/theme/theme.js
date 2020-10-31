@@ -57,4 +57,9 @@ export const APP_COLORS = {
     main: '#3693FF',
     dark: '#647287',
   },
+  teal: {
+    light: '#98C3C1',
+    main: '#47CAB2',
+    dark: '#496C6A',
+  },
 }

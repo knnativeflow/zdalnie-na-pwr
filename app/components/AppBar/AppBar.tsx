@@ -10,15 +10,15 @@ const AppBar = () => {
     <AppBarMaterialUI position="static" classes={{ root: styles.appBar }}>
       <Typography variant="h6">Zdalnie na PWr</Typography>
       <div>
-        <NavLink to={routes.HOME} activeStyle={{ color: '#fff', opacity: 1 }}>
-          <Button color="inherit">Home</Button>
+        <NavLink to={routes.INDEX} activeStyle={{ color: '#fff', opacity: 1 }}>
+          <Button color="inherit">Panel</Button>
         </NavLink>
         <NavLink to={routes.CALENDAR} activeStyle={{ color: '#fff', opacity: 1 }}>
           <Button color="inherit">Kalendarz</Button>
         </NavLink>
-        <Button color="inherit" disabled>
-          Lista kursów
-        </Button>
+        <NavLink to={routes.SETTINGS} activeStyle={{ color: '#fff', opacity: 1 }}>
+          <Button color="inherit">Ustawienia</Button>
+        </NavLink>
       </div>
     </AppBarMaterialUI>
   )

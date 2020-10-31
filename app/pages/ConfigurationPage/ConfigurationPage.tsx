@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Box, styled, Theme } from '@material-ui/core'
+import { Box, FormControlLabel, Radio, styled } from '@material-ui/core'
 
 import studentMail from 'features/studentMail'
 import { jsosAuth, jsosExtractor } from 'features/jsos'
@@ -10,26 +10,11 @@ import { addCourses, addTeamsLinks } from 'actions/courses'
 import { updateUser } from 'actions/user'
 import LoginForm from 'components/LoginForm'
 import Button from 'components/Button'
-import { BackgroundCircle } from 'components/Button/Button.styled'
 import { APP_COLORS } from 'base/theme/theme'
 import { FaChevronLeft } from 'react-icons/all'
 import Text from 'components/Text'
 import Space from 'components/Space'
-import mockup from '../../../resources/images/stepper-mockup-1.png'
-
-type FeatureProps = {
-  src: string
-  theme: Theme
-}
-
-const StepperFeature = styled('div')((props: FeatureProps) => ({
-  backgroundImage: `url(${props.src})`,
-  height: '90%',
-  flex: 1,
-  backgroundSize: 'auto 100%',
-  backgroundRepeat: 'no-repeat',
-  margin: 'auto',
-}))
+import ConfigurationMockup from './ConfigurationMockup'
 
 const StyledSidebar = styled('div')({
   height: '100%',
@@ -44,6 +29,42 @@ const StyledSidebar = styled('div')({
     margin: 0,
   },
 })
+
+type LoginProps = {
+  handleSubmit: (login: string, password: string) => Promise<void>
+}
+
+type GoBackProps = {
+  count: number
+  color: {
+    light: string
+    main: string
+  }
+  onClick: () => void
+}
+
+const GoBackButton = ({ count, color, onClick }: GoBackProps) => (
+  <Box display="flex" alignItems="center" marginBottom="auto">
+    <Button color={color.main} compact onClick={onClick}>
+      <FaChevronLeft />
+    </Button>
+    <Space size={0.5} horizontal />
+    <Text fontWeight="bold" color={color.light} size={0.9}>
+      Krok {count} z 3
+    </Text>
+  </Box>
+)
+
+type FooterInfoProps = {
+  children: React.ReactNode
+  color: string
+}
+
+const FooterInfo = ({ children, color }: FooterInfoProps) => (
+  <Text color={color} size={0.75} style={{ marginTop: 'auto' }}>
+    {children}
+  </Text>
+)
 
 const StartStep = ({ nextStep }: { nextStep: () => void }) => (
   <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
@@ -61,112 +82,106 @@ const StartStep = ({ nextStep }: { nextStep: () => void }) => (
         Do dzieła
       </Button>
     </StyledSidebar>
-    <BackgroundCircle color="#EA95FF" />
-    <StepperFeature src={mockup} />
+    <ConfigurationMockup color={APP_COLORS.pink.light} />
   </Box>
 )
-
-type LoginProps = {
-  handleSubmit: (login: string, password: string) => Promise<void>
-}
 
 const JsosStep = ({ handleSubmit, prevStep }: LoginProps & { prevStep: () => void }) => (
   <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
     <StyledSidebar>
-      <Box display="flex" alignItems="center">
-        <Button color={APP_COLORS.purple.main} compact onClick={prevStep}>
-          <FaChevronLeft />
-        </Button>
-        <Space size={0.5} horizontal />
-        <Text fontWeight="bold" color={APP_COLORS.purple.light} size={0.9}>
-          Krok 1 z 3
-        </Text>
-      </Box>
+      <GoBackButton color={APP_COLORS.purple} count={1} onClick={prevStep} />
       <Space size={2} />
-      <h2>Zaloguj się do JSOS</h2>
+      <h3>Zaloguj się do JSOS</h3>
       <Space size={2} />
       <LoginForm onSubmit={handleSubmit} color={APP_COLORS.purple} />
       <Space size={2} />
-      <Text color={APP_COLORS.purple.light} size={0.75}>
+      <FooterInfo color={APP_COLORS.purple.light}>
         Aktualnie jedyną informacją pobieraną z JSOS jest siatka zajęć. Cały proces wykonywany jest wewnątrz aplikacji i
         nie różni się od logowania przez przeglądarkę.
-      </Text>
+      </FooterInfo>
     </StyledSidebar>
-    <BackgroundCircle color={APP_COLORS.purple.light} />
-    <StepperFeature src={mockup} />
+    <ConfigurationMockup color={APP_COLORS.purple.light} />
   </Box>
 )
 
 const MailStep = ({ handleSubmit, prevStep }: LoginProps & { prevStep: () => void }) => (
   <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
     <StyledSidebar>
-      <Box display="flex" alignItems="center">
-        <Button color={APP_COLORS.blue.main} compact onClick={prevStep}>
-          <FaChevronLeft />
-        </Button>
-        <Space size={0.5} horizontal />
-        <Text fontWeight="bold" color={APP_COLORS.blue.light} size={0.9}>
-          Krok 2 z 3
-        </Text>
-      </Box>
+      <GoBackButton color={APP_COLORS.blue} count={2} onClick={prevStep} />
       <Space size={2} />
-      <h2>Zaloguj się do poczty studenckiej</h2>
+      <h3>Zaloguj się do poczty studenckiej</h3>
       <Space size={2} />
       <LoginForm onSubmit={handleSubmit} color={APP_COLORS.blue} />
       <Space size={2} />
-      <Text color={APP_COLORS.blue.light} size={0.75}>
+      <FooterInfo color={APP_COLORS.blue.light}>
         Logowanie do poczty wymagane jest do pobierania automatycznie linków do Zooma oraz linków do Teamsów. Po co
         szukać samemu linków jak może to zrobić za ciebie technologia? Działanie i bezpieczeństwo działa na tej samej
         zasadzie co logowanie do JSOS.
-      </Text>
+      </FooterInfo>
     </StyledSidebar>
-    <BackgroundCircle color={APP_COLORS.blue.light} />
-    <StepperFeature src={mockup} />
+    <ConfigurationMockup color={APP_COLORS.blue.light} />
   </Box>
 )
 
-//
-// const SavePasswordStep = ({ handleSavePassword }: { handleSavePassword: (hasAgreed: boolean) => void }) => (
-//   <Paper elevation={3}>
-//     <div>
-//       <Typography variant="h6">Zapisz hasło na przyszłość</Typography>
-//       <Typography variant="body1">
-//         Dane logowania, które wprowadziliście wcześniej możemy zapisać u was na komputrze, podobnie jak robi to
-//         przeglądarka. Pozwoli to na automatyczne odświeżanie danych. Głównie dotyczy to linków do Zooma przysyłanych na
-//         pocztę studencką. Dane są zapisywane w tzw. bezpiecznej enklawie, czyli miejscu stworzonym przez twórców
-//         systemów operacyjnych właśnie dla wrażliwych danych jakimi są dane logowania.
-//       </Typography>
-//       <Typography variant="body1">
-//         Oczywiście możecie nie wyrazić zgody na zapisanie haseł. Musicie się jedynie liczyć, że przed każdym pobraniem
-//         danych będziecie musieli wprowadzać na nowo dane logowania.
-//       </Typography>
-//       <div>
-//         <Button color="primary" variant="outlined" onClick={() => handleSavePassword(false)}>
-//           Nie wyrażam zgody
-//         </Button>
-//         <Button color="primary" variant="contained" onClick={() => handleSavePassword(true)}>
-//           Wyrażam zgodę
-//         </Button>
-//       </div>
-//     </div>
-//   </Paper>
-// )
-//
-// const CongratulationsStep = () => (
-//   <Paper elevation={3}>
-//     <div>
-//       <Typography variant="h6">Udało się, wszystko gotowe!</Typography>
-//       <Typography variant="body1">Teraz możesz już korzystać z aplikacji.</Typography>
-//       <div>
-//         <Button color="primary" variant="outlined" component={Link} to={routes.CALENDAR}>
-//           Przejdź do aplikacji
-//         </Button>
-//       </div>
-//     </div>
-//   </Paper>
-// )
+const SavePasswordStep = (props: { prevStep: () => void; handleSavePassword: (hasAgreed: boolean) => void }) => {
+  const [hasAgreed, setHasAgreed] = useState(true)
+  const { handleSavePassword, prevStep } = props
+  return (
+    <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
+      <StyledSidebar>
+        <GoBackButton color={APP_COLORS.teal} count={3} onClick={prevStep} />
+        <Space size={2} />
+        <h3>Zapamiętaj dane logowania</h3>
+        <FormControlLabel
+          onChange={() => setHasAgreed(true)}
+          checked={hasAgreed}
+          control={<Radio />}
+          label="Pamiętaj"
+        />
+        <FormControlLabel
+          onChange={() => setHasAgreed(false)}
+          checked={!hasAgreed}
+          control={<Radio />}
+          label="Nie pamiętaj"
+        />
+        <Space size={2} />
+        <Button onClick={() => handleSavePassword(hasAgreed)} glow color={APP_COLORS.teal.main} primary fullWidth>
+          Gotowe
+        </Button>
+        <Space size={2} />
+        <FooterInfo color={APP_COLORS.teal.light}>
+          Jeśli dane nie zostaną zapamiętane, trzeba będzie wpisać je na nowo podczas każdego uruchomienia aplikacji.
+        </FooterInfo>
+      </StyledSidebar>
+      <ConfigurationMockup color={APP_COLORS.teal.light} />
+    </Box>
+  )
+}
 
-// const STEPS = ['JSOS', 'Poczta studencka', 'Zapisanie haseł', 'Koniec']
+const CongratulationsStep = ({ handleExitConfiguration }: { handleExitConfiguration: () => void }) => (
+  <Box
+    width="100vw"
+    height="100vh"
+    overflow="hidden"
+    position="relative"
+    display="flex"
+    flexDirection="column"
+    justifyContent="center"
+    alignItems="center"
+  >
+    <Text fontWeight="bold" size={2}>
+      Wszystko gotowe!
+      <span role="img" aria-label="gwiazdki">
+        ✨
+      </span>
+    </Text>
+    <Text>Możesz już zacząć korzystać z aplikacji.</Text>
+    <Space size={2} />
+    <Button color={APP_COLORS.pink.main} primary glow onClick={handleExitConfiguration}>
+      Przejdź do aplikacji
+    </Button>
+  </Box>
+)
 
 const ConfigurationPage = () => {
   const dispatch = useDispatch()
@@ -212,18 +227,20 @@ const ConfigurationPage = () => {
       console.log('nie zapisuje haseł')
     }
 
-    dispatch(updateUser({ configured: true }))
-
     // TODO: add save password
 
     goToNextStep()
+  }
+
+  const handleExitConfiguration = () => {
+    dispatch(updateUser({ configured: true }))
   }
   return [
     <StartStep key={0} nextStep={goToNextStep} />,
     <JsosStep key={1} handleSubmit={handleJsosLogin} prevStep={goToPrevStep} />,
     <MailStep key={2} handleSubmit={handleMailLogin} prevStep={goToPrevStep} />,
-    // <SavePasswordStep key={3} handleSavePassword={handleSavePassword} />,
-    // <CongratulationsStep key={4} />,
+    <SavePasswordStep key={3} handleSavePassword={handleSavePassword} prevStep={goToPrevStep} />,
+    <CongratulationsStep key={4} handleExitConfiguration={handleExitConfiguration} />,
   ][activeStepIndex]
 }
 

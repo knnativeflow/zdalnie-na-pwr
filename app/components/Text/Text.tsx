@@ -1,9 +1,9 @@
 import React from 'react'
-import { Palette } from '@material-ui/core/styles/createPalette'
 import { styled, Theme } from '@material-ui/core/styles'
+import { getPaletteColor, PaletteOrString } from 'utils/theme'
 
 export type Props = {
-  color?: ((palette: Palette) => string) | string
+  color?: PaletteOrString
   size?: number | string
   fontWeight?:
     | number
@@ -21,7 +21,7 @@ export type Props = {
 }
 
 const Text = styled('span')(({ theme, ...props }: Props) => {
-  const color = typeof props.color === 'function' ? props.color(theme.palette) : props.color
+  const color = getPaletteColor(theme.palette)(props.color)
   const fontSize = typeof props.size === 'number' ? `${props.size}rem` : props.size
   return { color, fontSize, fontWeight: props.fontWeight }
 })
