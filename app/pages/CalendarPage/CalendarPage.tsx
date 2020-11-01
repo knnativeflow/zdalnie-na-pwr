@@ -7,6 +7,7 @@ import Calendar from 'components/Calendar'
 import { RootState } from 'store'
 
 import { eventColor } from 'utils/courseTypes'
+import { IEventFullCalendar } from 'domain/event'
 import styles from './CalendarPage.scss'
 
 const CalendarPage = (): JSX.Element => {
