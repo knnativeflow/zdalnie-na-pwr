@@ -2,22 +2,18 @@ import moment from 'moment'
 
 import { Store } from 'store'
 
-import studentMail from 'features/studentMail'
-
-import PasswordManager from 'features/passwords'
+import SmailRefresher from './SmailRefresher'
 import { addZoomLinks } from 'actions/events'
 import { IEvent } from 'domain/event'
 
 const SMAIL_REFRESH_PERIOD = 1000 * 60 * 5 //5 minutes
-// const JSOS_REFRESH_PERIOD = 1000 * 60 * 60 * 24 //24 hours
 
-export class Synchronization {
-  redux: Store
-  smailInterval: NodeJS.Timeout
+export default class Synchronization {
+  private redux: Store
 
   constructor(redux: Store) {
     this.redux = redux
-    this.smailInterval = setInterval(async () => this.refreshSmailIfNessecery(), SMAIL_REFRESH_PERIOD)
+    setInterval(async () => this.refreshSmailIfNessecery(), SMAIL_REFRESH_PERIOD)
     this.refreshSmail()
   }
 
@@ -33,12 +29,8 @@ export class Synchronization {
 
   private async refreshSmail() {
     try {
-      const {account, password} = await PasswordManager.getSmailCredentials()
-      await studentMail.login(account, password)
-
-      const zoomLinks = await studentMail.getZoomLinks()
-
-      this.redux.store.dispatch(addZoomLinks(zoomLinks, true))
+      const zoomLinks = await SmailRefresher.refresh()
+      this.redux.store.dispatch(addZoomLinks(zoomLinks, false))
     } catch (e) {
       console.error('Bład podczas odświeżania maili z Poczty Studenckiej.', e)
     }
