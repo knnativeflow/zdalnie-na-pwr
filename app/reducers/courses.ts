@@ -13,7 +13,7 @@ const reducerCourseList = (state = INIT_STATE, action: Action) => {
       return action.payload
     case ADD_EVENT_ZOOM_LINKS:
       return state.map((course) => {
-        const foundLink = action.payload.find((zoomLink) => zoomLink.courseName.startsWith(course.name))
+        const foundLink = action.payload.zoomLinks.find((zoomLink) => zoomLink.courseName.startsWith(course.name))
 
         return foundLink ? { ...course, platforms: { ...course.platforms, zoom: { recurrent: false } } } : course
       })
