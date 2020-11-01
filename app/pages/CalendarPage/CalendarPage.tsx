@@ -31,6 +31,11 @@ const EventDetailsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   background: #f5f9fd;
+  overflow: auto;
+
+  @media (max-width: 1200px) {
+    min-width: 300px;
+  }
 `
 
 const CalendarPage = (): JSX.Element => {
@@ -38,6 +43,7 @@ const CalendarPage = (): JSX.Element => {
   const [isOpenStudentMailModal, setIsOpenStudentMailModal] = useState(false)
   const events = useSelector((state: RootState) => state.events)
 
+  // TODO: move it to calendar component
   const parsedEvents = useMemo<IEventFullCalendar[]>(
     () =>
       events.reduce<IEventFullCalendar[]>((events, event) => {
@@ -46,7 +52,7 @@ const CalendarPage = (): JSX.Element => {
           {
             start: event.start,
             end: event.end,
-            title: `${event.type} ${event.name}`,
+            title: event.name,
             color: eventColor(event.type),
             resource: event,
           },

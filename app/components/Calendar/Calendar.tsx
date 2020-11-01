@@ -6,6 +6,7 @@ import locale from '@fullcalendar/core/locales/pl'
 import { IEvent, IEventFullCalendar } from 'domain/event'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/all'
 import styled from '@emotion/styled'
+import { EventContentArg } from '@fullcalendar/core'
 
 interface Props {
   events: IEventFullCalendar[]
@@ -22,18 +23,58 @@ const CalendarWrapper = styled.div`
   .fc-toolbar.fc-header-toolbar {
     margin-bottom: 10px;
   }
+
   .fc-toolbar-chunk {
     display: flex;
   }
-  .fc-button {
+
+  .fc-button-primary {
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
+  .fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
+    margin-left: 8px;
+  }
+
   .fc-view-harness {
     overflow-y: auto;
   }
+`
+
+const Title = styled.p`
+  font-weight: 700;
+  margin: 0;
+  position: absolute;
+`
+
+const EventContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 3px;
+  padding-bottom: 8px;
+  height: 100%;
+`
+
+const EventHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  opacity: 0.8;
+  flex: 1;
+`
+
+const EventType = styled.span`
+  font-weight: 700;
+`
+
+const EventName = styled.span`
+  margin: 0;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 1.2;
+  overflow-wrap: break-word;
 `
 
 const Calendar = ({ events, onEventClick }: Props) => {
@@ -64,9 +105,22 @@ const Calendar = ({ events, onEventClick }: Props) => {
     },
   }
 
-  // @ts-ignore
+  // TODO: improve styles
+  const renderEventContent = (eventInfo: EventContentArg) => {
+    const event = eventInfo.event.extendedProps.resource
+    return (
+      <EventContent>
+        <EventHeader>
+          {eventInfo.timeText} <EventType>{event.type}</EventType>
+        </EventHeader>
+        <EventName>{event.name}</EventName>
+      </EventContent>
+    )
+  }
+
   return (
     <CalendarWrapper>
+      <Title>Plan zajęć</Title>
       <FullCalendar
         ref={calendarRef}
         height="auto"
@@ -80,21 +134,23 @@ const Calendar = ({ events, onEventClick }: Props) => {
         events={events}
         locale={locale}
         eventClick={handleClickEvent}
-        weekends
+        // weekends
         nowIndicator
         slotLabelFormat={{
           hour: 'numeric',
           minute: '2-digit',
           omitZeroMinute: false,
         }}
-        viewHeight="500px"
         buttonIcons={false}
+        // @ts-ignore
         customButtons={customButtons}
         headerToolbar={{
           left: '',
           center: '',
           right: 'today prevButton nextButton',
         }}
+        firstDay={1}
+        eventContent={renderEventContent}
       />
     </CalendarWrapper>
   )

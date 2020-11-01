@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { Button } from '@material-ui/core'
+import { BsCalendar, FaRegBookmark } from 'react-icons/all'
 import styled from '@emotion/styled'
 
 import routes from 'constants/routes.json'
@@ -22,23 +22,44 @@ const ActionsWrapper = styled.div`
   display: flex;
   align-items: center;
 `
-// TODO: style nav buttons, remove material btns
+
+const Link = styled(NavLink)`
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+
+  margin-right: 32px;
+  transition: all 0.2s ease-in-out;
+
+  svg {
+    font-size: 18px;
+    margin-right: 5px;
+  }
+
+  &:hover {
+    opacity: 0.5;
+  }
+`
+
+const activeStyle = { color: '#fff', opacity: 1 }
+
+// TODO: style nav buttons
 const AppBar = () => {
   return (
     <>
       <AppBarWrapper>
         <ActionsWrapper>
-          <NavLink to={routes.INDEX} activeStyle={{ color: '#fff', opacity: 1 }} exact>
-            <Button color="inherit">Panel</Button>
-          </NavLink>
-          <NavLink to={routes.CALENDAR} activeStyle={{ color: '#fff', opacity: 1 }}>
-            <Button color="inherit">Kalendarz</Button>
-          </NavLink>
+          <Link to={routes.INDEX} activeStyle={activeStyle} exact>
+            <FaRegBookmark /> Panel
+          </Link>
+          <Link to={routes.CALENDAR} activeStyle={activeStyle}>
+            <BsCalendar /> Kalendarz
+          </Link>
         </ActionsWrapper>
         <ActionsWrapper>
-          <NavLink to={routes.SETTINGS} activeStyle={{ color: '#fff', opacity: 1 }}>
-            <Button color="inherit">Ustawienia</Button>
-          </NavLink>
+          <Link to={routes.SETTINGS} activeStyle={activeStyle}>
+            Ustawienia
+          </Link>
         </ActionsWrapper>
       </AppBarWrapper>
     </>

@@ -1,37 +1,24 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
+import { shell } from 'electron'
 import { EventNote, LocalLibrary, MenuBook, Notes, People, Person, TurnedIn, Videocam } from '@material-ui/icons'
 import moment from 'moment'
-import { shell } from 'electron'
-
-import { eventColor, eventFullText } from 'utils/courseTypes'
-import InfoWithIcon from 'components/InfoWithIcon'
-import { APP_COLORS } from 'base/theme/theme'
-import { IEvent } from 'domain/event'
 import styled from '@emotion/styled'
 
-// START TEST DATA
-const platform: IPlatforms = {
-  zoom: {
-    weekly: true,
-    url: 'https://google.com',
-  },
-  teams: {
-    name: 'Oracle - projekt, Z00-21g',
-    url: 'https://google.com',
-  },
-  ePortal: {
-    name: 'Baza danych Oracle - programowanie',
-    url: 'https://google.com',
-  },
-}
+import { IEvent } from 'domain/event'
+import { ICourse } from 'domain/course'
+import { RootState } from 'store'
+import { APP_COLORS } from 'base/theme/theme'
+import { eventColor, eventFullText } from 'utils/courseTypes'
+import InfoWithIcon from 'components/InfoWithIcon'
 
+// START TEST DATA
 const additional: { [key: string]: string } = {
   Konsultacje: 'wt 16-18 227 B-2, czw 17-19 168 C-3',
   'Czy ziomek jest spoko': 'W sumie git',
   'Test emoji 😶🤐😗✌😐🤙': 'Idk chyba działa',
 }
 
-const code = 'Z00-21g'
 // END TEST DATA
 
 const EventInfoWrapper = styled.div`
@@ -51,6 +38,11 @@ const InfoGrid = styled.p`
   grid-auto-rows: auto;
   grid-gap: 8px;
   margin-bottom: 24px;
+
+  @media (max-width: 1200px) {
+    // TODO: use variable
+    grid-template-columns: 1fr;
+  }
 `
 
 const Subheader = styled.p`
@@ -68,16 +60,36 @@ const NoInfoText = styled.p`
   text-align: center;
 `
 
+const NoEventText = styled.p`
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.54);
+`
+
 interface Props {
   event?: IEvent
 }
 
 const EventInfo = ({ event }: Props) => {
-  if (!event) return null
+  const courses = useSelector((state: RootState) => state.courses)
 
-  const { name, type, start, end, lecturer, platform /* , code, additional, platform */ } = event
-  const mappedAdditional = Object.entries(additional)
-  const hasPlatforms = !!Object.values(platform).length
+  if (!event) {
+    return (
+      <EventInfoWrapper>
+        <NoEventText>Wybierz zajęcia, aby zobaczyć ich szczegóły ;)</NoEventText>
+      </EventInfoWrapper>
+    )
+  }
+
+  const eventCourse: ICourse | undefined = courses.find(
+    (course) => course.name.startsWith(event.name) && course.type === event.type
+  )
+
+  const { name, type, start, end, lecturer, platform, additional } = event
+  const mergedPlatforms = { ...eventCourse?.platforms, ...platform }
+  const mergedAdditional = { ...eventCourse?.additional, ...additional }
+  const mappedAdditional = Object.entries(mergedAdditional)
+  const hasPlatforms = !!Object.values(mergedPlatforms).length
   const color = eventColor(type)
 
   const handleOpenLink = (url: string) => () => shell.openExternal(url)
@@ -90,7 +102,7 @@ const EventInfo = ({ event }: Props) => {
           {eventFullText(type)}
         </InfoWithIcon>
         <InfoWithIcon icon={TurnedIn} title="Kod grupy" color={color}>
-          {code}
+          {eventCourse?.classesCode}
         </InfoWithIcon>
         <InfoWithIcon icon={EventNote} title="Termin" color={color}>
           {moment(start).format('dddd, HH:mm')} - {moment(end).format('HH:mm')}
@@ -108,34 +120,34 @@ const EventInfo = ({ event }: Props) => {
 
       {hasPlatforms && (
         <InfoGrid>
-          {platform?.zoom?.url && (
+          {mergedPlatforms?.zoom?.url && (
             <InfoWithIcon
-              onClick={handleOpenLink(platform.zoom.url)}
+              onClick={handleOpenLink(mergedPlatforms.zoom.url)}
               icon={Videocam}
               title="ZOOM"
               color={APP_COLORS.brand.zoom}
             >
-              {platform.zoom.weekly ? 'spotkanie cotygodniowe' : 'spotkanie jednorazowe'}
+              {mergedPlatforms.zoom.recurrent ? 'spotkanie cotygodniowe' : 'spotkanie jednorazowe'}
             </InfoWithIcon>
           )}
-          {platform.teams && (
+          {mergedPlatforms.teams && (
             <InfoWithIcon
-              onClick={handleOpenLink(platform.teams.url)}
+              onClick={handleOpenLink(mergedPlatforms.teams.url)}
               icon={People}
               title="Teams"
               color={APP_COLORS.brand.teams}
             >
-              {platform.teams.name}
+              {mergedPlatforms.teams.name}
             </InfoWithIcon>
           )}
-          {platform.ePortal && (
+          {mergedPlatforms.ePortal && (
             <InfoWithIcon
-              onClick={handleOpenLink(platform.ePortal.url)}
+              onClick={handleOpenLink(mergedPlatforms.ePortal.url)}
               icon={LocalLibrary}
               title="EPortal"
               color={APP_COLORS.brand.ePortal}
             >
-              {platform.ePortal.name}
+              {mergedPlatforms.ePortal.name}
             </InfoWithIcon>
           )}
         </InfoGrid>
