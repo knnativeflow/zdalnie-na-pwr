@@ -300,5 +300,8 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  }
+  },
+  "browserslist": [
+    "last 1 electron version"
+  ]
 }

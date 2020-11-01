@@ -43,7 +43,7 @@ export const APP_COLORS = {
     ePortal: '#FA7F0E',
   },
   pink: {
-    light: '#FF4AF8',
+    light: '#EA95FF',
     main: '#FF4AF8',
     dark: '#FF4AF8',
   },

@@ -1,16 +1,14 @@
-import { IEvent } from './event'
-
 export enum CourseType {
-  W='W',
-  C='C',
-  S='S',
-  L='L',
-  P='P'
+  W = 'W',
+  C = 'C',
+  S = 'S',
+  L = 'L',
+  P = 'P',
 }
 
 export interface IPlatforms {
   zoom?: {
-    weekly: boolean
+    recurrent: boolean
     url?: string
   }
   teams?: {
@@ -23,10 +21,10 @@ export interface IPlatforms {
   }
 }
 
-export  enum WeekType {
+export enum WeekType {
   TP = 'TP',
   TN = 'TN',
-  ALL = ''
+  ALL = '',
 }
 
 export interface ICourse {
@@ -35,19 +33,15 @@ export interface ICourse {
   start: string
   end: string
   lecturer: string
-  courseCode: string,
-  classesCode: string,
-  inWeeks: WeekType,
-  hoursInSemester: string,
-  ECTSes: string,
+  courseCode: string
+  classesCode: string
+  inWeeks: WeekType
+  hoursInSemester: string
+  ECTSes: string
   platforms: IPlatforms
   additional: {
     [key: string]: string
   }
-}
-
-export interface ICourseWithEvents extends ICourse {
-  events: IEvent[]
 }
 
 export interface ICourseTeamsLink {

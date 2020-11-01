@@ -63,8 +63,10 @@ class StudentMail {
       throw new Error('Invalid data in ical')
     }
 
+    const foundUrl = event.description.match(/https:\/\/pwr-edu.zoom.us\/j\/[0-9]+\?pwd=[a-zA-Z0-9]+/g)?.[0]
+
     return {
-      url: event.description.split('\n')[0],
+      url: foundUrl || '',
       courseName: event.summary,
       date: moment(event.start).format('YYYY-MM-DDTHH:mm:ss'),
     }
@@ -101,7 +103,7 @@ class StudentMail {
   }
 
   public async getZoomLinks(): Promise<IEventZoomLink[]> {
-    const baseMailList = await this.getMailList(10, { subject: 'Planowany termin zdalnych zajęć' })
+    const baseMailList = await this.getMailList(15, { subject: 'Planowany termin zdal' })
 
     return baseMailList.reduce<Promise<IEventZoomLink[]>>(async (promiseAgg, mail) => {
       const agg = await promiseAgg
