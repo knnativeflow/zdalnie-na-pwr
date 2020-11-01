@@ -3,13 +3,8 @@ import { remote } from 'electron'
 import { useSelector } from 'react-redux'
 import { VscChromeClose, VscChromeMaximize, VscChromeMinimize, VscChromeRestore } from 'react-icons/all'
 import { IconType } from 'react-icons'
-import {
-  MenuBarWrapper,
-  ActionButton as StyledActionButton,
-  ActionButtonsContainer,
-  Title,
-} from 'components/Menubar/Menubar.styled'
 import { RootState } from 'store'
+import { MenuBarWrapper, ActionButton as StyledActionButton, ActionButtonsContainer, Title } from './MenuBar.styled'
 
 type ActionButtonProps = {
   icon: IconType

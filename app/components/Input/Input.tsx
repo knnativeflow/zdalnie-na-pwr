@@ -1,25 +1,41 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react'
-import { InputBaseProps } from '@material-ui/core'
-import { PaletteOrString } from 'utils/theme'
-import StyledInput, { StyledInputLabel } from './Input.styled'
+import React, { useState } from 'react'
+import { FaEye, FaEyeSlash } from 'react-icons/all'
+import Button from 'components/Button'
+import Space from 'components/Space'
+import StyledInput, { StyledInputContainer, StyledInputLabel } from './Input.styled'
 
 export type Props = {
-  children: React.ReactNode
-  textColor: PaletteOrString
-  bgColor?: PaletteOrString
+  textColor: string
+  bgColor?: string
   maxWidth?: string | number
-} & InputBaseProps
+  placeholder?: string
+} & React.ComponentProps<'input'>
 
 const Input = (props: Props) => {
-  const { children, textColor, ...rest } = props
+  const { placeholder, textColor, bgColor, maxWidth, disabled, ...rest } = props
+  const [isPasswordShown, setPasswordShown] = useState(rest.type !== 'password')
+  const type = rest.type === 'password' && isPasswordShown ? 'text' : rest.type
+
   return (
-    <StyledInput
-      textColor={textColor}
-      placeholder=" "
-      endAdornment={<StyledInputLabel>{children}</StyledInputLabel>}
-      {...rest}
-    />
+    <StyledInputContainer {...{ textColor, bgColor, maxWidth, disabled }}>
+      <StyledInput onBlur={() => setPasswordShown(false)} placeholder=" " {...rest} type={type} />
+      <StyledInputLabel>{placeholder}</StyledInputLabel>
+      {rest.type === 'password' && (
+        <>
+          <Button
+            color={textColor}
+            onClick={() => setPasswordShown(!isPasswordShown)}
+            even
+            compact
+            variant="transparent"
+          >
+            {isPasswordShown ? <FaEye size="2em" /> : <FaEyeSlash size="2em" />}
+          </Button>
+          <Space size={0.5} horizontal />
+        </>
+      )}
+    </StyledInputContainer>
   )
 }
 

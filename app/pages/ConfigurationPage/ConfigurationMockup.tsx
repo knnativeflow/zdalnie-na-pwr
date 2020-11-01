@@ -1,45 +1,38 @@
 import React from 'react'
-import { styled, Theme } from '@material-ui/core'
-import { getPaletteColor, PaletteOrString } from 'utils/theme'
-
+import styled from '@emotion/styled'
 import mockup from 'assets/images/stepper-mockup-1.png'
 
 type FeatureProps = {
   src: string
-  theme: Theme
 }
 
-const StepperFeature = styled('div')((props: FeatureProps) => ({
-  backgroundImage: `url(${props.src})`,
-  height: '90%',
-  flex: 1,
-  backgroundSize: 'auto 100%',
-  backgroundRepeat: 'no-repeat',
-  margin: 'auto',
-}))
+const StepperFeature = styled.div<FeatureProps>`
+  background-image: ${({ src }) => `url(${src})`};
+  height: 90%;
+  flex: 1;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  margin: auto;
+`
 
 type CircleProps = {
-  theme: Theme
-  bgColor: PaletteOrString
+  bgColor: string
 }
 
-const BackgroundCircle = styled('div')(({ theme, ...props }: CircleProps) => {
-  const color = getPaletteColor(theme.palette)(props.bgColor)
-  return {
-    borderRadius: '50%',
-    width: '130vmax',
-    height: '130vmax',
-    right: '-70vmax',
-    bottom: '-35vmax',
-    background: color,
-    position: 'absolute',
-    zIndex: -100,
-  }
-})
+const BackgroundCircle = styled.div<CircleProps>`
+  border-radius: 50%;
+  width: 130vmax;
+  height: 130vmax;
+  right: -70vmax;
+  bottom: -35vmax;
+  background: ${({ bgColor }) => bgColor};
+  position: absolute;
+  z-index: -100;
+`
 
 type ConfigurationMockupProps = {
   src?: string
-  color: PaletteOrString
+  color: string
 }
 
 const ConfigurationMockup = ({ src = mockup, color }: ConfigurationMockupProps) => (

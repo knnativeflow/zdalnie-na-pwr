@@ -7,6 +7,7 @@ import Space from 'components/Space'
 export type LoginFormProps = {
   onSubmit: (login: string, password: string) => Promise<void>
   defaultValues?: { login: string; password: string }
+  loginPlaceholder?: string
   color: {
     light: string
     main: string
@@ -14,7 +15,7 @@ export type LoginFormProps = {
   }
 }
 
-const LoginForm = ({ onSubmit, defaultValues, color }: LoginFormProps) => {
+const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder }: LoginFormProps) => {
   const [login, setLogin] = useState(defaultValues?.login ?? '')
   const [password, setPassword] = useState(defaultValues?.password ?? '')
   const [error, setError] = useState('')
@@ -42,20 +43,20 @@ const LoginForm = ({ onSubmit, defaultValues, color }: LoginFormProps) => {
         autoFocus
         onChange={(event: ChangeEvent<HTMLInputElement>) => setLogin(event.target.value)}
         defaultValue={defaultValues?.login}
-      >
-        Login
-      </Input>
+        placeholder={loginPlaceholder ?? 'login'}
+        disabled={isLoading}
+      />
       <Space size={0.5} />
       <Input
         type="password"
         textColor={color.dark}
         onChange={(event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
         defaultValue={defaultValues?.password}
-      >
-        Hasło
-      </Input>
+        placeholder="hasło"
+        disabled={isLoading}
+      />
       <Space size={1} />
-      <Button type="submit" glow color={color.main} primary fullWidth disabled={isLoading}>
+      <Button type="submit" glow color={color.main} variant="primary" fullWidth disabled={isLoading}>
         {isLoading ? <CircularProgress size="1em" color="inherit" /> : 'Zaloguj'}
       </Button>
       {!!error && (
