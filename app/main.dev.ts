@@ -12,12 +12,14 @@ import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 import './initSentry'
 import path from 'path'
-import { app, BrowserWindow, autoUpdater } from 'electron'
+import { app, BrowserWindow, autoUpdater, dialog } from 'electron'
 import log from 'electron-log'
 
 import os from 'os'
 
 import MenuBuilder from './menu'
+
+let mainWindow: BrowserWindow | null = null
 
 export default class AppUpdater {
   constructor() {
@@ -25,11 +27,52 @@ export default class AppUpdater {
     const platform = `${os.platform()}_${os.arch()}`
     const version = app.getVersion()
 
-    autoUpdater.setFeedURL({ url: `http://zdalnie-na-pwr-update-app.herokuapp.com/update/${platform}/${version}` })
+    console.log('app', platform, version)
+
+    autoUpdater.setFeedURL({ url: `https://zdalnie-na-pwr-update-app.herokuapp.com/update/${platform}/${version}` })
+
+    autoUpdater.on('checking-for-update', () => console.log('checking-for-update'))
+    autoUpdater.on('update-available', () => console.log('update-available'))
+    autoUpdater.on('update-not-available', () => console.log('update-not-available'))
+    autoUpdater.on('error', (err) => console.log('err', err))
+
+    // autoUpdater.on('update-available', () => {
+    //   mainWindow?.webContents.send('update_available')
+    // })
+    // autoUpdater.on('update-downloaded', () => {
+    //   mainWindow?.webContents.send('update_downloaded')
+    // })
+
+    autoUpdater.checkForUpdates()
+
+    // autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+    //   let message = `${app.getName()} ${releaseName} is now available. It will be installed the next time you restart the application.`
+    //   if (releaseNotes) {
+    //     const splitNotes = releaseNotes.split(/[^\r]\n/)
+    //     message += '\n\nRelease notes:\n'
+    //     splitNotes.forEach((notes) => {
+    //       message += `${notes}\n\n`
+    //     })
+    //   }
+    //   // Ask user to update the app
+    //   dialog.showMessageBox(
+    //     {
+    //       type: 'question',
+    //       buttons: ['Install and Relaunch', 'Later'],
+    //       defaultId: 0,
+    //       message: `A new version of ${app.getName()} has been downloaded`,
+    //       detail: message,
+    //     },
+    //     (response) => {
+    //       if (response === 0) {
+    //         setTimeout(() => autoUpdater.quitAndInstall(), 1)
+    //       }
+    //     }
+    //   )
+    // })
+    // init for updates
   }
 }
-
-let mainWindow: BrowserWindow | null = null
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support')
@@ -101,7 +144,7 @@ const createWindow = async () => {
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
-  new AppUpdater()
+  // new AppUpdater()
 }
 
 /**

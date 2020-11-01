@@ -1,7 +1,7 @@
 {
   "name": "zdalnie-na-pwr",
   "productName": "Zdalnie na PWr",
-  "version": "0.0.5",
+  "version": "0.0.4",
   "versionNumber": 2,
   "description": "Aplikacja wspierająca e-learning na Politechnice Wrocławskiej",
   "scripts": {
@@ -64,13 +64,15 @@
       "main.prod.js.map",
       "package.json"
     ],
-    "afterSign": "scripts/notarize.js",
+    "afterSign": "electron-builder-notarize",
     "mac": {
       "hardenedRuntime": true,
-      "gatekeeperAssess": false,
-      "entitlements": "release/entitlements.mac.plist",
-      "entitlementsInherit": "release/entitlements.mac.plist",
-      "target": ["dmg"]
+      "entitlements": "./build/entitlements.mac.plist",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "gatekeeperAssess": false
     },
     "dmg": {
       "sign": false,
@@ -207,6 +209,7 @@
     "dotenv-webpack": "^4.0.0",
     "electron": "^8",
     "electron-builder": "^22.3.6",
+    "electron-builder-notarize": "^1.2.0",
     "electron-devtools-installer": "^2.2.4",
     "electron-notarize": "^1.0.0",
     "electron-rebuild": "^1.10.0",
@@ -272,8 +275,10 @@
     "@sentry/electron": "^2.0.1",
     "cheerio": "^1.0.0-rc.3",
     "connected-react-router": "^6.6.1",
+    "dotenv": "^8.2.0",
     "electron-debug": "^3.1.0",
     "electron-log": "^4.2.4",
+    "electron-osx-sign": "^0.4.17",
     "electron-store": "^6.0.1",
     "electron-updater": "^4.3.4",
     "fp-ts": "^2.8.5",

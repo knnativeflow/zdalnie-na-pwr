@@ -11,6 +11,8 @@ exports.default = async function notarizing(context) {
 
   console.log('data notarize', process.env.APPLEID, process.env.APPLEIDPASS)
 
+  // const password = `@keychain:Application Loader: ${process.env.APPLEID}`
+
   return await notarize({
     appBundleId: 'pl.napwr.zdalnie',
     appPath: `${appOutDir}/${appName}.app`,
