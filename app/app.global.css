@@ -59,3 +59,49 @@ a:hover {
 *::after {
   box-sizing: border-box;
 }
+
+/*
+* TODO: off scrollbar styles on macOS
+*/
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background: #b1b1b1;
+  border: 0 none #fff;
+
+  /* border-radius: 16px; */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888a90;
+  border: 0 none #fff;
+  border-radius: 50px;
+}
+
+::-webkit-scrollbar-track:hover {
+  background: #c6c7c9;
+}
+
+::-webkit-scrollbar-track:active {
+  background: #cccdd4;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #686a72;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #32333a;
+}

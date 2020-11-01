@@ -25,6 +25,12 @@ const InfoWithIconWrapper = styled.div<{ as: 'button' | 'div'; color: string }>`
     as === 'button' &&
     css`
       background: ${color}20;
+      cursor: pointer;
+      transition: opacity 0.1s ease-in-out;
+
+      &:hover {
+        opacity: 0.8;
+      }
     `}
 `
 
