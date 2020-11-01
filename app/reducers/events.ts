@@ -19,7 +19,7 @@ const eventsReducer = (state = INIT_STATE, action: ActionEvents) => {
         return foundLink
           ? {
               ...event,
-              platform: { ...event.platform, zoom: { weekly: false, url: foundLink.url } },
+              platform: { ...event.platform, zoom: { recurrent: false, url: foundLink.url } },
             }
           : event
       })
