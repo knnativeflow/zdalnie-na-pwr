@@ -6,7 +6,7 @@ import studentMail from 'features/studentMail'
 
 import PasswordManager from 'features/passwords'
 import { addZoomLinks } from 'actions/events'
-import { IEvent } from '../../domain/event'
+import { IEvent } from 'domain/event'
 
 const SMAIL_REFRESH_PERIOD = 1000 * 60 * 5 //5 minutes
 // const JSOS_REFRESH_PERIOD = 1000 * 60 * 60 * 24 //24 hours
@@ -25,7 +25,7 @@ export class Synchronization {
     const events = this.redux.store.getState().events
     const isLessThen10Minutes = (e: IEvent) => moment.duration(moment().diff(moment(e.start))).minutes() < 10
     const upcomingEvents = events.filter(isLessThen10Minutes)
-    const haveDefineZoomLink = upcomingEvents.every(e => e.platform.zoom?.url && !e.platform.zoom?.weekly)
+    const haveDefineZoomLink = upcomingEvents.every(e => e.platform.zoom?.url && !e.platform.zoom?.recurrent)
     if(!haveDefineZoomLink) {
       this.refreshSmail()
     }
