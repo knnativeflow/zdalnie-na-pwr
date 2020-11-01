@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { Stepper, Step, StepLabel, Paper, Typography, Button } from '@material-ui/core'
+import { Box, FormControlLabel, Radio, styled } from '@material-ui/core'
 
 import studentMail from 'features/studentMail'
 import { jsosAuth, jsosExtractor } from 'features/jsos'
@@ -9,100 +8,188 @@ import iCalendar from 'features/iCalendar'
 import { addEvents, addZoomLinks } from 'actions/events'
 import { addCourses, addTeamsLinks } from 'actions/courses'
 import { updateUser } from 'actions/user'
-import routes from 'constants/routes.json'
 import LoginForm from 'components/LoginForm'
-import styles from './ConfigurationPage.scss'
+import Button from 'components/Button'
+import { LoginFormProps } from 'components/LoginForm/LoginForm'
+import { APP_COLORS } from 'base/theme/theme'
+import { FaChevronLeft } from 'react-icons/all'
+import Text from 'components/Text'
+import Space from 'components/Space'
+import ConfigurationMockup from './ConfigurationMockup'
 
-const JsosStep = ({ handleSubmit }: { handleSubmit: (login: string, password: string) => Promise<void> }) => (
-  <Paper elevation={3} className={styles.paper}>
-    <div className={styles.column}>
-      <Typography variant="h6">JSOS</Typography>
-      <LoginForm
-        loginInput={{ label: 'Login', placeholder: 'pwr123456' }}
-        passwordInput={{ label: 'Password', placeholder: 'Twoje hasło do JSOS' }}
-        onSubmit={handleSubmit}
-      />
-    </div>
-    <div className={styles.column}>
-      <Typography variant="body1">
-        Logowanie do JSOS wymagane jest do pobrania listy kursów oraz zajęć, na które uczęszczasz. Aktualnie to jedyne
-        informacje pobierane przez aplikację. Cały proces wykonywany jest w aplikacji, więc nie musisz się martwić o
-        wyciek twoich danych logowania. Działa to na podobnej zasadzie jak przeglądarka ze stroną JSOS, ale to aplikacja
-        symuluje ruchy użytkownika.
-      </Typography>
-    </div>
-  </Paper>
+const StyledSidebar = styled('div')({
+  height: '100%',
+  width: '40%',
+  maxWidth: 400,
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  padding: '5%',
+
+  '& h1': {
+    margin: 0,
+  },
+})
+
+type StepWithLoginProps = Omit<LoginFormProps, 'color'> & { prevStep: () => void }
+
+type GoBackProps = {
+  count: number
+  color: {
+    light: string
+    main: string
+  }
+  onClick: () => void
+}
+
+const GoBackButton = ({ count, color, onClick }: GoBackProps) => (
+  <Box display="flex" alignItems="center" marginBottom="auto">
+    <Button color={color.main} compact onClick={onClick}>
+      <FaChevronLeft />
+    </Button>
+    <Space size={0.5} horizontal />
+    <Text fontWeight="bold" color={color.light} size={0.9}>
+      Krok {count} z 3
+    </Text>
+  </Box>
 )
 
-const MailStep = ({ handleSubmit }: { handleSubmit: (login: string, password: string) => Promise<void> }) => (
-  <Paper elevation={3} className={styles.paper}>
-    <div className={styles.column}>
-      <Typography variant="h6">Poczta studencka</Typography>
-      <LoginForm
-        loginInput={{ label: 'Login', placeholder: '123456' }}
-        passwordInput={{ label: 'Password', placeholder: 'Twoje hasło do poczty studenckiej' }}
-        onSubmit={handleSubmit}
-      />
-    </div>
-    <div className={styles.column}>
-      <Typography variant="body1">
+type FooterInfoProps = {
+  children: React.ReactNode
+  color: string
+}
+
+const FooterInfo = ({ children, color }: FooterInfoProps) => (
+  <Text color={color} size={0.75} style={{ marginTop: 'auto' }}>
+    {children}
+  </Text>
+)
+
+const StartStep = ({ nextStep }: { nextStep: () => void }) => (
+  <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
+    <StyledSidebar>
+      <Text size={2} fontWeight={900}>
+        Zdalnie
+      </Text>
+      <Text size={2} fontWeight="lighter">
+        na PWR
+      </Text>
+      <Box height="4em" />
+      <span>Od dziś wszystkie linki do zajęć możesz mieć w jednym miejscu.</span>
+      <Box height="2em" />
+      <Button onClick={nextStep} glow color="#FF4AF8" primary fullWidth>
+        Do dzieła
+      </Button>
+    </StyledSidebar>
+    <ConfigurationMockup color={APP_COLORS.pink.light} />
+  </Box>
+)
+
+const JsosStep = ({ onSubmit, defaultValues, prevStep }: StepWithLoginProps) => (
+  <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
+    <StyledSidebar>
+      <GoBackButton color={APP_COLORS.purple} count={1} onClick={prevStep} />
+      <Space size={2} />
+      <h3>Zaloguj się do JSOS</h3>
+      <Space size={2} />
+      <LoginForm color={APP_COLORS.purple} {...{ onSubmit, defaultValues }} />
+      <Space size={2} />
+      <FooterInfo color={APP_COLORS.purple.light}>
+        Aktualnie jedyną informacją pobieraną z JSOS jest siatka zajęć. Cały proces wykonywany jest wewnątrz aplikacji i
+        nie różni się od logowania przez przeglądarkę.
+      </FooterInfo>
+    </StyledSidebar>
+    <ConfigurationMockup color={APP_COLORS.purple.light} />
+  </Box>
+)
+
+const MailStep = ({ onSubmit, defaultValues, prevStep }: StepWithLoginProps) => (
+  <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
+    <StyledSidebar>
+      <GoBackButton color={APP_COLORS.blue} count={2} onClick={prevStep} />
+      <Space size={2} />
+      <h3>Zaloguj się do poczty studenckiej</h3>
+      <Space size={2} />
+      <LoginForm color={APP_COLORS.blue} {...{ onSubmit, defaultValues }} />
+      <Space size={2} />
+      <FooterInfo color={APP_COLORS.blue.light}>
         Logowanie do poczty wymagane jest do pobierania automatycznie linków do Zooma oraz linków do Teamsów. Po co
         szukać samemu linków jak może to zrobić za ciebie technologia? Działanie i bezpieczeństwo działa na tej samej
         zasadzie co logowanie do JSOS.
-      </Typography>
-    </div>
-  </Paper>
+      </FooterInfo>
+    </StyledSidebar>
+    <ConfigurationMockup color={APP_COLORS.blue.light} />
+  </Box>
 )
 
-const SavePasswordStep = ({ handleSavePassword }: { handleSavePassword: (hasAgreed: boolean) => void }) => (
-  <Paper elevation={3} className={styles.paper}>
-    <div className={styles.column}>
-      <Typography variant="h6">Zapisz hasło na przyszłość</Typography>
-      <Typography variant="body1">
-        Dane logowania, które wprowadziliście wcześniej możemy zapisać u was na komputrze, podobnie jak robi to
-        przeglądarka. Pozwoli to na automatyczne odświeżanie danych. Głównie dotyczy to linków do Zooma przysyłanych na
-        pocztę studencką. Dane są zapisywane w tzw. bezpiecznej enklawie, czyli miejscu stworzonym przez twórców
-        systemów operacyjnych właśnie dla wrażliwych danych jakimi są dane logowania.
-      </Typography>
-      <Typography variant="body1">
-        Oczywiście możecie nie wyrazić zgody na zapisanie haseł. Musicie się jedynie liczyć, że przed każdym pobraniem
-        danych będziecie musieli wprowadzać na nowo dane logowania.
-      </Typography>
-      <div className={styles.buttonActions}>
-        <Button color="primary" variant="outlined" onClick={() => handleSavePassword(false)}>
-          Nie wyrażam zgody
+const SavePasswordStep = (props: { prevStep: () => void; onPasswordSave: (hasAgreed: boolean) => void }) => {
+  const [hasAgreed, setHasAgreed] = useState(true)
+  const { onPasswordSave, prevStep } = props
+  return (
+    <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
+      <StyledSidebar>
+        <GoBackButton color={APP_COLORS.teal} count={3} onClick={prevStep} />
+        <Space size={2} />
+        <h3>Zapamiętaj dane logowania</h3>
+        <FormControlLabel
+          onChange={() => setHasAgreed(true)}
+          checked={hasAgreed}
+          control={<Radio />}
+          label="Pamiętaj"
+        />
+        <FormControlLabel
+          onChange={() => setHasAgreed(false)}
+          checked={!hasAgreed}
+          control={<Radio />}
+          label="Nie pamiętaj"
+        />
+        <Space size={2} />
+        <Button onClick={() => onPasswordSave(hasAgreed)} glow color={APP_COLORS.teal.main} primary fullWidth>
+          Gotowe
         </Button>
-        <Button color="primary" variant="contained" onClick={() => handleSavePassword(true)}>
-          Wyrażam zgodę
-        </Button>
-      </div>
-    </div>
-  </Paper>
-)
+        <Space size={2} />
+        <FooterInfo color={APP_COLORS.teal.light}>
+          Jeśli dane nie zostaną zapamiętane, trzeba będzie wpisać je na nowo podczas każdego uruchomienia aplikacji.
+        </FooterInfo>
+      </StyledSidebar>
+      <ConfigurationMockup color={APP_COLORS.teal.light} />
+    </Box>
+  )
+}
 
-const CongratulationsStep = () => (
-  <Paper elevation={3} className={styles.paper}>
-    <div className={styles.column}>
-      <Typography variant="h6">Udało się, wszystko gotowe!</Typography>
-      <Typography variant="body1">Teraz możesz już korzystać z aplikacji.</Typography>
-      <div className={styles.buttonActions}>
-        <Button color="primary" variant="outlined" component={Link} to={routes.CALENDAR}>
-          Przejdź do aplikacji
-        </Button>
-      </div>
-    </div>
-  </Paper>
+const CongratulationsStep = ({ onConfigurationExit }: { onConfigurationExit: () => void }) => (
+  <Box
+    width="100vw"
+    height="100vh"
+    overflow="hidden"
+    position="relative"
+    display="flex"
+    flexDirection="column"
+    justifyContent="center"
+    alignItems="center"
+  >
+    <Text fontWeight="bold" size={2}>
+      Wszystko gotowe!
+      <span role="img" aria-label="gwiazdki">
+        ✨
+      </span>
+    </Text>
+    <Text>Możesz już zacząć korzystać z aplikacji.</Text>
+    <Space size={2} />
+    <Button color={APP_COLORS.pink.main} primary glow onClick={onConfigurationExit}>
+      Przejdź do aplikacji
+    </Button>
+  </Box>
 )
-
-const STEPS = ['JSOS', 'Poczta studencka', 'Zapisanie haseł', 'Koniec']
 
 const ConfigurationPage = () => {
+  const dispatch = useDispatch()
   const [activeStepIndex, setActiveStepIndex] = useState(0)
   const [jsosDataLogin, setJsosDataLogin] = useState({ login: '', password: '' })
   const [mailDataLogin, setMailDataLogin] = useState({ login: '', password: '' })
-  const dispatch = useDispatch()
 
   const goToNextStep = () => setActiveStepIndex(activeStepIndex + 1)
+  const goToPrevStep = () => setActiveStepIndex(activeStepIndex - 1)
 
   const handleJsosLogin = async (login: string, password: string): Promise<void> => {
     await jsosAuth.signIn(login, password)
@@ -139,28 +226,22 @@ const ConfigurationPage = () => {
       console.log('nie zapisuje haseł')
     }
 
-    dispatch(updateUser({ configured: true }))
-
     // TODO: add save password
 
     goToNextStep()
   }
 
-  return (
-    <div className={styles.root}>
-      <Stepper activeStep={activeStepIndex} alternativeLabel>
-        {STEPS.map((label) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      {activeStepIndex === 0 && <JsosStep handleSubmit={handleJsosLogin} />}
-      {activeStepIndex === 1 && <MailStep handleSubmit={handleMailLogin} />}
-      {activeStepIndex === 2 && <SavePasswordStep handleSavePassword={handleSavePassword} />}
-      {activeStepIndex === 3 && <CongratulationsStep />}
-    </div>
-  )
+  const handleExitConfiguration = () => {
+    dispatch(updateUser({ configured: true }))
+  }
+
+  return [
+    <StartStep key={0} nextStep={goToNextStep} />,
+    <JsosStep key={1} onSubmit={handleJsosLogin} defaultValues={jsosDataLogin} prevStep={goToPrevStep} />,
+    <MailStep key={2} onSubmit={handleMailLogin} defaultValues={mailDataLogin} prevStep={goToPrevStep} />,
+    <SavePasswordStep key={3} onPasswordSave={handleSavePassword} prevStep={goToPrevStep} />,
+    <CongratulationsStep key={4} onConfigurationExit={handleExitConfiguration} />,
+  ][activeStepIndex]
 }
 
 export default ConfigurationPage

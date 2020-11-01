@@ -1,8 +1,8 @@
 import React from 'react'
 
-import styles from './HomePage.scss'
+import styles from './DashboardPage.scss'
 
-const HomePage = () => {
+const DashboardPage = () => {
   return (
     <div className={styles.root}>
       <div className={styles.header}>
@@ -12,4 +12,4 @@ const HomePage = () => {
   )
 }
 
-export default HomePage
+export default DashboardPage

@@ -9,7 +9,7 @@ const eventsReducer = (state = INIT_STATE, action: ActionEvents) => {
     case ADD_EVENTS:
       return action.payload ?? state
     case CLEAR_EVENTS:
-      return []
+      return INIT_STATE
     case ADD_EVENT_ZOOM_LINKS:
       return state.map((event) => {
         const foundLink = action.payload.find(

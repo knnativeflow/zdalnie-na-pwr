@@ -6,6 +6,9 @@ const theme = createMuiTheme({
       // main: '#70f',
       main: '#ae00ff',
     },
+    error: {
+      main: '#FF487F',
+    },
     secondary: {
       main: '#999',
     },
@@ -17,6 +20,9 @@ const theme = createMuiTheme({
     subtitle2: {
       fontSize: '0.7rem',
     },
+  },
+  shape: {
+    borderRadius: 12,
   },
 })
 
@@ -35,5 +41,25 @@ export const APP_COLORS = {
     zoom: '#2D8CFF',
     teams: '#464EB8',
     ePortal: '#FA7F0E',
+  },
+  pink: {
+    light: '#EA95FF',
+    main: '#FF4AF8',
+    dark: '#FF4AF8',
+  },
+  purple: {
+    light: '#C5BEDD',
+    main: '#8860FF',
+    dark: '#564E6A',
+  },
+  blue: {
+    light: '#AFBDD2',
+    main: '#3693FF',
+    dark: '#647287',
+  },
+  teal: {
+    light: '#98C3C1',
+    main: '#47CAB2',
+    dark: '#496C6A',
   },
 }

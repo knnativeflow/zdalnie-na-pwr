@@ -12,6 +12,30 @@ import { ICourse } from 'domain/course'
 import { IEvent } from 'domain/event'
 import { RootState } from 'store'
 
+// START TEST DATA
+const platform: IPlatforms = {
+  zoom: {
+    weekly: true,
+    url: 'https://google.com',
+  },
+  teams: {
+    name: 'Oracle - projekt, Z00-21g',
+    url: 'https://google.com',
+  },
+  ePortal: {
+    name: 'Baza danych Oracle - programowanie',
+    url: 'https://google.com',
+  },
+}
+
+const additional: { [key: string]: string } = {
+  Konsultacje: 'wt 16-18 227 B-2, czw 17-19 168 C-3',
+  'Czy ziomek jest spoko': 'W sumie git',
+  'Test emoji 😶🤐😗✌😐🤙': 'Idk chyba działa',
+}
+
+// END TEST DATA
+
 interface Props {
   event?: IEvent
   onClose: () => void
