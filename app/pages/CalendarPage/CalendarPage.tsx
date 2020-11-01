@@ -9,7 +9,7 @@ import { SmailRefresher } from 'features/synchronization'
 import { eventColor } from 'utils/courseTypes'
 import { IEventFullCalendar } from 'domain/event'
 import styles from './CalendarPage.scss'
-import { addZoomLinks } from '../../actions/events'
+import { addZoomLinks } from 'actions/events'
 import { CircularProgress } from '@material-ui/core'
 
 const CalendarPage = (): JSX.Element => {
