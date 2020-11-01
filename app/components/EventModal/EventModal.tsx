@@ -8,7 +8,7 @@ import { shell } from 'electron'
 import { eventColor, eventFullText } from 'utils/courseTypes'
 import InfoWithIcon, { ButtonInfoWithIcon } from 'components/InfoWithIcon'
 import { APP_COLORS } from 'base/theme/theme'
-import { ICourse } from 'domain/course'
+import { ICourse, IPlatforms } from 'domain/course'
 import { IEvent } from 'domain/event'
 import { RootState } from 'store'
 

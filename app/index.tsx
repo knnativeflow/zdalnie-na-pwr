@@ -5,7 +5,7 @@ import initSentry from './initSentry'
 
 import { history, configuredStore } from './store'
 import './app.global.css'
-import { Synchronization } from './features/synchronization/Synchronization'
+import { Synchronization } from './features/synchronization'
 
 const redux = configuredStore()
 
