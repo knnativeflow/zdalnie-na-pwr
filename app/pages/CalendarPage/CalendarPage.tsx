@@ -1,8 +1,7 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import styled from '@emotion/styled'
 
-import StudentMailModal from 'components/StudentMailModal'
 import Calendar from 'components/Calendar'
 import { RootState } from 'store'
 
@@ -38,9 +37,8 @@ const EventDetailsWrapper = styled.div`
   }
 `
 
-const CalendarPage = (): JSX.Element => {
+const CalendarPage = () => {
   const [isModalOpen, openModal, closeModal, modalParams] = useModal<IEvent>()
-  const [isOpenStudentMailModal, setIsOpenStudentMailModal] = useState(false)
   const events = useSelector((state: RootState) => state.events)
 
   // TODO: move it to calendar component
@@ -73,8 +71,7 @@ const CalendarPage = (): JSX.Element => {
           <EventInfo event={modalParams} />
         </EventDetailsWrapper>
       </CalendarPageWrapper>
-
-      <StudentMailModal open={isOpenStudentMailModal} onClose={() => setIsOpenStudentMailModal(false)} />
+      {/* <StudentMailModal open={isOpenStudentMailModal} onClose={() => setIsOpenStudentMailModal(false)} /> */}
       {/* <EventModal isOpen={isModalOpen} event={modalParams} onClose={closeModal} /> */}
     </>
   )

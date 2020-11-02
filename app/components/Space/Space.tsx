@@ -1,17 +1,14 @@
-import { styled, Theme } from '@material-ui/core/styles'
+import styled from '@emotion/styled'
+import { parseSize } from 'base/theme/theme'
 
 export type Props = {
   size: string | number
   horizontal?: boolean
-  theme: Theme
 }
 
-const Space = styled('div')(({ horizontal, ...props }: Props) => {
-  const size = typeof props.size === 'number' ? `${props.size}em` : props.size
-  return {
-    width: horizontal ? size : 0,
-    height: !horizontal ? size : 0,
-  }
-})
+const Space = styled.div<Props>`
+  width: ${({ horizontal, size }) => (horizontal ? parseSize(size) : 0)};
+  height: ${({ horizontal, size }) => (!horizontal ? parseSize(size) : 0)};
+`
 
 export default Space

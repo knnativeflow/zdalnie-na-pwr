@@ -1,18 +1,40 @@
+import { Box } from '@material-ui/core'
 import React from 'react'
-import { SvgIconTypeMap } from '@material-ui/core'
-import { OverridableComponent } from '@material-ui/core/OverridableComponent'
+import { IconType } from 'react-icons'
+import Button from 'components/Button'
+import { THEME } from 'base/theme/theme'
 import styled from '@emotion/styled'
 import { css } from '@emotion/core'
 
 interface InfoProps {
-  icon: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>
+  icon: IconType
   title: string
   children: React.ReactNode
   color?: string
   onClick?: () => void
 }
 
-const InfoWithIconWrapper = styled.div<{ as: 'button' | 'div'; color: string }>`
+// const InfoWithIcon = ({ icon: Icon, title, children, color }: InfoProps) => (
+//   <Box display="flex" alignItems="start" width={1}>
+//     <Box bgcolor={`${color}40`} color={color} display="inline-flex" p={0.75} mr={1.5} borderRadius="borderRadius">
+//       <Icon size="1.25em" />
+//     </Box>
+//     <Box flexGrow={1} display="flex" flexDirection="column">
+//       <Text fontWeight="bold" size={0.75} color={THEME.colors.mid}>
+//         {title}
+//       </Text>
+//       <Text size={0.85} fontWeight="normal">
+//         {children}
+//       </Text>
+//     </Box>
+//   </Box>
+// )
+
+// InfoWithIcon.defaultProps = {
+//   color: THEME.colors.mid,
+// }
+
+const InfoWithIconWrapper = styled.div<{ as: 'button' | 'div'; color?: string }>`
   display: flex;
   justify-content: left;
   text-align: left;
@@ -27,7 +49,6 @@ const InfoWithIconWrapper = styled.div<{ as: 'button' | 'div'; color: string }>`
       background: ${color}20;
       cursor: pointer;
       transition: opacity 0.1s ease-in-out;
-
       &:hover {
         opacity: 0.8;
       }
@@ -83,6 +104,27 @@ const InfoWithIcon = ({ icon: Icon, title, children, color, onClick }: InfoProps
 
 InfoWithIcon.defaultProps = {
   color: '#888888',
+}
+
+type ButtonProps = InfoProps & {
+  disabled?: boolean
+}
+
+export const ButtonInfoWithIcon = (props: ButtonProps) => {
+  const { onClick, icon, title, children, disabled, color = THEME.colors.mid } = props
+  return (
+    <Button even {...{ onClick, color, disabled }} fullWidth compact align="left">
+      <InfoWithIcon {...{ icon, title, color }}>
+        <Box fontSize="subtitle2.fontSize">{children}</Box>
+      </InfoWithIcon>
+    </Button>
+  )
+}
+
+ButtonInfoWithIcon.defaultProps = {
+  onClick: undefined,
+  color: THEME.colors.mid,
+  disabled: false,
 }
 
 export default InfoWithIcon

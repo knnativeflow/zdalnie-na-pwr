@@ -3,13 +3,8 @@ import { remote } from 'electron'
 import { useSelector } from 'react-redux'
 import { VscChromeClose, VscChromeMaximize, VscChromeMinimize, VscChromeRestore } from 'react-icons/all'
 import { IconType } from 'react-icons'
-import {
-  MenuBarWrapper,
-  ActionButton as StyledActionButton,
-  ActionButtonsContainer,
-  Title,
-} from 'components/Menubar/Menubar.styled'
 import { RootState } from 'store'
+import { MenuBarWrapper, ActionButton as StyledActionButton, ActionButtonsContainer, Title } from './MenuBar.styled'
 
 type ActionButtonProps = {
   icon: IconType
@@ -50,13 +45,13 @@ const MenuBar = () => {
         <span>Zdalnie</span>&nbsp;na PWr
       </Title>
       <ActionButtonsContainer>
-        <ActionButton icon={VscChromeMinimize} alt="Minimalizuj" onClick={win.minimize} />
+        <ActionButton icon={VscChromeMinimize} alt="Minimalizuj" onClick={() => win.minimize()} />
         {isMaximized ? (
-          <ActionButton icon={VscChromeRestore} alt="Przywróć" onClick={win.unmaximize} />
+          <ActionButton icon={VscChromeRestore} alt="Przywróć" onClick={() => win.unmaximize()} />
         ) : (
-          <ActionButton icon={VscChromeMaximize} alt="Maksymalizuj" onClick={win.maximize} />
+          <ActionButton icon={VscChromeMaximize} alt="Maksymalizuj" onClick={() => win.maximize()} />
         )}
-        <ActionButton icon={VscChromeClose} alt="Zamknij" onClick={win.close} />
+        <ActionButton icon={VscChromeClose} alt="Zamknij" onClick={() => win.close()} />
       </ActionButtonsContainer>
     </MenuBarWrapper>
   )

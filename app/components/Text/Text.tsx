@@ -1,29 +1,20 @@
 import React from 'react'
-import { styled, Theme } from '@material-ui/core/styles'
-import { getPaletteColor, PaletteOrString } from 'utils/theme'
+import styled from '@emotion/styled'
+import { parseSize } from 'base/theme/theme'
 
 export type Props = {
-  color?: PaletteOrString
+  color?: string
   size?: number | string
-  fontWeight?:
-    | number
-    | '-moz-initial'
-    | 'inherit'
-    | 'initial'
-    | 'revert'
-    | 'unset'
-    | 'normal'
-    | 'bold'
-    | 'bolder'
-    | 'lighter'
+  fontWeight?: string | number
   children: React.ReactNode
-  theme: Theme
 }
 
-const Text = styled('span')(({ theme, ...props }: Props) => {
-  const color = getPaletteColor(theme.palette)(props.color)
-  const fontSize = typeof props.size === 'number' ? `${props.size}rem` : props.size
-  return { color, fontSize, fontWeight: props.fontWeight }
-})
+const shouldForwardProp = (name: string) => !['color', 'size', 'fontWeight'].includes(name)
+
+const Text = styled('span', { shouldForwardProp })<Props>`
+  color: ${({ color }) => color};
+  font-size: ${({ size }) => size && parseSize(size)};
+  font-weight: ${({ fontWeight }) => fontWeight};
+`
 
 export default Text

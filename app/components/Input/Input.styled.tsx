@@ -1,56 +1,68 @@
-import { styled, Theme } from '@material-ui/core/styles'
-import { InputBase, InputBaseProps } from '@material-ui/core'
-import { getPaletteColor, PaletteOrString } from 'utils/theme'
+import styled from '@emotion/styled'
+import { parseSize } from 'base/theme/theme'
+import { css } from '@emotion/core'
 
 export type Props = {
-  theme: Theme
-  textColor: PaletteOrString
-  bgColor?: PaletteOrString
+  textColor: string
+  bgColor?: string
   maxWidth?: string | number
-} & InputBaseProps
+  disabled?: boolean
+}
 
-const StyledInput = styled(InputBase)(({ theme, ...props }: Props) => {
-  const textColor = getPaletteColor(theme.palette)(props.textColor)
-  const bgColor = props.bgColor ? getPaletteColor(theme.palette)(props.bgColor) : textColor + 20
-  return {
-    border: 0,
-    borderRadius: 8,
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-    paddingTop: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-    backgroundColor: bgColor,
-    color: textColor,
-    maxWidth: props.maxWidth,
-    transition: 'box-shadow 0.2s ease',
-    boxShadow: `0 0 0 1px transparent, 0 0 0 1px transparent inset`,
-    width: '100%',
+export const StyledInputContainer = styled('label')<Props>`
+  position: relative;
+  border: 0;
+  border-radius: 8px;
+  background-color: ${({ bgColor, textColor }) => bgColor || `${textColor}20`};
+  color: ${({ textColor }) => textColor};
+  max-width: ${({ maxWidth }) => maxWidth};
+  transition: box-shadow 0.2s ease;
+  box-shadow: 0 0 0 2px transparent inset;
+  width: 100%;
+  font-size: 0.85em;
+  display: flex;
+  align-items: center;
 
-    '& input': {
-      outline: 'none',
-    },
-
-    '&:focus-within': {
-      boxShadow: `0 0 0 1px ${textColor}, 0 0 0 1px ${textColor} inset`,
-    },
-
-    ...(props.disabled && {
-      opacity: 0.5,
-    }),
+  &:focus-within {
+    box-shadow: ${({ textColor }) => `0 0 0 2px ${textColor}60 inset`};
   }
-})
+
+  ${({ disabled }) =>
+    disabled &&
+    css`
+      opacity: 0.75;
+      pointer-events: none;
+    `}
+`
+
+const StyledInput = styled.input`
+  -webkit-appearance: none;
+  height: auto;
+  width: 100%;
+  flex-grow: 1;
+  background: transparent;
+  color: inherit;
+  padding-left: ${parseSize(1.5)};
+  padding-right: ${parseSize(1.5)};
+  padding-top: ${parseSize(1)};
+  padding-bottom: ${parseSize(1)};
+  border: 0;
+  outline: none;
+  font-weight: bold;
+`
 
 export default StyledInput
 
-export const StyledInputLabel = styled('span')(({ theme }) => ({
-  position: 'absolute',
-  left: theme.spacing(3),
-  top: '50%',
-  transform: 'translateY(-50%)',
-  transition: 'opacity 0.1s ease',
-  pointerEvents: 'none',
+export const StyledInputLabel = styled.span`
+  position: absolute;
+  left: ${parseSize(1.5)};
+  top: 50%;
+  transform: translateY(-50%);
+  transition: opacity 0.1s ease;
+  pointer-events: none;
+  opacity: 0.75;
 
-  ':not(:placeholder-shown) + &': {
-    opacity: 0,
+  ${StyledInput}:not(:placeholder-shown) + & {
+    opacity: 0;
   },
-}))
+`

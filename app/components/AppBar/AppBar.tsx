@@ -1,10 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { BsCalendar, FaRegBookmark } from 'react-icons/all'
+import { useDispatch } from 'react-redux'
+import { FaRegCalendarAlt, FaRegBookmark, FaSync, FaTools } from 'react-icons/all'
+import { css, keyframes } from '@emotion/core'
 import styled from '@emotion/styled'
 
 import routes from 'constants/routes.json'
 import { MENU_BAR_HEIGHT } from 'components/MenuBar/MenuBar.styled'
+import { SmailRefresher } from 'features/synchronization'
+import { addZoomLinks } from 'actions/events'
 
 const AppBarWrapper = styled.div`
   background: #759ccb;
@@ -23,10 +27,16 @@ const ActionsWrapper = styled.div`
   align-items: center;
 `
 
-const Link = styled(NavLink)`
+const link = css`
+  font-family: 'Open Sans';
+  font-size: 14px;
   display: flex;
   align-items: center;
   font-weight: 700;
+  background: none;
+  border: none;
+  opacity: 0.75;
+  cursor: pointer;
 
   margin-right: 32px;
   transition: all 0.2s ease-in-out;
@@ -39,12 +49,63 @@ const Link = styled(NavLink)`
   &:hover {
     opacity: 0.5;
   }
+
+  &:disabled {
+    color: #53678c;
+    cursor: initial;
+
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+`
+
+const Link = styled(NavLink)`
+  ${link}
+`
+
+const Button = styled.button`
+  ${link}
+`
+
+const spinAnim = keyframes`
+  0% {
+    transform: rotate(0deg)
+  }
+  100% {
+
+    transform: rotate(360deg)
+  }
+`
+
+const SyncIcon = styled(FaSync)<{ animate: boolean }>`
+  ${({ animate }) =>
+    animate &&
+    css`
+      animation: ${spinAnim} 1s linear infinite;
+    `}
 `
 
 const activeStyle = { color: '#fff', opacity: 1 }
 
-// TODO: style nav buttons
+// TODO: style nav buttons and active state
 const AppBar = () => {
+  const dispatch = useDispatch()
+  const [isSmailRefreshing, setIsSmailRefreshing] = useState(false)
+
+  const refreshSmail = async () => {
+    try {
+      setIsSmailRefreshing(true)
+      const zoomLinks = await SmailRefresher.refresh()
+      dispatch(addZoomLinks(zoomLinks, false))
+    } catch (e) {
+      // eslint-disable-next-line
+      console.error(e)
+    } finally {
+      setIsSmailRefreshing(false)
+    }
+  }
+
   return (
     <>
       <AppBarWrapper>
@@ -53,12 +114,16 @@ const AppBar = () => {
             <FaRegBookmark /> Panel
           </Link>
           <Link to={routes.CALENDAR} activeStyle={activeStyle}>
-            <BsCalendar /> Kalendarz
+            <FaRegCalendarAlt /> Kalendarz
           </Link>
         </ActionsWrapper>
         <ActionsWrapper>
+          <Button onClick={refreshSmail} disabled={isSmailRefreshing}>
+            <SyncIcon animate={isSmailRefreshing} />
+            Odśwież dane
+          </Button>
           <Link to={routes.SETTINGS} activeStyle={activeStyle}>
-            Ustawienia
+            <FaTools /> Ustawienia
           </Link>
         </ActionsWrapper>
       </AppBarWrapper>

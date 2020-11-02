@@ -1,35 +1,37 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { Box, FormControlLabel, Radio, styled } from '@material-ui/core'
+import { Box, FormControlLabel, Radio } from '@material-ui/core'
+import styled from '@emotion/styled'
 
 import studentMail from 'features/studentMail'
 import { jsosAuth, jsosExtractor } from 'features/jsos'
 import iCalendar from 'features/iCalendar'
+import PasswordManager from 'features/passwords'
 import { addEvents, addZoomLinks } from 'actions/events'
 import { addCourses, addTeamsLinks } from 'actions/courses'
 import { updateUser } from 'actions/user'
 import LoginForm from 'components/LoginForm'
 import Button from 'components/Button'
 import { LoginFormProps } from 'components/LoginForm/LoginForm'
-import { APP_COLORS } from 'base/theme/theme'
+import { THEME } from 'base/theme/theme'
 import { FaChevronLeft } from 'react-icons/all'
 import Text from 'components/Text'
 import Space from 'components/Space'
 import ConfigurationMockup from './ConfigurationMockup'
 
-const StyledSidebar = styled('div')({
-  height: '100%',
-  width: '40%',
-  maxWidth: 400,
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  padding: '5%',
+const StyledSidebar = styled.div`
+  height: 100%;
+  width: 40%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5%;
 
-  '& h1': {
-    margin: 0,
-  },
-})
+  & h1 {
+    margin: 0;
+  }
+`
 
 type StepWithLoginProps = Omit<LoginFormProps, 'color'> & { prevStep: () => void }
 
@@ -77,48 +79,52 @@ const StartStep = ({ nextStep }: { nextStep: () => void }) => (
       <Box height="4em" />
       <span>Od dziś wszystkie linki do zajęć możesz mieć w jednym miejscu.</span>
       <Box height="2em" />
-      <Button onClick={nextStep} glow color="#FF4AF8" primary fullWidth>
+      <Button onClick={nextStep} glow color="#FF4AF8" variant="primary" fullWidth>
         Do dzieła
       </Button>
     </StyledSidebar>
-    <ConfigurationMockup color={APP_COLORS.pink.light} />
+    <ConfigurationMockup color={THEME.colors.palette.pink.light} />
   </Box>
 )
 
 const JsosStep = ({ onSubmit, defaultValues, prevStep }: StepWithLoginProps) => (
   <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
     <StyledSidebar>
-      <GoBackButton color={APP_COLORS.purple} count={1} onClick={prevStep} />
+      <GoBackButton color={THEME.colors.palette.purple} count={1} onClick={prevStep} />
       <Space size={2} />
-      <h3>Zaloguj się do JSOS</h3>
+      <h2>Zaloguj się do JSOS</h2>
       <Space size={2} />
-      <LoginForm color={APP_COLORS.purple} {...{ onSubmit, defaultValues }} />
+      <LoginForm color={THEME.colors.palette.purple} {...{ onSubmit, defaultValues }} loginPlaceholder="pwr######" />
       <Space size={2} />
-      <FooterInfo color={APP_COLORS.purple.light}>
+      <FooterInfo color={THEME.colors.palette.purple.light}>
         Aktualnie jedyną informacją pobieraną z JSOS jest siatka zajęć. Cały proces wykonywany jest wewnątrz aplikacji i
         nie różni się od logowania przez przeglądarkę.
       </FooterInfo>
     </StyledSidebar>
-    <ConfigurationMockup color={APP_COLORS.purple.light} />
+    <ConfigurationMockup color={THEME.colors.palette.purple.light} />
   </Box>
 )
 
 const MailStep = ({ onSubmit, defaultValues, prevStep }: StepWithLoginProps) => (
   <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
     <StyledSidebar>
-      <GoBackButton color={APP_COLORS.blue} count={2} onClick={prevStep} />
+      <GoBackButton color={THEME.colors.palette.blue} count={2} onClick={prevStep} />
       <Space size={2} />
-      <h3>Zaloguj się do poczty studenckiej</h3>
+      <h2>Zaloguj się do poczty studenckiej</h2>
       <Space size={2} />
-      <LoginForm color={APP_COLORS.blue} {...{ onSubmit, defaultValues }} />
+      <LoginForm
+        color={THEME.colors.palette.blue}
+        {...{ onSubmit, defaultValues }}
+        loginPlaceholder="indeks@student.pwr.edu.pl"
+      />
       <Space size={2} />
-      <FooterInfo color={APP_COLORS.blue.light}>
+      <FooterInfo color={THEME.colors.palette.blue.light}>
         Logowanie do poczty wymagane jest do pobierania automatycznie linków do Zooma oraz linków do Teamsów. Po co
         szukać samemu linków jak może to zrobić za ciebie technologia? Działanie i bezpieczeństwo działa na tej samej
         zasadzie co logowanie do JSOS.
       </FooterInfo>
     </StyledSidebar>
-    <ConfigurationMockup color={APP_COLORS.blue.light} />
+    <ConfigurationMockup color={THEME.colors.palette.blue.light} />
   </Box>
 )
 
@@ -128,9 +134,9 @@ const SavePasswordStep = (props: { prevStep: () => void; onPasswordSave: (hasAgr
   return (
     <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
       <StyledSidebar>
-        <GoBackButton color={APP_COLORS.teal} count={3} onClick={prevStep} />
+        <GoBackButton color={THEME.colors.palette.teal} count={3} onClick={prevStep} />
         <Space size={2} />
-        <h3>Zapamiętaj dane logowania</h3>
+        <h2>Zapamiętaj dane logowania</h2>
         <FormControlLabel
           onChange={() => setHasAgreed(true)}
           checked={hasAgreed}
@@ -144,15 +150,21 @@ const SavePasswordStep = (props: { prevStep: () => void; onPasswordSave: (hasAgr
           label="Nie pamiętaj"
         />
         <Space size={2} />
-        <Button onClick={() => onPasswordSave(hasAgreed)} glow color={APP_COLORS.teal.main} primary fullWidth>
+        <Button
+          onClick={() => onPasswordSave(hasAgreed)}
+          glow
+          color={THEME.colors.palette.teal.main}
+          variant="primary"
+          fullWidth
+        >
           Gotowe
         </Button>
         <Space size={2} />
-        <FooterInfo color={APP_COLORS.teal.light}>
+        <FooterInfo color={THEME.colors.palette.teal.light}>
           Jeśli dane nie zostaną zapamiętane, trzeba będzie wpisać je na nowo podczas każdego uruchomienia aplikacji.
         </FooterInfo>
       </StyledSidebar>
-      <ConfigurationMockup color={APP_COLORS.teal.light} />
+      <ConfigurationMockup color={THEME.colors.palette.teal.light} />
     </Box>
   )
 }
@@ -176,7 +188,7 @@ const CongratulationsStep = ({ onConfigurationExit }: { onConfigurationExit: () 
     </Text>
     <Text>Możesz już zacząć korzystać z aplikacji.</Text>
     <Space size={2} />
-    <Button color={APP_COLORS.pink.main} primary glow onClick={onConfigurationExit}>
+    <Button color={THEME.colors.palette.pink.main} variant="primary" glow onClick={onConfigurationExit}>
       Przejdź do aplikacji
     </Button>
   </Box>
@@ -195,12 +207,12 @@ const ConfigurationPage = () => {
     await jsosAuth.signIn(login, password)
 
     setJsosDataLogin({ login, password })
-    const iCalendarString = await jsosExtractor.downloadCalendar()
     const courses = await jsosExtractor.fetchCourseList()
-    const events = iCalendar.getEventsFromString(iCalendarString)
-
-    dispatch(addEvents(events))
     dispatch(addCourses(courses))
+
+    const iCalendarString = await jsosExtractor.downloadCalendar()
+    const events = iCalendar.getEventsFromString(iCalendarString)
+    dispatch(addEvents(events))
 
     goToNextStep()
   }
@@ -219,15 +231,13 @@ const ConfigurationPage = () => {
     goToNextStep()
   }
 
-  const handleSavePassword = (hasAgreed: boolean) => {
+  const handleSavePassword = async (hasAgreed: boolean) => {
     if (hasAgreed) {
-      console.log('zapisuje hasła', jsosDataLogin, mailDataLogin)
-    } else {
-      console.log('nie zapisuje haseł')
+      await PasswordManager.saveJsosCredentials(jsosDataLogin.login, jsosDataLogin.password)
+      await PasswordManager.saveSmailCredentials(mailDataLogin.login, mailDataLogin.password)
+
+      dispatch(updateUser({ configured: true }))
     }
-
-    // TODO: add save password
-
     goToNextStep()
   }
 

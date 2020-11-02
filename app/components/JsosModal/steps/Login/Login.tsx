@@ -6,18 +6,18 @@ import {
   DialogContentText,
   DialogActions,
   Button,
-  TextField, CircularProgress
+  TextField,
+  CircularProgress,
 } from '@material-ui/core'
 import { Alert } from '@material-ui/lab'
 
-import {jsosAuth} from 'features/jsos'
+import { jsosAuth } from 'features/jsos'
 import styles from './Login.scss'
 
 interface Props {
   open: boolean
   onSuccess: () => void
   onClose: () => void
-
 }
 
 const Login = (props: Props): JSX.Element => {
@@ -76,14 +76,8 @@ const Login = (props: Props): JSX.Element => {
           Anuluj
         </Button>
         {/* TODO: handle press enter and esc buttons */}
-        <Button
-          onClick={handleSubmit}
-          color="primary"
-          variant="contained"
-          type="submit"
-          disabled={isProcessing}
-        >
-          { isProcessing ? <CircularProgress size={24} /> : 'Zaloguj' }
+        <Button onClick={handleSubmit} color="primary" variant="contained" type="submit" disabled={isProcessing}>
+          {isProcessing ? <CircularProgress size={24} /> : 'Zaloguj'}
         </Button>
       </DialogActions>
     </Dialog>

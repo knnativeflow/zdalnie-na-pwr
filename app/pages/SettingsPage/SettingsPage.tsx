@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { shell } from 'electron'
 import Button from 'components/Button'
 
-import { APP_COLORS } from 'base/theme/theme'
+import { THEME } from 'base/theme/theme'
 import { clearUser } from 'actions/user'
 import styled from '@emotion/styled'
 
@@ -29,7 +29,7 @@ const SettingsPage = () => {
 
   return (
     <Wrapper>
-      <Button color={APP_COLORS.blue.main} primary shadow onClick={logoutUser}>
+      <Button color={THEME.colors.palette.blue.main} variant="primary" shadow onClick={logoutUser}>
         Wyloguj
       </Button>
 

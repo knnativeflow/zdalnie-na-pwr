@@ -81,6 +81,7 @@ const Calendar = ({ events, onEventClick }: Props) => {
   const calendarRef = useRef<FullCalendar | null>(null)
 
   const handleClickEvent = (event: EventClickArg) => {
+    console.log(event.event.extendedProps.resource)
     onEventClick(event.event.extendedProps.resource)
   }
 

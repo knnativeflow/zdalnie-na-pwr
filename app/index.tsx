@@ -5,10 +5,12 @@ import initSentry from './initSentry'
 
 import { history, configuredStore } from './store'
 import './app.global.css'
+import { Synchronization } from './features/synchronization'
+
+const redux = configuredStore()
 
 initSentry()
-
-const { store, persistor } = configuredStore()
+new Synchronization(redux)
 
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer
 
@@ -17,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const Root = require('./base/Root').default
   render(
     <AppContainer>
-      <Root store={store} history={history} persistor={persistor} />
+      <Root store={redux.store} history={history} persistor={redux.persistor} />
     </AppContainer>,
     document.getElementById('root')
   )

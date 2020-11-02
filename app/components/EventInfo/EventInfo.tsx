@@ -1,25 +1,25 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { shell } from 'electron'
-import { EventNote, LocalLibrary, MenuBook, Notes, People, Person, TurnedIn, Videocam } from '@material-ui/icons'
 import moment from 'moment'
 import styled from '@emotion/styled'
+import {
+  FaBookOpen,
+  FaCalendarAlt,
+  FaChalkboardTeacher,
+  FaClipboard,
+  FaHashtag,
+  FaUserFriends,
+  FaVideo,
+  FaVideoSlash,
+} from 'react-icons/all'
 
 import { IEvent } from 'domain/event'
 import { ICourse } from 'domain/course'
 import { RootState } from 'store'
-import { APP_COLORS } from 'base/theme/theme'
+import { THEME } from 'base/theme/theme'
 import { eventColor, eventFullText } from 'utils/courseTypes'
 import InfoWithIcon from 'components/InfoWithIcon'
-
-// START TEST DATA
-const additional: { [key: string]: string } = {
-  Konsultacje: 'wt 16-18 227 B-2, czw 17-19 168 C-3',
-  'Czy ziomek jest spoko': 'W sumie git',
-  'Test emoji 😶🤐😗✌😐🤙': 'Idk chyba działa',
-}
-
-// END TEST DATA
 
 const EventInfoWrapper = styled.div`
   padding: 16px;
@@ -98,16 +98,16 @@ const EventInfo = ({ event }: Props) => {
     <EventInfoWrapper>
       <Title>{name}</Title>
       <InfoGrid>
-        <InfoWithIcon icon={MenuBook} title="Zajęcia" color={color}>
+        <InfoWithIcon icon={FaBookOpen} title="Zajęcia" color={color}>
           {eventFullText(type)}
         </InfoWithIcon>
-        <InfoWithIcon icon={TurnedIn} title="Kod grupy" color={color}>
+        <InfoWithIcon icon={FaHashtag} title="Kod grupy" color={color}>
           {eventCourse?.classesCode}
         </InfoWithIcon>
-        <InfoWithIcon icon={EventNote} title="Termin" color={color}>
+        <InfoWithIcon icon={FaCalendarAlt} title="Termin" color={color}>
           {moment(start).format('dddd, HH:mm')} - {moment(end).format('HH:mm')}
         </InfoWithIcon>
-        <InfoWithIcon icon={Person} title="Prowadzący" color={color}>
+        <InfoWithIcon icon={FaChalkboardTeacher} title="Prowadzący" color={color}>
           {lecturer?.split(', ').map((value) => (
             <div key={value}>{value}</div>
           ))}
@@ -123,9 +123,9 @@ const EventInfo = ({ event }: Props) => {
           {mergedPlatforms?.zoom?.url && (
             <InfoWithIcon
               onClick={handleOpenLink(mergedPlatforms.zoom.url)}
-              icon={Videocam}
+              icon={FaVideo}
               title="ZOOM"
-              color={APP_COLORS.brand.zoom}
+              color={THEME.colors.brand.zoom}
             >
               {mergedPlatforms.zoom.recurrent ? 'spotkanie cotygodniowe' : 'spotkanie jednorazowe'}
             </InfoWithIcon>
@@ -133,9 +133,9 @@ const EventInfo = ({ event }: Props) => {
           {mergedPlatforms.teams && (
             <InfoWithIcon
               onClick={handleOpenLink(mergedPlatforms.teams.url)}
-              icon={People}
+              icon={FaVideoSlash}
               title="Teams"
-              color={APP_COLORS.brand.teams}
+              color={THEME.colors.brand.teams}
             >
               {mergedPlatforms.teams.name}
             </InfoWithIcon>
@@ -143,9 +143,9 @@ const EventInfo = ({ event }: Props) => {
           {mergedPlatforms.ePortal && (
             <InfoWithIcon
               onClick={handleOpenLink(mergedPlatforms.ePortal.url)}
-              icon={LocalLibrary}
+              icon={FaUserFriends}
               title="EPortal"
-              color={APP_COLORS.brand.ePortal}
+              color={THEME.colors.brand.ePortal}
             >
               {mergedPlatforms.ePortal.name}
             </InfoWithIcon>
@@ -158,7 +158,7 @@ const EventInfo = ({ event }: Props) => {
       {!mappedAdditional.length && <NoInfoText>Nie znaleziono pozostałych informacji dla tego kursu</NoInfoText>}
 
       {mappedAdditional?.map(([key, value]) => (
-        <InfoWithIcon key={key} title={key} icon={Notes}>
+        <InfoWithIcon key={key} title={key} icon={FaClipboard}>
           {value}
         </InfoWithIcon>
       ))}
