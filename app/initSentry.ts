@@ -1,6 +1,11 @@
 import * as Sentry from '@sentry/electron'
 
-Sentry.init({
-  dsn: process.env.SENTRY_DSN,
-  enabled: process.env.NODE_ENV === 'production',
-})
+const initSentry = () => {
+  if (process.env.NODE_ENV === 'production') {
+    Sentry.init({
+      dsn: process.env.SENTRY_DSN,
+    })
+  }
+}
+
+export default initSentry

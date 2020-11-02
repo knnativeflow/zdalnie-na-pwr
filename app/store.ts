@@ -1,4 +1,4 @@
-import ElectronStore from 'electron-store'
+// import ElectronStore from 'electron-store'
 import { configureStore, Action } from '@reduxjs/toolkit'
 import { createHashHistory } from 'history'
 import { routerMiddleware } from 'connected-react-router'

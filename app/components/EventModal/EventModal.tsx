@@ -1,26 +1,42 @@
 import React from 'react'
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from '@material-ui/core'
-import { EventNote, LocalLibrary, MenuBook, Notes, People, Person, TurnedIn, Videocam } from '@material-ui/icons'
+import { useSelector } from 'react-redux'
+import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from '@material-ui/core'
 import moment from 'moment'
 import { shell } from 'electron'
 
 import { eventColor, eventFullText } from 'utils/courseTypes'
 import InfoWithIcon, { ButtonInfoWithIcon } from 'components/InfoWithIcon'
-import { APP_COLORS } from 'base/theme/theme'
+import { THEME } from 'base/theme/theme'
+import { ICourse } from 'domain/course'
+import { IEvent } from 'domain/event'
+import { RootState } from 'store'
+import {
+  FaBookOpen,
+  FaBookReader,
+  FaCalendarAlt,
+  FaChalkboardTeacher,
+  FaClipboard,
+  FaHashtag,
+  FaUserFriends,
+  FaVideo,
+  FaVideoSlash,
+} from 'react-icons/all'
+import Button from 'components/Button'
 
 // START TEST DATA
+/*
 const platform: IPlatforms = {
   zoom: {
-    weekly: true,
-    url: 'http://google.com',
+    recurrent: true,
+    url: 'https://google.com',
   },
   teams: {
     name: 'Oracle - projekt, Z00-21g',
-    url: 'http://google.com',
+    url: 'https://google.com',
   },
   ePortal: {
     name: 'Baza danych Oracle - programowanie',
-    url: 'http://google.com',
+    url: 'https://google.com',
   },
 }
 
@@ -29,9 +45,7 @@ const additional: { [key: string]: string } = {
   'Czy ziomek jest spoko': 'W sumie git',
   'Test emoji 😶🤐😗✌😐🤙': 'Idk chyba działa',
 }
-
-const code = 'Z00-21g'
-
+*/
 // END TEST DATA
 
 interface Props {
@@ -42,11 +56,19 @@ interface Props {
 
 const EventModal = (props: Props) => {
   const { event, onClose, isOpen } = props
+  const courses = useSelector((state: RootState) => state.courses)
+
   if (!event) return null
 
-  const { name, type, start, end, lecturer /* , code, additional, platform */ } = event
-  const mappedAdditional = Object.entries(additional)
-  const hasPlatforms = !!Object.values(platform).length
+  const eventCourse: ICourse | undefined = courses.find(
+    (course) => course.name.startsWith(event.name) && course.type === event.type
+  )
+
+  const { name, type, start, end, lecturer, platform, additional } = event
+  const mergedPlatforms = { ...eventCourse?.platforms, ...platform }
+  const mergedAdditional = { ...eventCourse?.additional, ...additional }
+  const mappedAdditional = Object.entries(mergedAdditional)
+  const hasPlatforms = !!Object.values(mergedPlatforms).length
 
   const handleOpenLink = (url: string) => () => shell.openExternal(url)
 
@@ -57,22 +79,22 @@ const EventModal = (props: Props) => {
         <Box mb={2}>
           <Grid container spacing={2}>
             <Grid item xs={6}>
-              <InfoWithIcon icon={MenuBook} title="Zajęcia" color={eventColor(type)}>
+              <InfoWithIcon icon={FaBookOpen} title="Zajęcia" color={eventColor(type)}>
                 {eventFullText(type)}
               </InfoWithIcon>
             </Grid>
             <Grid item xs={6}>
-              <InfoWithIcon icon={TurnedIn} title="Kod grupy">
-                {code}
+              <InfoWithIcon icon={FaHashtag} title="Kod grupy">
+                {eventCourse?.classesCode}
               </InfoWithIcon>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <InfoWithIcon icon={EventNote} title="Termin">
+              <InfoWithIcon icon={FaCalendarAlt} title="Termin">
                 {moment(start).format('dddd, HH:mm')} - {moment(end).format('HH:mm')}
               </InfoWithIcon>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <InfoWithIcon icon={Person} title="Prowadzący">
+              <InfoWithIcon icon={FaChalkboardTeacher} title="Prowadzący">
                 {lecturer?.split(', ').map((value) => (
                   <div key={value}>{value}</div>
                 ))}
@@ -102,39 +124,46 @@ const EventModal = (props: Props) => {
 
           {hasPlatforms && (
             <Grid container spacing={1}>
-              {platform?.zoom?.url && (
+              {mergedPlatforms.zoom &&
+                (mergedPlatforms.zoom.url ? (
+                  <Grid item xs={12} sm={6}>
+                    <ButtonInfoWithIcon
+                      onClick={handleOpenLink(mergedPlatforms.zoom.url)}
+                      icon={FaVideo}
+                      title="ZOOM"
+                      color={THEME.colors.brand.zoom}
+                    >
+                      {mergedPlatforms.zoom.recurrent ? 'spotkanie cotygodniowe' : 'spotkanie jednorazowe'}
+                    </ButtonInfoWithIcon>
+                  </Grid>
+                ) : (
+                  <Grid item xs={12} sm={6}>
+                    <ButtonInfoWithIcon icon={FaVideoSlash} title="ZOOM" disabled>
+                      brak aktualnego linka
+                    </ButtonInfoWithIcon>
+                  </Grid>
+                ))}
+              {mergedPlatforms.teams && (
                 <Grid item xs={12} sm={6}>
                   <ButtonInfoWithIcon
-                    onClick={handleOpenLink(platform.zoom.url)}
-                    icon={Videocam}
-                    title="ZOOM"
-                    color={APP_COLORS.brand.zoom}
-                  >
-                    {platform.zoom.weekly ? 'spotkanie cotygodniowe' : 'spotkanie jednorazowe'}
-                  </ButtonInfoWithIcon>
-                </Grid>
-              )}
-              {platform.teams && (
-                <Grid item xs={12} sm={6}>
-                  <ButtonInfoWithIcon
-                    onClick={handleOpenLink(platform.teams.url)}
-                    icon={People}
+                    onClick={handleOpenLink(mergedPlatforms.teams.url)}
+                    icon={FaUserFriends}
                     title="Teams"
-                    color={APP_COLORS.brand.teams}
+                    color={THEME.colors.brand.teams}
                   >
-                    {platform.teams.name}
+                    {mergedPlatforms.teams.name}
                   </ButtonInfoWithIcon>
                 </Grid>
               )}
-              {platform.ePortal && (
+              {mergedPlatforms.ePortal && (
                 <Grid item xs={12} sm={6}>
                   <ButtonInfoWithIcon
-                    onClick={handleOpenLink(platform.ePortal.url)}
-                    icon={LocalLibrary}
+                    onClick={handleOpenLink(mergedPlatforms.ePortal.url)}
+                    icon={FaBookReader}
                     title="EPortal"
-                    color={APP_COLORS.brand.ePortal}
+                    color={THEME.colors.brand.ePortal}
                   >
-                    {platform.ePortal.name}
+                    {mergedPlatforms.ePortal.name}
                   </ButtonInfoWithIcon>
                 </Grid>
               )}
@@ -157,7 +186,7 @@ const EventModal = (props: Props) => {
               fontSize="subtitle2.fontSize"
               py={1}
             >
-              Nie znaleziono pozostałych informacji w tym kursie
+              Nie dodano dodatkowych danych o zajęciach lub kursie.
             </Box>
           )}
 
@@ -165,7 +194,7 @@ const EventModal = (props: Props) => {
             <Grid container spacing={2}>
               {mappedAdditional.map(([key, value]) => (
                 <Grid key={key} item xs={12}>
-                  <InfoWithIcon title={key} icon={Notes}>
+                  <InfoWithIcon title={key} icon={FaClipboard}>
                     {value}
                   </InfoWithIcon>
                 </Grid>
@@ -175,7 +204,9 @@ const EventModal = (props: Props) => {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>Zamknij</Button>
+        <Button onClick={onClose} compact>
+          Zamknij
+        </Button>
       </DialogActions>
     </Dialog>
   )

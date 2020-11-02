@@ -13,9 +13,9 @@ const reducerCourseList = (state = INIT_STATE, action: Action) => {
       return action.payload
     case ADD_EVENT_ZOOM_LINKS:
       return state.map((course) => {
-        const foundLink = action.payload.find((zoomLink) => zoomLink.courseName.startsWith(course.name))
+        const foundLink = action.payload.zoomLinks.find((zoomLink) => zoomLink.courseName.startsWith(course.name))
 
-        return foundLink ? { ...course, platforms: { ...course.platforms, zoom: { weekly: false } } } : course
+        return foundLink ? { ...course, platforms: { ...course.platforms, zoom: { recurrent: false } } } : course
       })
     case ADD_COURSE_TEAMS_LINKS:
       return state.map((course) => {
@@ -24,7 +24,7 @@ const reducerCourseList = (state = INIT_STATE, action: Action) => {
         return foundLink
           ? {
               ...course,
-              platforms: { ...course.platforms, teams: { weekly: true, url: foundLink.url, name: foundLink.name } },
+              platforms: { ...course.platforms, teams: { url: foundLink.url, name: foundLink.name } },
             }
           : course
       })

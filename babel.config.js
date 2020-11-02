@@ -26,6 +26,8 @@ module.exports = (api) => {
       [require('@babel/preset-react'), { development }],
     ],
     plugins: [
+      require('babel-plugin-emotion'),
+
       // Stage 0
       require('@babel/plugin-proposal-function-bind'),
 
@@ -33,14 +35,8 @@ module.exports = (api) => {
       require('@babel/plugin-proposal-export-default-from'),
       require('@babel/plugin-proposal-logical-assignment-operators'),
       [require('@babel/plugin-proposal-optional-chaining'), { loose: false }],
-      [
-        require('@babel/plugin-proposal-pipeline-operator'),
-        { proposal: 'minimal' },
-      ],
-      [
-        require('@babel/plugin-proposal-nullish-coalescing-operator'),
-        { loose: false },
-      ],
+      [require('@babel/plugin-proposal-pipeline-operator'), { proposal: 'minimal' }],
+      [require('@babel/plugin-proposal-nullish-coalescing-operator'), { loose: false }],
       require('@babel/plugin-proposal-do-expressions'),
 
       // Stage 2

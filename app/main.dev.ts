@@ -10,12 +10,16 @@
  */
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
-import './initSentry'
 import path from 'path'
+import installExtension, { REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer'
 import { app, BrowserWindow } from 'electron'
 
-import AppUpdater from 'features/appUpdater'
-import MenuBuilder from './menu'
+import AppUpdater from './features/appUpdater'
+import initSentry from './initSentry'
+
+const IS_DEV = process.env.NODE_ENV === 'development'
+
+initSentry()
 
 let mainWindow: BrowserWindow | null = null
 
@@ -24,20 +28,28 @@ if (process.env.NODE_ENV === 'production') {
   sourceMapSupport.install()
 }
 
-if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
+if (IS_DEV || process.env.DEBUG_PROD === 'true') {
   require('electron-debug')()
 }
 
 const installExtensions = async () => {
-  const installer = require('electron-devtools-installer')
   const forceDownload = !!process.env.UPGRADE_EXTENSIONS
-  const extensions = ['REACT_DEVELOPER_TOOLS', 'REDUX_DEVTOOLS']
+  const extensions = [REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS]
 
-  return Promise.all(extensions.map((name) => installer.default(installer[name], forceDownload))).catch(console.log)
+  const results = await Promise.allSettled(extensions.map((extension) => installExtension(extension, forceDownload)))
+  results.forEach((result) => {
+    if (result.status === 'fulfilled') {
+      console.log(`${result.value} extension added!`)
+    }
+    if (result.status === 'rejected') {
+      console.log('Error during extension installation', result.reason)
+    }
+  })
 }
 
 const createWindow = async () => {
-  if (process.env.NODE_ENV === 'development' || process.env.DEBUG_PROD === 'true') {
+  console.log(IS_DEV)
+  if (IS_DEV || process.env.DEBUG_PROD === 'true') {
     await installExtensions()
   }
 
@@ -53,9 +65,12 @@ const createWindow = async () => {
     show: false,
     width: 1024,
     height: 728,
+    minHeight: 500,
+    minWidth: 800,
     icon: getAssetPath('icon.png'),
+    frame: false,
     webPreferences:
-      (process.env.NODE_ENV === 'development' || process.env.E2E_BUILD === 'true') && process.env.ERB_SECURE !== 'true'
+      (IS_DEV || process.env.E2E_BUILD === 'true') && process.env.ERB_SECURE !== 'true'
         ? {
             nodeIntegration: true,
           }
@@ -63,6 +78,8 @@ const createWindow = async () => {
             preload: path.join(__dirname, 'dist/renderer.prod.js'),
           },
   })
+
+  mainWindow.setMenu(null)
 
   mainWindow.loadURL(`file://${__dirname}/app.html`)
 
@@ -83,9 +100,6 @@ const createWindow = async () => {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
-
-  const menuBuilder = new MenuBuilder(mainWindow)
-  menuBuilder.buildMenu()
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line

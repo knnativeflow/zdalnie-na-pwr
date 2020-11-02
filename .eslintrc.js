@@ -6,7 +6,8 @@ module.exports = {
     'no-shadow': 'off',
     'react/jsx-one-expression-per-line': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
-    'no-void': 'off'
+    'no-void': 'off',
+    'compat/compat': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

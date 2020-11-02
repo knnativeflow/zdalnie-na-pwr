@@ -1,33 +1,31 @@
 import React from 'react'
-import { Switch, Route, Redirect } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 
 import routes from 'constants/routes.json'
 import { RootState } from 'store'
-import { CalendarPage, CourseListPage, HomePage, ConfigurationPage, WelcomePage } from 'pages'
-import App from './App'
+import { CalendarPage, ConfigurationPage, DashboardPage, SettingsPage } from 'pages'
+import App, { AppWithNavigation } from './App'
 
 const Routes = () => {
   const configured = useSelector((state: RootState) => state.user.configured)
 
+  if (!configured) {
+    return (
+      <App>
+        <Route component={ConfigurationPage} />
+      </App>
+    )
+  }
+
   return (
-    <App>
+    <AppWithNavigation>
       <Switch>
-        <Switch>
-          <Route path={routes.FIRST_CONFIGURATION} component={ConfigurationPage} exact />
-          <Route path={routes.WELCOME_PAGE} component={WelcomePage} exact />
-          {configured ? (
-            <>
-              <Route path={routes.CALENDAR} component={CalendarPage} exact />
-              <Route path={routes.COURSE_LIST} component={CourseListPage} exact />
-              <Route path={routes.HOME} component={HomePage} exact />
-            </>
-          ) : (
-            <Redirect to={routes.WELCOME_PAGE} />
-          )}
-        </Switch>
+        <Route path={routes.CALENDAR} component={CalendarPage} exact />
+        <Route path={routes.SETTINGS} component={SettingsPage} exact />
+        <Route path={routes.INDEX} component={DashboardPage} exact />
       </Switch>
-    </App>
+    </AppWithNavigation>
   )
 }
 

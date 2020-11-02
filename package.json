@@ -179,6 +179,7 @@
     "@babel/preset-typescript": "^7.10.4",
     "@babel/register": "^7.10.5",
     "@teamsupercell/typings-for-css-modules-loader": "^2.2.1",
+    "@types/electron-devtools-installer": "^2.2.0",
     "@types/enzyme": "^3.10.5",
     "@types/enzyme-adapter-react-16": "^1.0.6",
     "@types/history": "^4.7.7",
@@ -203,6 +204,7 @@
     "babel-jest": "^26.1.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-dev-expression": "^0.2.2",
+    "babel-plugin-emotion": "^10.0.33",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "browserslist-config-erb": "^0.0.1",
     "chalk": "^4.1.0",
@@ -215,8 +217,8 @@
     "electron": "^8",
     "electron-builder": "^22.3.6",
     "electron-builder-notarize": "^1.2.0",
-    "electron-devtools-installer": "^2.2.4",
     "electron-notarize": "^1.0.0",
+    "electron-devtools-installer": "^3.1.1",
     "electron-rebuild": "^1.10.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.3",
@@ -267,7 +269,8 @@
     "webpack-merge": "^5.0.9"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-free": "^5.14.0",
+    "@emotion/core": "^10.0.35",
+    "@emotion/styled": "^10.0.27",
     "@fullcalendar/core": "^5.3.1",
     "@fullcalendar/daygrid": "^5.3.2",
     "@fullcalendar/react": "^5.3.1",
@@ -294,6 +297,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.12.0",
     "react-hot-loader": "^4.12.21",
+    "react-icons": "^3.11.0",
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
@@ -316,5 +320,8 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  }
+  },
+  "browserslist": [
+    "last 1 electron version"
+  ]
 }
