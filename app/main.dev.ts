@@ -12,25 +12,14 @@ import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 import path from 'path'
 import installExtension, { REDUX_DEVTOOLS, REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer'
-import { app, BrowserWindow, autoUpdater } from 'electron'
-import log from 'electron-log'
-import os from 'os'
+import { app, BrowserWindow } from 'electron'
 
+import AppUpdater from './features/appUpdater'
 import initSentry from './initSentry'
 
 const IS_DEV = process.env.NODE_ENV === 'development'
 
 initSentry()
-
-export default class AppUpdater {
-  constructor() {
-    log.transports.file.level = 'info'
-    const platform = `${os.platform()}_${os.arch()}`
-    const version = app.getVersion()
-
-    autoUpdater.setFeedURL({ url: `https://zdalnie-na-pwr-update-app.herokuapp.com/update/${platform}/${version}` })
-  }
-}
 
 let mainWindow: BrowserWindow | null = null
 
