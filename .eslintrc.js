@@ -7,7 +7,7 @@ module.exports = {
     'react/jsx-one-expression-per-line': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     'no-void': 'off',
-    'compat/compat': 'off',
+    'react/require-default-props': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

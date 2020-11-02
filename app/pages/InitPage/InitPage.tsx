@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { useHistory } from 'react-router'
 
 import routes from 'constants/routes.json'
@@ -16,10 +16,11 @@ const InitPage = () => {
     setOpenJsosModal(true)
   }
 
-  return openJsosModal
-    ? <JsosSignInAndExtracting open={openJsosModal} onClose={redirectToCalendar} />
-    : <UploadICalendarFileModal open onSubmit={redirectToCalendar} onJsos={handleJsosModal} onClose={() => {}} />
-
+  return openJsosModal ? (
+    <JsosSignInAndExtracting open={openJsosModal} onClose={redirectToCalendar} />
+  ) : (
+    <UploadICalendarFileModal open onSubmit={redirectToCalendar} onJsos={handleJsosModal} onClose={() => {}} />
+  )
 }
 
 export default InitPage

@@ -1,6 +1,6 @@
 import defaultRequest from 'request-promise'
 import cheerio from 'cheerio'
-import {Response as RequestResponse} from 'request'
+import { Response as RequestResponse } from 'request'
 
 const URL_OAUTH_PAGE = 'https://oauth.pwr.edu.pl/oauth'
 const URL_LOGIN_PAGE = 'https://jsos.pwr.edu.pl/index.php/site/loginAsStudent'
@@ -11,15 +11,15 @@ interface Response<T> extends RequestResponse {
   body: T
 }
 
-async function request<T>(config:IRequestOptions): Promise<Response<T>> {
-  const request = defaultRequest.defaults({jar: j})
+async function request<T>(config: IRequestOptions): Promise<Response<T>> {
+  const request = defaultRequest.defaults({ jar: j })
   console.log(`Request ${config.method} [${config.url}] body: ${JSON.stringify(config.form)}`)
   return request(config)
     .then((response: Response<T>) => {
       console.log(`Response from ${config.method} [${config.url}]: ${response.body}`)
       return response
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(`Error response from ${config.method} [${config.url}]`)
       console.error(err)
       throw err
@@ -27,10 +27,10 @@ async function request<T>(config:IRequestOptions): Promise<Response<T>> {
 }
 
 class JsosAuth {
-  oauthToken = {key: 'oauth_token', value: ''}
-  oauthConsumerKey = {key: 'oauth_consumer_key', value: ''}
-  csrfToken = {key: 'YII_CSRF_TOKEN', value: ''}
-  jsosSessionId = {key: 'JSOSSESSID', value: ''}
+  oauthToken = { key: 'oauth_token', value: '' }
+  oauthConsumerKey = { key: 'oauth_consumer_key', value: '' }
+  csrfToken = { key: 'YII_CSRF_TOKEN', value: '' }
+  jsosSessionId = { key: 'JSOSSESSID', value: '' }
 
   lastTimeRequest: Date | null = null
 
@@ -42,8 +42,8 @@ class JsosAuth {
         ...requestOps,
         form: {
           ...requestOps.form,
-          ...(requestOps.addCsrfToken ? {[this.csrfToken.key]: this.csrfToken.value} : {}),
-        }
+          ...(requestOps.addCsrfToken ? { [this.csrfToken.key]: this.csrfToken.value } : {}),
+        },
       })
 
       response.selector = cheerio.load(response.body)
@@ -60,7 +60,7 @@ class JsosAuth {
       const loginPageRequestOptions = {
         method: HttpMethod.GET,
         url: URL_LOGIN_PAGE,
-        resolveWithFullResponse: true
+        resolveWithFullResponse: true,
       }
       const loginPageResponse = await request<string>(loginPageRequestOptions)
       const loginPageBody = cheerio.load(loginPageResponse.body)
@@ -81,18 +81,18 @@ class JsosAuth {
           method: HttpMethod.POST,
           url: oAuthUrl,
           form: {
-            'username': login,
-            'password': password,
-            'authenticateForm13_hf_0': '',
-            'oauth_request_url': 'http://oauth.pwr.edu.pl/oauth/authenticate',
-            'oauth_token': this.oauthToken.value,
-            'oauth_consumer_key': this.oauthConsumerKey.value,
-            'oauth_locale': 'pl',
-            'oauth_callback_url': URL_LOGIN_PAGE,
-            'oauth_symbol': 'EIS',
-            'authenticateButton': 'Zaloguj'
+            username: login,
+            password: password,
+            authenticateForm13_hf_0: '',
+            oauth_request_url: 'http://oauth.pwr.edu.pl/oauth/authenticate',
+            oauth_token: this.oauthToken.value,
+            oauth_consumer_key: this.oauthConsumerKey.value,
+            oauth_locale: 'pl',
+            oauth_callback_url: URL_LOGIN_PAGE,
+            oauth_symbol: 'EIS',
+            authenticateButton: 'Zaloguj',
           },
-          followAllRedirects: true
+          followAllRedirects: true,
         }
 
         await request(oAuthPageRequestOptions)
@@ -100,20 +100,22 @@ class JsosAuth {
 
       const homePageRequestOptions = {
         method: HttpMethod.GET,
-        url: URL_LOGIN_PAGE + '?callbackUrl=student%2FindeksDane&oauth_token=' + this.oauthToken.value
+        url: URL_LOGIN_PAGE + '?callbackUrl=student%2FindeksDane&oauth_token=' + this.oauthToken.value,
       }
 
       await request(homePageRequestOptions)
 
-      const cookies = j.getCookies(URL_LOGIN_PAGE + '?callbackUrl=student%2FindeksDane&oauth_token=' + this.oauthToken.value)
+      const cookies = j.getCookies(
+        URL_LOGIN_PAGE + '?callbackUrl=student%2FindeksDane&oauth_token=' + this.oauthToken.value
+      )
 
-      cookies.forEach(({key, value}) => {
+      cookies.forEach(({ key, value }) => {
         if (key === this.jsosSessionId.key) {
-          this.jsosSessionId = {key, value}
+          this.jsosSessionId = { key, value }
         }
 
         if (key === this.csrfToken.key) {
-          this.csrfToken = {key, value}
+          this.csrfToken = { key, value }
         }
       })
 
@@ -121,7 +123,7 @@ class JsosAuth {
         jsosSessionId: this.jsosSessionId,
         oauthConsumerKey: this.oauthConsumerKey,
         oauthToken: this.oauthToken,
-        csrfToken: this.csrfToken
+        csrfToken: this.csrfToken,
       }
     } catch (err) {
       console.error(err)
@@ -129,11 +131,10 @@ class JsosAuth {
     }
   }
 
-
   public async logout(): Promise<any> {
     const logoutOptionsRequest = {
       method: HttpMethod.GET,
-      url: ' https://jsos.pwr.edu.pl/index.php/site/logout'
+      url: ' https://jsos.pwr.edu.pl/index.php/site/logout',
     }
 
     return request(logoutOptionsRequest)
@@ -146,12 +147,12 @@ export interface ResponseWithSelector extends Response<string> {
 
 export enum HttpMethod {
   GET = 'GET',
-  POST = 'POST'
+  POST = 'POST',
 }
 
 export interface IRequestOptions {
   url: string
-  method: HttpMethod,
+  method: HttpMethod
   resolveWithFullResponse?: boolean
   followAllRedirects?: boolean
   json?: boolean

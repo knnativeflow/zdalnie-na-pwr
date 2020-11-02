@@ -1,10 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { Button } from '@material-ui/core'
+import { useDispatch } from 'react-redux'
+import { FaRegCalendarAlt, FaRegBookmark, FaSync, FaTools } from 'react-icons/all'
+import { css, keyframes } from '@emotion/core'
 import styled from '@emotion/styled'
+import moment from 'moment'
 
 import routes from 'constants/routes.json'
 import { MENU_BAR_HEIGHT } from 'components/MenuBar/MenuBar.styled'
+import { SmailRefresher } from 'features/synchronization'
+import { addZoomLinks } from 'actions/events'
 
 const AppBarWrapper = styled.div`
   background: #759ccb;
@@ -16,29 +21,137 @@ const AppBarWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 10px;
+  box-shadow: 0 2px 6px 0 #bed0e6;
 `
 
 const ActionsWrapper = styled.div`
   display: flex;
   align-items: center;
 `
-// TODO: style nav buttons, remove material btns
+
+const link = css`
+  font-family: 'Open Sans';
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  background: none;
+  border: none;
+  opacity: 0.75;
+  padding: 15px 0;
+  margin-right: 32px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+
+  svg {
+    font-size: 18px;
+    margin-right: 5px;
+  }
+
+  &:hover {
+    opacity: 0.5;
+  }
+
+  &:disabled {
+    color: #53678c;
+    cursor: initial;
+
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+`
+
+const Link = styled(NavLink)`
+  ${link}
+`
+
+const Button = styled.button`
+  ${link}
+  outline: none;
+`
+
+const spinAnim = keyframes`
+  0% {
+    transform: rotate(0deg)
+  }
+  100% {
+
+    transform: rotate(360deg)
+  }
+`
+
+const SyncIcon = styled(FaSync, {
+  shouldForwardProp: (prop) => prop !== 'animate',
+})<{ animate: boolean }>`
+  ${({ animate }) =>
+    animate &&
+    css`
+      animation: ${spinAnim} 1s linear infinite;
+    `}
+`
+
+const RefreshWrapper = styled.span`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  span {
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  small {
+    line-height: 1;
+    font-size: 10px;
+    font-weight: 500;
+    opacity: 0.7;
+  }
+`
+
+const activeStyle = { color: '#fff', opacity: 1 }
+
+// TODO: style nav buttons and active state
 const AppBar = () => {
+  const dispatch = useDispatch()
+  const [isSmailRefreshing, setIsSmailRefreshing] = useState(false)
+  const lastUpdateDate = new Date()
+
+  const refreshSmail = async () => {
+    try {
+      setIsSmailRefreshing(true)
+      const zoomLinks = await SmailRefresher.refresh()
+      dispatch(addZoomLinks(zoomLinks, false))
+    } catch (e) {
+      // eslint-disable-next-line
+      console.error(e)
+    } finally {
+      setIsSmailRefreshing(false)
+    }
+  }
+
   return (
     <>
       <AppBarWrapper>
         <ActionsWrapper>
-          <NavLink to={routes.INDEX} activeStyle={{ color: '#fff', opacity: 1 }} exact>
-            <Button color="inherit">Panel</Button>
-          </NavLink>
-          <NavLink to={routes.CALENDAR} activeStyle={{ color: '#fff', opacity: 1 }}>
-            <Button color="inherit">Kalendarz</Button>
-          </NavLink>
+          <Link to={routes.INDEX} activeStyle={activeStyle} exact>
+            <FaRegBookmark /> Panel
+          </Link>
+          <Link to={routes.CALENDAR} activeStyle={activeStyle}>
+            <FaRegCalendarAlt /> Kalendarz
+          </Link>
         </ActionsWrapper>
         <ActionsWrapper>
-          <NavLink to={routes.SETTINGS} activeStyle={{ color: '#fff', opacity: 1 }}>
-            <Button color="inherit">Ustawienia</Button>
-          </NavLink>
+          <Button onClick={refreshSmail} disabled={isSmailRefreshing}>
+            <SyncIcon animate={isSmailRefreshing} />
+            <RefreshWrapper>
+              <span>Odśwież dane</span>
+              <small>Zaktualizowano {moment(lastUpdateDate).fromNow()}</small>
+            </RefreshWrapper>
+          </Button>
+          <Link to={routes.SETTINGS} activeStyle={activeStyle}>
+            <FaTools /> Ustawienia
+          </Link>
         </ActionsWrapper>
       </AppBarWrapper>
     </>

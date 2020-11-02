@@ -1,22 +1,47 @@
-import React, { useMemo, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import Button from '@material-ui/core/Button'
+import React, { useMemo } from 'react'
+import { useSelector } from 'react-redux'
+import styled from '@emotion/styled'
 
 import Calendar from 'components/Calendar'
 import { RootState } from 'store'
 
-import { SmailRefresher } from 'features/synchronization'
+import { IEvent, IEventFullCalendar } from 'domain/event'
 import { eventColor } from 'utils/courseTypes'
-import { IEventFullCalendar } from 'domain/event'
-import styles from './CalendarPage.scss'
-import { addZoomLinks } from 'actions/events'
-import { CircularProgress } from '@material-ui/core'
+// import EventModal from 'components/EventModal'
+import useModal from 'hooks/useModal'
+import EventInfo from 'components/EventInfo'
 
-const CalendarPage = (): JSX.Element => {
-  const [isSmailRefreshing, setIsSmailRefreshing] = useState(false)
+const CalendarPageWrapper = styled.div`
+  display: flex;
+  height: 100%;
+`
+
+const CalendarWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  height: 100%;
+  overflow-y: auto;
+`
+
+const EventDetailsWrapper = styled.div`
+  flex: 1;
+  min-width: 500px;
+  display: flex;
+  flex-direction: column;
+  background: #f5f9fd;
+  overflow: auto;
+
+  @media (max-width: 1200px) {
+    min-width: 300px;
+  }
+`
+
+const CalendarPage = () => {
+  const [isModalOpen, openModal, closeModal, modalParams] = useModal<IEvent>()
   const events = useSelector((state: RootState) => state.events)
-  const dispatch = useDispatch()
 
+  // TODO: move it to calendar component
   const parsedEvents = useMemo<IEventFullCalendar[]>(
     () =>
       events.reduce<IEventFullCalendar[]>((events, event) => {
@@ -25,7 +50,7 @@ const CalendarPage = (): JSX.Element => {
           {
             start: event.start,
             end: event.end,
-            title: `${event.type} ${event.name}`,
+            title: event.name,
             color: eventColor(event.type),
             resource: event,
           },
@@ -34,28 +59,21 @@ const CalendarPage = (): JSX.Element => {
     [events]
   )
 
-  const refreshSmail = async () => {
-    try {
-      setIsSmailRefreshing(true)
-      const zoomLinks = await SmailRefresher.refresh()
-      dispatch(addZoomLinks(zoomLinks, false))
-    } catch(e) {
-      console.error(e)
-    } finally {
-      setIsSmailRefreshing(false)
-    }
-  }
-
+  // TODO: add clear btn for EventInfo
+  // TODO: we can still use modal for small screens
   return (
-    <div className={styles.root}>
-      <div className={styles.header}>
-        <h1>Kalendarz</h1>
-        <Button onClick={refreshSmail} variant="outlined" color="primary">
-          {isSmailRefreshing ? <CircularProgress size={24} /> : 'Odśwież pocztę studencką'}
-        </Button>
-      </div>
-      <Calendar events={parsedEvents} />
-    </div>
+    <>
+      <CalendarPageWrapper>
+        <CalendarWrapper>
+          <Calendar events={parsedEvents} onEventClick={openModal} />
+        </CalendarWrapper>
+        <EventDetailsWrapper>
+          <EventInfo event={modalParams} />
+        </EventDetailsWrapper>
+      </CalendarPageWrapper>
+      {/* <StudentMailModal open={isOpenStudentMailModal} onClose={() => setIsOpenStudentMailModal(false)} /> */}
+      {/* <EventModal isOpen={isModalOpen} event={modalParams} onClose={closeModal} /> */}
+    </>
   )
 }
 

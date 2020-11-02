@@ -25,7 +25,7 @@ const JsosSignInAndExtracting = (props: Props): JSX.Element => {
     return <Login open onSuccess={handleSuccessLogin} onClose={onClose} />
   }
 
-  if(open && isLoggedIn && !isCalendarFetched) {
+  if (open && isLoggedIn && !isCalendarFetched) {
     return <JsosExtracting open onSuccess={handleSuccessFetchLinks} onClose={onClose} />
   }
 

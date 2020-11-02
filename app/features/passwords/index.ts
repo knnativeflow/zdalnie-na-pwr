@@ -1,1 +1,1 @@
-export {default} from './PasswordManager'
+export { default } from './PasswordManager'

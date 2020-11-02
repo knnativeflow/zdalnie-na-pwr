@@ -8,10 +8,14 @@ class PasswordManager {
   checkOS(): OperatingSystem {
     const type = os.type()
     switch (type) {
-      case OperatingSystem.WINDOWS: return OperatingSystem.WINDOWS
-      case OperatingSystem.LINUX: return OperatingSystem.LINUX
-      case OperatingSystem.MACOS: return OperatingSystem.MACOS
-      default: throw Error('Nieznany system operacyjny.')
+      case OperatingSystem.WINDOWS:
+        return OperatingSystem.WINDOWS
+      case OperatingSystem.LINUX:
+        return OperatingSystem.LINUX
+      case OperatingSystem.MACOS:
+        return OperatingSystem.MACOS
+      default:
+        throw Error('Nieznany system operacyjny.')
     }
   }
 
@@ -20,11 +24,10 @@ class PasswordManager {
   }
 
   async getJsosCredentials(): Promise<ICredentials> {
-    return keytar.findCredentials(JSOS)
-      .then(([credentials]: ICredentials[]) => {
-        if(!credentials) throw Error('Nie można znaleźć konta dla JSOS.')
-        return credentials
-      })
+    return keytar.findCredentials(JSOS).then(([credentials]: ICredentials[]) => {
+      if (!credentials) throw Error('Nie można znaleźć konta dla JSOS.')
+      return credentials
+    })
   }
 
   async saveSmailCredentials(account: string, password: string): Promise<void> {
@@ -32,16 +35,15 @@ class PasswordManager {
   }
 
   async getSmailCredentials(): Promise<ICredentials> {
-    return keytar.findCredentials(SMAIL)
-      .then(([credentials]: ICredentials[]) => {
-        if(!credentials) throw Error('Nie można znaleźć konta dla Studenckiej poczty.')
-        return credentials
-      })
+    return keytar.findCredentials(SMAIL).then(([credentials]: ICredentials[]) => {
+      if (!credentials) throw Error('Nie można znaleźć konta dla Studenckiej poczty.')
+      return credentials
+    })
   }
 }
 
 export interface ICredentials {
-  account: string,
+  account: string
   password: string
 }
 

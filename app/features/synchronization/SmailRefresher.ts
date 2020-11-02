@@ -4,11 +4,11 @@ import { IEventZoomLink } from 'domain/event'
 
 class SmailRefresher {
   async refresh(): Promise<IEventZoomLink[]> {
-      console.log('Refreshing smail.')
-      const {account, password} = await PasswordManager.getSmailCredentials()
-      await studentMail.login(account, password)
+    console.log('Refreshing smail.')
+    const { account, password } = await PasswordManager.getSmailCredentials()
+    await studentMail.login(account, password)
 
-      return studentMail.getZoomLinks()
+    return studentMail.getZoomLinks()
   }
 }
 

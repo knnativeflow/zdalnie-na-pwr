@@ -55,16 +55,23 @@ const UploadICalendarFileModal = (props: Props): JSX.Element => {
       <DialogTitle id="form-dialog-title">Wgrywanie pliku iCalendar</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Do poprawnego działania nasza aplikacja potrzebuje kalandarza z Twoimi kursami z portalu JSOS.
-          Żadne dane nie są przesyłane na zewnętrze serwery, wszystko dzieje się na Twoim komputerze.
+          Do poprawnego działania nasza aplikacja potrzebuje kalandarza z Twoimi kursami z portalu JSOS. Żadne dane nie
+          są przesyłane na zewnętrze serwery, wszystko dzieje się na Twoim komputerze.
         </DialogContentText>
         <DialogContentText>
-          Plik iCalendar zostanie automatycznie pobrany jeśli wybierzesz opcje "Zaloguj się i pobierz z JSOS" lub możesz pobrać i wgrać go ręcznie.
+          Plik iCalendar zostanie automatycznie pobrany jeśli wybierzesz opcje "Zaloguj się i pobierz z JSOS" lub możesz
+          pobrać i wgrać go ręcznie.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
         {/* TODO: handle press enter and esc buttons */}
-        <Button onClick={handleJsosSignInAndCalendarDownload} color="primary" variant="contained" type="submit" disabled={isLoading}>
+        <Button
+          onClick={handleJsosSignInAndCalendarDownload}
+          color="primary"
+          variant="contained"
+          type="submit"
+          disabled={isLoading}
+        >
           Zaloguj się i pobierz z JSOS
         </Button>
         <Button onClick={handleUpload} color="primary" variant="contained" type="submit" disabled={isLoading}>

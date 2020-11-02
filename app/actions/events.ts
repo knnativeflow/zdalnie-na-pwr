@@ -13,7 +13,7 @@ interface IActionClearEvents {
 interface IActionAddEventZoomLinks {
   type: typeof ADD_EVENT_ZOOM_LINKS
   payload: {
-    zoomLinks: IEventZoomLink[],
+    zoomLinks: IEventZoomLink[]
     overwriteExisting: boolean
   }
 }
@@ -33,7 +33,7 @@ export const clearEvents = (): IActionClearEvents => {
   }
 }
 
-export const addZoomLinks = (zoomLinks: IEventZoomLink[], overwriteExisting: boolean = false): IActionAddEventZoomLinks => {
+export const addZoomLinks = (zoomLinks: IEventZoomLink[], overwriteExisting = false): IActionAddEventZoomLinks => {
   return {
     type: ADD_EVENT_ZOOM_LINKS,
     payload: { zoomLinks, overwriteExisting },

@@ -5,7 +5,7 @@ import moment from 'moment'
 import { shell } from 'electron'
 
 import { eventColor, eventFullText } from 'utils/courseTypes'
-import InfoWithIcon, { ButtonInfoWithIcon } from 'components/InfoWithIcon'
+import InfoWithIcon from 'components/InfoWithIcon'
 import { THEME } from 'base/theme/theme'
 import { ICourse } from 'domain/course'
 import { IEvent } from 'domain/event'
@@ -23,39 +23,19 @@ import {
 } from 'react-icons/all'
 import Button from 'components/Button'
 
-// START TEST DATA
 /*
-const platform: IPlatforms = {
-  zoom: {
-    recurrent: true,
-    url: 'https://google.com',
-  },
-  teams: {
-    name: 'Oracle - projekt, Z00-21g',
-    url: 'https://google.com',
-  },
-  ePortal: {
-    name: 'Baza danych Oracle - programowanie',
-    url: 'https://google.com',
-  },
-}
+ * For now thi component is replaced with EventInfo
+ * It's still here because it'll be used in the future for small windows
+ */
 
-const additional: { [key: string]: string } = {
-  Konsultacje: 'wt 16-18 227 B-2, czw 17-19 168 C-3',
-  'Czy ziomek jest spoko': 'W sumie git',
-  'Test emoji 😶🤐😗✌😐🤙': 'Idk chyba działa',
-}
-*/
 // END TEST DATA
-
 interface Props {
   event?: IEvent
   onClose: () => void
   isOpen: boolean
 }
 
-const EventModal = (props: Props) => {
-  const { event, onClose, isOpen } = props
+const EventModal = ({ event, onClose, isOpen }: Props) => {
   const courses = useSelector((state: RootState) => state.courses)
 
   if (!event) return null
@@ -65,8 +45,8 @@ const EventModal = (props: Props) => {
   )
 
   const { name, type, start, end, lecturer, platform, additional } = event
-  const mergedPlatforms = { ...eventCourse?.platforms, ...platform }
-  const mergedAdditional = { ...eventCourse?.additional, ...additional }
+  const mergedPlatforms = { ...(eventCourse?.platforms || {}), ...platform }
+  const mergedAdditional = { ...(eventCourse?.additional || {}), ...additional }
   const mappedAdditional = Object.entries(mergedAdditional)
   const hasPlatforms = !!Object.values(mergedPlatforms).length
 
@@ -96,7 +76,7 @@ const EventModal = (props: Props) => {
             <Grid item xs={12} sm={6}>
               <InfoWithIcon icon={FaChalkboardTeacher} title="Prowadzący">
                 {lecturer?.split(', ').map((value) => (
-                  <div key={value}>{value}</div>
+                  <span key={value}>{value}</span>
                 ))}
               </InfoWithIcon>
             </Grid>
@@ -127,44 +107,44 @@ const EventModal = (props: Props) => {
               {mergedPlatforms.zoom &&
                 (mergedPlatforms.zoom.url ? (
                   <Grid item xs={12} sm={6}>
-                    <ButtonInfoWithIcon
+                    <InfoWithIcon
                       onClick={handleOpenLink(mergedPlatforms.zoom.url)}
                       icon={FaVideo}
                       title="ZOOM"
                       color={THEME.colors.brand.zoom}
                     >
                       {mergedPlatforms.zoom.recurrent ? 'spotkanie cotygodniowe' : 'spotkanie jednorazowe'}
-                    </ButtonInfoWithIcon>
+                    </InfoWithIcon>
                   </Grid>
                 ) : (
                   <Grid item xs={12} sm={6}>
-                    <ButtonInfoWithIcon icon={FaVideoSlash} title="ZOOM" disabled>
+                    <InfoWithIcon icon={FaVideoSlash} title="ZOOM" disabled>
                       brak aktualnego linka
-                    </ButtonInfoWithIcon>
+                    </InfoWithIcon>
                   </Grid>
                 ))}
-              {mergedPlatforms.teams && (
+              {mergedPlatforms?.teams && (
                 <Grid item xs={12} sm={6}>
-                  <ButtonInfoWithIcon
-                    onClick={handleOpenLink(mergedPlatforms.teams.url)}
+                  <InfoWithIcon
+                    onClick={handleOpenLink(mergedPlatforms.teams?.url)}
                     icon={FaUserFriends}
                     title="Teams"
                     color={THEME.colors.brand.teams}
                   >
-                    {mergedPlatforms.teams.name}
-                  </ButtonInfoWithIcon>
+                    {mergedPlatforms.teams?.name}
+                  </InfoWithIcon>
                 </Grid>
               )}
-              {mergedPlatforms.ePortal && (
+              {mergedPlatforms?.ePortal && (
                 <Grid item xs={12} sm={6}>
-                  <ButtonInfoWithIcon
-                    onClick={handleOpenLink(mergedPlatforms.ePortal.url)}
+                  <InfoWithIcon
+                    onClick={handleOpenLink(mergedPlatforms.ePortal?.url)}
                     icon={FaBookReader}
                     title="EPortal"
                     color={THEME.colors.brand.ePortal}
                   >
-                    {mergedPlatforms.ePortal.name}
-                  </ButtonInfoWithIcon>
+                    {mergedPlatforms.ePortal?.name}
+                  </InfoWithIcon>
                 </Grid>
               )}
             </Grid>
