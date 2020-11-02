@@ -53,3 +53,4 @@ npm-debug.log.*
 
 # ENV
 .env
+electron-builder.env
