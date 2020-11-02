@@ -12,73 +12,12 @@ import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 import './initSentry'
 import path from 'path'
-import { app, BrowserWindow, dialog } from 'electron'
-import { autoUpdater } from 'electron-updater'
-import log from 'electron-log'
+import { app, BrowserWindow } from 'electron'
 
-import os from 'os'
-
+import AppUpdater from 'features/appUpdater'
 import MenuBuilder from './menu'
 
 let mainWindow: BrowserWindow | null = null
-
-export default class AppUpdater {
-  constructor() {
-    log.transports.file.level = 'info'
-    const platform = `${os.platform()}_${os.arch()}`
-    const version = app.getVersion()
-    
-    autoUpdater.setFeedURL({
-      provider: 'github',
-      repo: 'zdalnie-na-pwr',
-      owner: 'knnativeflow',
-      private: true,
-      token: process.env.GH_TOKEN
-    })
-
-    dialog.showMessageBoxSync({
-      type: 'info',
-      title: 'Info',
-      message: `Test dialogów`,
-    })
-
-    autoUpdater.on('checking-for-update', () => {
-      dialog.showMessageBoxSync({
-        type: 'info',
-        title: 'Info',
-        message: `Sprawdzam aktualizacje dla platformy ${platform} wersji ${version}`,
-      })
-    })
-
-    autoUpdater.on('error', (err) => {
-      dialog.showMessageBoxSync({
-        type: 'error',
-        title: 'Error',
-        message: `Wystąpił błąd przy aktualizacji ${err.message}`,
-      })
-    })
-
-    autoUpdater.on('update-downloaded', () => {
-      dialog
-        .showMessageBox({
-          type: 'question',
-          buttons: ['Zainstaluj i otwórz ponownie', 'Później'],
-          defaultId: 0,
-          message: `Nowa wersja aplikacji ${app.getName()} została pobrana. Czy chcesz teraz zaktualiwać aplikację?`,
-        })
-        .then((result) => {
-          if (result.response === 0) {
-            autoUpdater.quitAndInstall()
-          }
-
-          return result
-        })
-        .catch((err) => console.log(`Error auto updater dialog ${err.message}`))
-    })
-
-    void autoUpdater.checkForUpdatesAndNotify()
-  }
-}
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support')
