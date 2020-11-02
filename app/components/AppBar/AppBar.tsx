@@ -144,7 +144,7 @@ const AppBar = () => {
             <SyncIcon animate={isSmailRefreshing} />
             <RefreshWrapper>
               <span>Odśwież dane</span>
-              <small>Zaktualizowano o {moment(lastUpdateDate).format('HH:mm')}</small>
+              <small>Zaktualizowano {moment(lastUpdateDate).fromNow()}</small>
             </RefreshWrapper>
           </Button>
           <Link to={routes.SETTINGS} activeStyle={activeStyle}>
