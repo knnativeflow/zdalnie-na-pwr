@@ -12,6 +12,7 @@ interface InfoProps {
   children: React.ReactNode
   color?: string
   onClick?: () => void
+  asDisabledButton?: boolean
 }
 
 // const InfoWithIcon = ({ icon: Icon, title, children, color }: InfoProps) => (
@@ -34,7 +35,7 @@ interface InfoProps {
 //   color: THEME.colors.mid,
 // }
 
-const InfoWithIconWrapper = styled.div<{ as: 'button' | 'div'; color?: string }>`
+const InfoWithIconWrapper = styled.div<{ as: 'button' | 'div'; color?: string; asDisabledButton?: boolean }>`
   display: flex;
   justify-content: left;
   text-align: left;
@@ -43,6 +44,11 @@ const InfoWithIconWrapper = styled.div<{ as: 'button' | 'div'; color?: string }>
   padding: 4px;
   width: 100%;
 
+  ${({ asDisabledButton, color }) =>
+    asDisabledButton &&
+    css`
+      background: ${color}20;
+    `}
   ${({ as, color }) =>
     as === 'button' &&
     css`
@@ -86,11 +92,11 @@ const InfoText = styled.p`
   line-height: 1;
 `
 
-const InfoWithIcon = ({ icon: Icon, title, children, color, onClick }: InfoProps) => {
+const InfoWithIcon = ({ icon: Icon, title, children, color, onClick, asDisabledButton }: InfoProps) => {
   const WrapperComp = onClick ? 'button' : 'div'
 
   return (
-    <InfoWithIconWrapper onClick={onClick} as={WrapperComp} color={color}>
+    <InfoWithIconWrapper onClick={onClick} as={WrapperComp} color={color} asDisabledButton={asDisabledButton}>
       <IconWrapper color={color}>
         <Icon fontSize="small" />
       </IconWrapper>
@@ -115,7 +121,9 @@ export const ButtonInfoWithIcon = (props: ButtonProps) => {
   return (
     <Button even {...{ onClick, color, disabled }} fullWidth compact align="left">
       <InfoWithIcon {...{ icon, title, color }}>
-        <Box fontSize="subtitle2.fontSize">{children}</Box>
+        <Box fontSize="subtitle2.fontSize" component="span">
+          {children}
+        </Box>
       </InfoWithIcon>
     </Button>
   )

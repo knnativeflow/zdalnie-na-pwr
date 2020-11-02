@@ -31,7 +31,7 @@ const Title = styled.p`
   margin-bottom: 24px;
 `
 
-const InfoGrid = styled.p`
+const InfoGrid = styled.div`
   margin: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -109,7 +109,7 @@ const EventInfo = ({ event }: Props) => {
         </InfoWithIcon>
         <InfoWithIcon icon={FaChalkboardTeacher} title="Prowadzący" color={color}>
           {lecturer?.split(', ').map((value) => (
-            <div key={value}>{value}</div>
+            <span key={value}>{value}</span>
           ))}
         </InfoWithIcon>
       </InfoGrid>
@@ -120,16 +120,21 @@ const EventInfo = ({ event }: Props) => {
 
       {hasPlatforms && (
         <InfoGrid>
-          {mergedPlatforms?.zoom?.url && (
-            <InfoWithIcon
-              onClick={handleOpenLink(mergedPlatforms.zoom.url)}
-              icon={FaVideo}
-              title="ZOOM"
-              color={THEME.colors.brand.zoom}
-            >
-              {mergedPlatforms.zoom.recurrent ? 'spotkanie cotygodniowe' : 'spotkanie jednorazowe'}
-            </InfoWithIcon>
-          )}
+          {mergedPlatforms.zoom &&
+            (mergedPlatforms.zoom.url ? (
+              <InfoWithIcon
+                onClick={handleOpenLink(mergedPlatforms.zoom.url)}
+                icon={FaVideo}
+                title="ZOOM"
+                color={THEME.colors.brand.zoom}
+              >
+                {mergedPlatforms.zoom.recurrent ? 'spotkanie cotygodniowe' : 'spotkanie jednorazowe'}
+              </InfoWithIcon>
+            ) : (
+              <InfoWithIcon icon={FaVideoSlash} title="ZOOM" asDisabledButton>
+                brak aktualnego linka
+              </InfoWithIcon>
+            ))}
           {mergedPlatforms.teams && (
             <InfoWithIcon
               onClick={handleOpenLink(mergedPlatforms.teams.url)}

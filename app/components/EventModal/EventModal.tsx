@@ -76,7 +76,7 @@ const EventModal = ({ event, onClose, isOpen }: Props) => {
             <Grid item xs={12} sm={6}>
               <InfoWithIcon icon={FaChalkboardTeacher} title="Prowadzący">
                 {lecturer?.split(', ').map((value) => (
-                  <div key={value}>{value}</div>
+                  <span key={value}>{value}</span>
                 ))}
               </InfoWithIcon>
             </Grid>

@@ -34,7 +34,7 @@ const CalendarWrapper = styled.div`
     align-items: center;
   }
 
-  .fc-direction-ltr .fc-toolbar > * > :not(:first-child) {
+  .fc-direction-ltr .fc-toolbar > * > :not(:first-of-type) {
     margin-left: 8px;
   }
 
@@ -49,7 +49,8 @@ const Title = styled.p`
   position: absolute;
 `
 
-const EventContent = styled.div`
+const EventContent = styled.p`
+  margin: 0;
   display: flex;
   flex-direction: column;
   padding: 3px;
@@ -57,7 +58,7 @@ const EventContent = styled.div`
   height: 100%;
 `
 
-const EventHeader = styled.div`
+const EventHeader = styled.span`
   display: flex;
   justify-content: space-between;
   font-size: 11px;
@@ -81,7 +82,6 @@ const Calendar = ({ events, onEventClick }: Props) => {
   const calendarRef = useRef<FullCalendar | null>(null)
 
   const handleClickEvent = (event: EventClickArg) => {
-    console.log(event.event.extendedProps.resource)
     onEventClick(event.event.extendedProps.resource)
   }
 

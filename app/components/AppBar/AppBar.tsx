@@ -78,7 +78,9 @@ const spinAnim = keyframes`
   }
 `
 
-const SyncIcon = styled(FaSync)<{ animate: boolean }>`
+const SyncIcon = styled(FaSync, {
+  shouldForwardProp: (prop) => prop !== 'animate',
+})<{ animate: boolean }>`
   ${({ animate }) =>
     animate &&
     css`
