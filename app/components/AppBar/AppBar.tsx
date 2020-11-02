@@ -38,6 +38,7 @@ const link = css`
   background: none;
   border: none;
   opacity: 0.75;
+  padding: 15px 0;
   margin-right: 32px;
   transition: all 0.2s ease-in-out;
   cursor: pointer;
