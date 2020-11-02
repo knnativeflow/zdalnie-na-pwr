@@ -21,6 +21,7 @@ const AppBarWrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0 10px;
+  box-shadow: 0 2px 6px 0 #bed0e6;
 `
 
 const ActionsWrapper = styled.div`
@@ -37,10 +38,9 @@ const link = css`
   background: none;
   border: none;
   opacity: 0.75;
-  cursor: pointer;
-
   margin-right: 32px;
   transition: all 0.2s ease-in-out;
+  cursor: pointer;
 
   svg {
     font-size: 18px;
@@ -67,6 +67,7 @@ const Link = styled(NavLink)`
 
 const Button = styled.button`
   ${link}
+  outline: none;
 `
 
 const spinAnim = keyframes`

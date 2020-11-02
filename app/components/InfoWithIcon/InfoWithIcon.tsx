@@ -15,26 +15,6 @@ interface InfoProps {
   asDisabledButton?: boolean
 }
 
-// const InfoWithIcon = ({ icon: Icon, title, children, color }: InfoProps) => (
-//   <Box display="flex" alignItems="start" width={1}>
-//     <Box bgcolor={`${color}40`} color={color} display="inline-flex" p={0.75} mr={1.5} borderRadius="borderRadius">
-//       <Icon size="1.25em" />
-//     </Box>
-//     <Box flexGrow={1} display="flex" flexDirection="column">
-//       <Text fontWeight="bold" size={0.75} color={THEME.colors.mid}>
-//         {title}
-//       </Text>
-//       <Text size={0.85} fontWeight="normal">
-//         {children}
-//       </Text>
-//     </Box>
-//   </Box>
-// )
-
-// InfoWithIcon.defaultProps = {
-//   color: THEME.colors.mid,
-// }
-
 const InfoWithIconWrapper = styled.div<{ as: 'button' | 'div'; color?: string; asDisabledButton?: boolean }>`
   display: flex;
   justify-content: left;
@@ -61,7 +41,7 @@ const InfoWithIconWrapper = styled.div<{ as: 'button' | 'div'; color?: string; a
     `}
 `
 
-const IconWrapper = styled.div<{ color?: string }>`
+const IconWrapper = styled.div<{ color: string }>`
   margin-right: 10px;
   border-radius: 8px;
   width: 35px;
@@ -92,7 +72,14 @@ const InfoText = styled.p`
   line-height: 1;
 `
 
-const InfoWithIcon = ({ icon: Icon, title, children, color, onClick, asDisabledButton }: InfoProps) => {
+const InfoWithIcon = ({
+  icon: Icon,
+  title,
+  children,
+  color = THEME.colors.mid,
+  onClick,
+  asDisabledButton,
+}: InfoProps) => {
   const WrapperComp = onClick ? 'button' : 'div'
 
   return (
@@ -106,10 +93,6 @@ const InfoWithIcon = ({ icon: Icon, title, children, color, onClick, asDisabledB
       </InfoWrapper>
     </InfoWithIconWrapper>
   )
-}
-
-InfoWithIcon.defaultProps = {
-  color: '#888888',
 }
 
 type ButtonProps = InfoProps & {

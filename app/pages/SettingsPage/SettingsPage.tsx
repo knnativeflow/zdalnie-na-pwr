@@ -16,20 +16,20 @@ const Wrapper = styled.div`
   align-items: center;
 `
 // TODO: use correct colors
-const Button = styled.button`
+const ClearDataButton = styled.button`
   border: none;
-  background: #5c7ca8;
+  background: #b81e44;
   color: #fff;
-  border-radius: 16px;
-  padding: 16px 24px;
-  font-weight: 700;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
   transition: all 0.1s ease-in-out;
-  box-shadow: 0 5px 8px -2px #cbd9ec;
+  box-shadow: 0 5px 8px -2px #ddaab7;
+  margin-top: 50px;
   cursor: pointer;
-  margin-bottom: 24px;
 
   &:hover {
-    background: #5378ac;
+    background: #830827;
   }
 `
 
@@ -49,8 +49,6 @@ const SettingsPage = () => {
 
   return (
     <Wrapper>
-      <Button onClick={logoutUser}>Wyloguj</Button>
-
       <Text>
         <a href="https://zdalnie.napwr.pl" onClick={handleLink}>
           O aplikacji
@@ -63,6 +61,7 @@ const SettingsPage = () => {
         </a>
       </Text>
       <Text>Wersja aplikacji {APP_VERSION}</Text>
+      <ClearDataButton onClick={logoutUser}>Wyczyść dane aplikacji</ClearDataButton>
     </Wrapper>
   )
 }

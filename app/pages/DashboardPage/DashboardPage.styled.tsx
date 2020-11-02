@@ -41,13 +41,14 @@ export const EventItemWrapper = styled.li`
 `
 
 export const EventItemButton = styled.button`
-  width: 100%;
-  background: none;
-  border: none;
   display: flex;
+  width: 100%;
+  border: none;
   background: #f3f5f8;
   border-radius: 16px;
   padding: 20px;
+  cursor: pointer;
+  outline: none;
 `
 
 export const EventItemColor = styled.div<{ color: string }>`
