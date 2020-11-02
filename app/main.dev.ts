@@ -27,9 +27,14 @@ export default class AppUpdater {
     log.transports.file.level = 'info'
     const platform = `${os.platform()}_${os.arch()}`
     const version = app.getVersion()
-    // const urlUpdateServer = `${process.env.URL_NUTS_SERVER}/download/osx` //`https://zdalnie-na-pwr-update-app.herokuapp.com/update/${platform}/${version}` // or /download/latest - for windows update
-    //
-    // autoUpdater.setFeedURL(urlUpdateServer)
+    
+    autoUpdater.setFeedURL({
+      provider: 'github',
+      repo: 'zdalnie-na-pwr',
+      owner: 'knnativeflow',
+      private: true,
+      token: process.env.GH_TOKEN
+    })
 
     dialog.showMessageBoxSync({
       type: 'info',
