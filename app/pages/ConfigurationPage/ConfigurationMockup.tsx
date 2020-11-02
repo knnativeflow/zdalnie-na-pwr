@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import mockup from 'assets/images/stepper-mockup-1.png'
+import mockup from 'assets/images/step1.png'
 
 type FeatureProps = {
   src: string
