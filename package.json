@@ -67,7 +67,7 @@
     "afterSign": "electron-builder-notarize",
     "mac": {
       "hardenedRuntime": true,
-      "entitlements": "./build/entitlements.mac.plist",
+      "entitlements": "./configs/entitlements.mac.plist",
       "target": [
         "dmg",
         "zip"
@@ -91,8 +91,7 @@
     },
     "win": {
       "target": [
-        "nsis",
-        "msi"
+        "nsis"
       ]
     },
     "linux": {
@@ -280,7 +279,7 @@
     "electron-log": "^4.2.4",
     "electron-osx-sign": "^0.4.17",
     "electron-store": "^6.0.1",
-    "electron-updater": "^4.3.4",
+    "electron-updater": "^4.3.5",
     "fp-ts": "^2.8.5",
     "history": "^4.7.2",
     "io-ts": "^2.2.12",

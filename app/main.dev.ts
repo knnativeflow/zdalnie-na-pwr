@@ -12,7 +12,8 @@ import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 import './initSentry'
 import path from 'path'
-import { app, BrowserWindow, autoUpdater, dialog } from 'electron'
+import { app, BrowserWindow, dialog } from 'electron'
+import { autoUpdater } from 'electron-updater'
 import log from 'electron-log'
 
 import os from 'os'
@@ -26,51 +27,51 @@ export default class AppUpdater {
     log.transports.file.level = 'info'
     const platform = `${os.platform()}_${os.arch()}`
     const version = app.getVersion()
+    // const urlUpdateServer = `${process.env.URL_NUTS_SERVER}/download/osx` //`https://zdalnie-na-pwr-update-app.herokuapp.com/update/${platform}/${version}` // or /download/latest - for windows update
+    //
+    // autoUpdater.setFeedURL(urlUpdateServer)
 
-    console.log('app', platform, version)
+    dialog.showMessageBoxSync({
+      type: 'info',
+      title: 'Info',
+      message: `Test dialogów`,
+    })
 
-    autoUpdater.setFeedURL({ url: `https://zdalnie-na-pwr-update-app.herokuapp.com/update/${platform}/${version}` })
+    autoUpdater.on('checking-for-update', () => {
+      dialog.showMessageBoxSync({
+        type: 'info',
+        title: 'Info',
+        message: `Sprawdzam aktualizacje dla platformy ${platform} wersji ${version}`,
+      })
+    })
 
-    autoUpdater.on('checking-for-update', () => console.log('checking-for-update'))
-    autoUpdater.on('update-available', () => console.log('update-available'))
-    autoUpdater.on('update-not-available', () => console.log('update-not-available'))
-    autoUpdater.on('error', (err) => console.log('err', err))
+    autoUpdater.on('error', (err) => {
+      dialog.showMessageBoxSync({
+        type: 'error',
+        title: 'Error',
+        message: `Wystąpił błąd przy aktualizacji ${err.message}`,
+      })
+    })
 
-    // autoUpdater.on('update-available', () => {
-    //   mainWindow?.webContents.send('update_available')
-    // })
-    // autoUpdater.on('update-downloaded', () => {
-    //   mainWindow?.webContents.send('update_downloaded')
-    // })
+    autoUpdater.on('update-downloaded', () => {
+      dialog
+        .showMessageBox({
+          type: 'question',
+          buttons: ['Zainstaluj i otwórz ponownie', 'Później'],
+          defaultId: 0,
+          message: `Nowa wersja aplikacji ${app.getName()} została pobrana. Czy chcesz teraz zaktualiwać aplikację?`,
+        })
+        .then((result) => {
+          if (result.response === 0) {
+            autoUpdater.quitAndInstall()
+          }
 
-    autoUpdater.checkForUpdates()
+          return result
+        })
+        .catch((err) => console.log(`Error auto updater dialog ${err.message}`))
+    })
 
-    // autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-    //   let message = `${app.getName()} ${releaseName} is now available. It will be installed the next time you restart the application.`
-    //   if (releaseNotes) {
-    //     const splitNotes = releaseNotes.split(/[^\r]\n/)
-    //     message += '\n\nRelease notes:\n'
-    //     splitNotes.forEach((notes) => {
-    //       message += `${notes}\n\n`
-    //     })
-    //   }
-    //   // Ask user to update the app
-    //   dialog.showMessageBox(
-    //     {
-    //       type: 'question',
-    //       buttons: ['Install and Relaunch', 'Later'],
-    //       defaultId: 0,
-    //       message: `A new version of ${app.getName()} has been downloaded`,
-    //       detail: message,
-    //     },
-    //     (response) => {
-    //       if (response === 0) {
-    //         setTimeout(() => autoUpdater.quitAndInstall(), 1)
-    //       }
-    //     }
-    //   )
-    // })
-    // init for updates
+    void autoUpdater.checkForUpdatesAndNotify()
   }
 }
 
@@ -144,7 +145,7 @@ const createWindow = async () => {
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
-  // new AppUpdater()
+  new AppUpdater()
 }
 
 /**
