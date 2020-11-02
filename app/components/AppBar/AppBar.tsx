@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { FaRegCalendarAlt, FaRegBookmark, FaSync, FaTools } from 'react-icons/all'
 import { css, keyframes } from '@emotion/core'
 import styled from '@emotion/styled'
+import moment from 'moment'
 
 import routes from 'constants/routes.json'
 import { MENU_BAR_HEIGHT } from 'components/MenuBar/MenuBar.styled'
@@ -88,12 +89,31 @@ const SyncIcon = styled(FaSync, {
     `}
 `
 
+const RefreshWrapper = styled.span`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  span {
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  small {
+    line-height: 1;
+    font-size: 10px;
+    font-weight: 500;
+    opacity: 0.7;
+  }
+`
+
 const activeStyle = { color: '#fff', opacity: 1 }
 
 // TODO: style nav buttons and active state
 const AppBar = () => {
   const dispatch = useDispatch()
   const [isSmailRefreshing, setIsSmailRefreshing] = useState(false)
+  const lastUpdateDate = new Date()
 
   const refreshSmail = async () => {
     try {
@@ -122,7 +142,10 @@ const AppBar = () => {
         <ActionsWrapper>
           <Button onClick={refreshSmail} disabled={isSmailRefreshing}>
             <SyncIcon animate={isSmailRefreshing} />
-            Odśwież dane
+            <RefreshWrapper>
+              <span>Odśwież dane</span>
+              <small>Zaktualizowano o {moment(lastUpdateDate).format('HH:mm')}</small>
+            </RefreshWrapper>
           </Button>
           <Link to={routes.SETTINGS} activeStyle={activeStyle}>
             <FaTools /> Ustawienia
