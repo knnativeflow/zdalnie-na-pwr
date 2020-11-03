@@ -8,6 +8,7 @@ module.exports = {
     '@typescript-eslint/ban-ts-comment': 'off',
     'no-void': 'off',
     'react/require-default-props': 'off',
+    'no-console': ['warn', { allow: ['warn', 'error'] }],
   },
   parserOptions: {
     ecmaVersion: 2020,

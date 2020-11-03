@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { NavLink } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { FaRegCalendarAlt, FaRegBookmark, FaSync, FaTools } from 'react-icons/all'
 import { css, keyframes } from '@emotion/core'
 import styled from '@emotion/styled'
@@ -10,6 +10,9 @@ import routes from 'constants/routes.json'
 import { MENU_BAR_HEIGHT } from 'components/MenuBar/MenuBar.styled'
 import { SmailRefresher } from 'features/synchronization'
 import { addZoomLinks } from 'actions/events'
+import { RootState } from 'store'
+import { setFetchStatusMail } from 'actions/mail'
+import { parseDateToString } from 'utils/date'
 
 const AppBarWrapper = styled.div`
   background: #759ccb;
@@ -114,19 +117,17 @@ const activeStyle = { color: '#fff', opacity: 1 }
 // TODO: style nav buttons and active state
 const AppBar = () => {
   const dispatch = useDispatch()
-  const [isSmailRefreshing, setIsSmailRefreshing] = useState(false)
-  const lastUpdateDate = new Date()
+  const { lastScan: lastScanMail, isLoading: isLoadingMail } = useSelector((state: RootState) => state.mail)
 
   const refreshSmail = async () => {
     try {
-      setIsSmailRefreshing(true)
+      dispatch(setFetchStatusMail({ isLoading: true, error: '' }))
       const zoomLinks = await SmailRefresher.refresh()
       dispatch(addZoomLinks(zoomLinks, false))
+      dispatch(setFetchStatusMail({ isLoading: false, lastScan: parseDateToString(new Date()), error: '' }))
     } catch (e) {
-      // eslint-disable-next-line
+      dispatch(setFetchStatusMail({ isLoading: false, error: e.message }))
       console.error(e)
-    } finally {
-      setIsSmailRefreshing(false)
     }
   }
 
@@ -142,11 +143,13 @@ const AppBar = () => {
           </Link>
         </ActionsWrapper>
         <ActionsWrapper>
-          <Button onClick={refreshSmail} disabled={isSmailRefreshing}>
-            <SyncIcon animate={isSmailRefreshing} />
+          <Button onClick={refreshSmail} disabled={isLoadingMail}>
+            <SyncIcon animate={isLoadingMail} />
             <RefreshWrapper>
               <span>Odśwież dane</span>
-              <small>Zaktualizowano {moment(lastUpdateDate).fromNow()}</small>
+              <small>
+                {lastScanMail ? `Zaktualizowano ${moment(lastScanMail).fromNow()}` : 'Nie aktualizowano wcześniej'}
+              </small>
             </RefreshWrapper>
           </Button>
           <Link to={routes.SETTINGS} activeStyle={activeStyle}>
