@@ -17,6 +17,11 @@ import { THEME } from 'base/theme/theme'
 import { FaChevronLeft } from 'react-icons/all'
 import Text from 'components/Text'
 import Space from 'components/Space'
+
+import img1 from 'assets/images/step1.png'
+import img2 from 'assets/images/step2.png'
+import img3 from 'assets/images/step3.png'
+
 import ConfigurationMockup from './ConfigurationMockup'
 import { jsosValidationSchema, mailValidationSchema } from './validationsSchemas'
 
@@ -84,7 +89,7 @@ const StartStep = ({ nextStep }: { nextStep: () => void }) => (
         Do dzieła
       </Button>
     </StyledSidebar>
-    <ConfigurationMockup color={THEME.colors.palette.pink.light} />
+    <ConfigurationMockup color={THEME.colors.palette.pink.light} src={img1} />
   </Box>
 )
 
@@ -107,7 +112,7 @@ const JsosStep = ({ onSubmit, defaultValues, prevStep }: StepWithLoginProps) => 
         nie różni się od logowania przez przeglądarkę.
       </FooterInfo>
     </StyledSidebar>
-    <ConfigurationMockup color={THEME.colors.palette.purple.light} />
+    <ConfigurationMockup color={THEME.colors.palette.purple.light} src={img2} />
   </Box>
 )
 
@@ -131,7 +136,7 @@ const MailStep = ({ onSubmit, defaultValues, prevStep }: StepWithLoginProps) => 
         zasadzie co logowanie do JSOS.
       </FooterInfo>
     </StyledSidebar>
-    <ConfigurationMockup color={THEME.colors.palette.blue.light} />
+    <ConfigurationMockup color={THEME.colors.palette.blue.light} src={img3} />
   </Box>
 )
 
