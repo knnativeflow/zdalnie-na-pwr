@@ -126,7 +126,7 @@ const MailStep = ({ onSubmit, defaultValues, validationSchema, prevStep }: StepW
       <LoginForm
         color={THEME.colors.palette.blue}
         {...{ onSubmit, defaultValues, validationSchema }}
-        loginPlaceholder="indeks@student.pwr.edu.pl"
+        loginPlaceholder="indeks"
       />
       <Space size={2} />
       <FooterInfo color={THEME.colors.palette.blue.light}>
