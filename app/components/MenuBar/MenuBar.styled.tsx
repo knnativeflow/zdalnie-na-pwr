@@ -32,6 +32,10 @@ export const MenuBarWrapper = styled.div<TMenuBarWrapper>`
     isMac &&
     css`
       justify-content: flex-end;
+
+      ${ActionButtonsContainer} {
+        display: none;
+      }
     `}
 
   ${({ isConfigured }) =>
@@ -40,10 +44,6 @@ export const MenuBarWrapper = styled.div<TMenuBarWrapper>`
       color: #fff; // TODO: use variables
       background: #3a5574; // TODO: use variables
     `}
-
-  ${ActionButtonsContainer} {
-    display: none;
-  }
 `
 export const ActionButton = styled.button`
   height: 100%;
