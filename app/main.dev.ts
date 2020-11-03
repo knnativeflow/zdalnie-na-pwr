@@ -18,6 +18,7 @@ import AppUpdater from './features/appUpdater'
 import initSentry from './initSentry'
 
 const IS_DEV = process.env.NODE_ENV === 'development'
+const IS_MAC = process.platform === 'darwin'
 
 initSentry()
 
@@ -48,7 +49,6 @@ const installExtensions = async () => {
 }
 
 const createWindow = async () => {
-  console.log(IS_DEV)
   if (IS_DEV || process.env.DEBUG_PROD === 'true') {
     await installExtensions()
   }
@@ -68,7 +68,8 @@ const createWindow = async () => {
     minHeight: 500,
     minWidth: 800,
     icon: getAssetPath('icon.png'),
-    frame: false,
+    frame: IS_MAC,
+    titleBarStyle: 'hiddenInset',
     webPreferences:
       (IS_DEV || process.env.E2E_BUILD === 'true') && process.env.ERB_SECURE !== 'true'
         ? {

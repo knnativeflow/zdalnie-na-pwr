@@ -5,6 +5,7 @@ import coursesReducer from './courses'
 import eventsReducer from './events'
 import userReducer from './user'
 import mailReducer from './mail'
+import appReducer from './app'
 
 export default function createRootReducer(history: History) {
   return combineReducers({
@@ -13,5 +14,6 @@ export default function createRootReducer(history: History) {
     events: eventsReducer,
     user: userReducer,
     mail: mailReducer,
+    app: appReducer,
   })
 }

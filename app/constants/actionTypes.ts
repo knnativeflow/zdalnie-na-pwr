@@ -11,3 +11,5 @@ export const UPDATE_USER = 'UPDATE_USER'
 export const CLEAR_USER = 'CLEAR_USER'
 
 export const SET_FETCH_STATUS_MAIL = 'SET_FETCH_STATUS_MAIL'
+
+export const SET_FULLSCREEN = 'SET_FULLSCREEN'

@@ -1,12 +1,21 @@
 import styled from '@emotion/styled'
 import { css } from '@emotion/core'
 
-export const MENU_BAR_HEIGHT = '30px'
+const isMac = process.platform === 'darwin'
+
+export const MENU_BAR_HEIGHT = isMac ? '38px' : '30px'
 const ACTION_ICON_SIZE = '15px'
 
 type TMenuBarWrapper = {
   isConfigured?: boolean
+  isMac?: boolean
 }
+
+export const ActionButtonsContainer = styled.div`
+  height: 100%;
+  margin-left: auto;
+  display: flex;
+`
 
 export const MenuBarWrapper = styled.div<TMenuBarWrapper>`
   position: absolute;
@@ -19,12 +28,22 @@ export const MenuBarWrapper = styled.div<TMenuBarWrapper>`
   -webkit-app-region: drag;
   z-index: 10000;
 
+  ${({ isMac }) =>
+    isMac &&
+    css`
+      justify-content: flex-end;
+    `}
+
   ${({ isConfigured }) =>
     isConfigured &&
     css`
       color: #fff; // TODO: use variables
       background: #3a5574; // TODO: use variables
     `}
+
+  ${ActionButtonsContainer} {
+    display: none;
+  }
 `
 export const ActionButton = styled.button`
   height: 100%;
@@ -53,15 +72,8 @@ export const ActionButton = styled.button`
   }
 `
 
-export const ActionButtonsContainer = styled.div`
-  height: 100%;
-  margin-left: auto;
-  display: flex;
-`
-
 export const Title = styled.p`
-  margin: 0;
-  margin-left: 10px;
+  margin: 0 10px;
   font-size: 13px;
   display: flex;
   align-items: center;

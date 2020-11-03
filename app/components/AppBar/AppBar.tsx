@@ -14,10 +14,10 @@ import { RootState } from 'store'
 import { setFetchStatusMail } from 'actions/mail'
 import { parseDateToString } from 'utils/date'
 
-const AppBarWrapper = styled.div`
+const AppBarWrapper = styled.div<{ isFullscreen: boolean }>`
   background: #759ccb;
   height: 60px;
-  margin-top: ${MENU_BAR_HEIGHT};
+  margin-top: ${({ isFullscreen }) => (isFullscreen ? 0 : MENU_BAR_HEIGHT)};
   flex-shrink: 0;
   width: 100%;
   display: flex;
@@ -118,6 +118,7 @@ const activeStyle = { color: '#fff', opacity: 1 }
 const AppBar = () => {
   const dispatch = useDispatch()
   const { lastScan: lastScanMail, isLoading: isLoadingMail } = useSelector((state: RootState) => state.mail)
+  const isFullscreen = useSelector(({ app }: RootState) => app.isFullscreen)
 
   const refreshSmail = async () => {
     try {
@@ -133,7 +134,7 @@ const AppBar = () => {
 
   return (
     <>
-      <AppBarWrapper>
+      <AppBarWrapper isFullscreen={isFullscreen}>
         <ActionsWrapper>
           <Link to={routes.INDEX} activeStyle={activeStyle} exact>
             <FaRegBookmark /> Panel
