@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react'
+import React, { forwardRef, useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/all'
 import Button from 'components/Button'
 import Space from 'components/Space'
@@ -10,16 +10,19 @@ export type Props = {
   bgColor?: string
   maxWidth?: string | number
   placeholder?: string
+  error?: string
 } & React.ComponentProps<'input'>
 
-const Input = (props: Props) => {
-  const { placeholder, textColor, bgColor, maxWidth, disabled, ...rest } = props
+// eslint-disable-next-line react/display-name
+const Input = forwardRef((props: Props, ref: React.Ref<HTMLInputElement>) => {
+  const { placeholder, textColor, bgColor, maxWidth, disabled, error, ...rest } = props
   const [isPasswordShown, setPasswordShown] = useState(rest.type !== 'password')
   const type = rest.type === 'password' && isPasswordShown ? 'text' : rest.type
 
+  // TODO: add handle error
   return (
     <StyledInputContainer {...{ textColor, bgColor, maxWidth, disabled }}>
-      <StyledInput onBlur={() => setPasswordShown(false)} placeholder=" " {...rest} type={type} />
+      <StyledInput onBlur={() => setPasswordShown(false)} placeholder=" " {...rest} type={type} ref={ref} />
       <StyledInputLabel>{placeholder}</StyledInputLabel>
       {rest.type === 'password' && (
         <>
@@ -37,6 +40,6 @@ const Input = (props: Props) => {
       )}
     </StyledInputContainer>
   )
-}
+})
 
 export default Input

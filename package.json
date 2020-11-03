@@ -199,6 +199,7 @@
     "@types/universal-analytics": "^0.4.4",
     "@types/webpack": "^4.41.21",
     "@types/webpack-env": "^1.15.2",
+    "@types/yup": "^0.29.9",
     "@typescript-eslint/eslint-plugin": "^3.6.1",
     "@typescript-eslint/parser": "^3.6.1",
     "babel-eslint": "^10.1.0",
@@ -218,8 +219,8 @@
     "electron": "^8",
     "electron-builder": "^22.3.6",
     "electron-builder-notarize": "^1.2.0",
-    "electron-notarize": "^1.0.0",
     "electron-devtools-installer": "^3.1.1",
+    "electron-notarize": "^1.0.0",
     "electron-rebuild": "^1.10.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.3",
@@ -276,6 +277,7 @@
     "@fullcalendar/daygrid": "^5.3.2",
     "@fullcalendar/react": "^5.3.1",
     "@fullcalendar/timegrid": "^5.3.1",
+    "@hookform/resolvers": "^1.0.0",
     "@hot-loader/react-dom": "^16.13.0",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
@@ -297,6 +299,7 @@
     "node-ical": "^0.12.2",
     "react": "^16.13.1",
     "react-dom": "^16.12.0",
+    "react-hook-form": "^6.10.1",
     "react-hot-loader": "^4.12.21",
     "react-icons": "^3.11.0",
     "react-redux": "^7.2.1",
@@ -310,7 +313,8 @@
     "source-map-support": "^0.5.19",
     "superagent": "^6.1.0",
     "superagent-jsonp": "^0.2.1",
-    "universal-analytics": "^0.4.23"
+    "universal-analytics": "^0.4.23",
+    "yup": "^0.29.3"
   },
   "devEngines": {
     "node": ">=7.x",

@@ -1,4 +1,8 @@
-import React, { ChangeEvent, FormEvent, useState } from 'react'
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { ObjectSchema } from 'yup'
+
 import { CircularProgress, Typography } from '@material-ui/core'
 import Input from 'components/Input'
 import Button from 'components/Button'
@@ -6,6 +10,7 @@ import Space from 'components/Space'
 
 export type LoginFormProps = {
   onSubmit: (login: string, password: string) => Promise<void>
+  validationSchema: ObjectSchema
   defaultValues?: { login: string; password: string }
   loginPlaceholder?: string
   color: {
@@ -15,19 +20,22 @@ export type LoginFormProps = {
   }
 }
 
-const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder }: LoginFormProps) => {
-  const [login, setLogin] = useState(defaultValues?.login ?? '')
-  const [password, setPassword] = useState(defaultValues?.password ?? '')
-  const [error, setError] = useState('')
+const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder, validationSchema }: LoginFormProps) => {
+  const [apiError, setApiError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+  const { handleSubmit: handleSubmitReactFrom, errors, register } = useForm({
+    resolver: yupResolver<Record<string, string>>(validationSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+  })
+
+  const handleSubmit = async ({ login, password }: { login: string; password: string }) => {
     try {
       setIsLoading(true)
       await onSubmit(login, password)
     } catch (error) {
-      setError(error.message)
+      setApiError(error.message)
       /*
        * It's here beacuse there is page change triggered after success in onSubmit func
        * so component is unmounted and we can't perform setIsLoading
@@ -37,33 +45,37 @@ const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder }: LoginFo
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmitReactFrom(handleSubmit)}>
       <Input
+        name="login"
+        ref={register}
         textColor={color.dark}
         autoFocus
-        onChange={(event: ChangeEvent<HTMLInputElement>) => setLogin(event.target.value)}
-        defaultValue={defaultValues?.login}
+        defaultValue={defaultValues?.login ?? ''}
         placeholder={loginPlaceholder ?? 'login'}
         disabled={isLoading}
+        error={errors.login?.message}
       />
       <Space size={0.5} />
       <Input
+        name="password"
         type="password"
         textColor={color.dark}
-        onChange={(event: ChangeEvent<HTMLInputElement>) => setPassword(event.target.value)}
-        defaultValue={defaultValues?.password}
+        defaultValue={defaultValues?.password ?? ''}
         placeholder="hasło"
+        ref={register}
         disabled={isLoading}
+        error={errors.password?.message}
       />
       <Space size={1} />
       <Button type="submit" glow color={color.main} variant="primary" fullWidth disabled={isLoading}>
         {isLoading ? <CircularProgress size="1em" color="inherit" /> : 'Zaloguj'}
       </Button>
-      {!!error && (
+      {!!apiError && (
         <>
           <Space size={1} />
           <Typography color="error" align="center">
-            {error}
+            {apiError}
           </Typography>
         </>
       )}

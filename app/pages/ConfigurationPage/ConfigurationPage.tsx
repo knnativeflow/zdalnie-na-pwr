@@ -11,13 +11,14 @@ import { addEvents, addZoomLinks } from 'actions/events'
 import { addCourses, addTeamsLinks } from 'actions/courses'
 import { updateUser } from 'actions/user'
 import LoginForm from 'components/LoginForm'
-import Button from 'components/Button'
 import { LoginFormProps } from 'components/LoginForm/LoginForm'
+import Button from 'components/Button'
 import { THEME } from 'base/theme/theme'
 import { FaChevronLeft } from 'react-icons/all'
 import Text from 'components/Text'
 import Space from 'components/Space'
 import ConfigurationMockup from './ConfigurationMockup'
+import { jsosValidationSchema, mailValidationSchema } from './validationsSchemas'
 
 const StyledSidebar = styled.div`
   height: 100%;
@@ -94,7 +95,12 @@ const JsosStep = ({ onSubmit, defaultValues, prevStep }: StepWithLoginProps) => 
       <Space size={2} />
       <h2>Zaloguj się do JSOS</h2>
       <Space size={2} />
-      <LoginForm color={THEME.colors.palette.purple} {...{ onSubmit, defaultValues }} loginPlaceholder="pwr######" />
+      <LoginForm
+        color={THEME.colors.palette.purple}
+        {...{ onSubmit, defaultValues }}
+        loginPlaceholder="pwr######"
+        validationSchema={jsosValidationSchema}
+      />
       <Space size={2} />
       <FooterInfo color={THEME.colors.palette.purple.light}>
         Aktualnie jedyną informacją pobieraną z JSOS jest siatka zajęć. Cały proces wykonywany jest wewnątrz aplikacji i
@@ -116,6 +122,7 @@ const MailStep = ({ onSubmit, defaultValues, prevStep }: StepWithLoginProps) => 
         color={THEME.colors.palette.blue}
         {...{ onSubmit, defaultValues }}
         loginPlaceholder="indeks@student.pwr.edu.pl"
+        validationSchema={mailValidationSchema}
       />
       <Space size={2} />
       <FooterInfo color={THEME.colors.palette.blue.light}>
@@ -156,6 +163,7 @@ const SavePasswordStep = (props: { prevStep: () => void; onPasswordSave: (hasAgr
           color={THEME.colors.palette.teal.main}
           variant="primary"
           fullWidth
+          disabled={!hasAgreed}
         >
           Gotowe
         </Button>
