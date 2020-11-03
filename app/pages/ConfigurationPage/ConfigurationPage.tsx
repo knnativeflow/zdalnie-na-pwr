@@ -93,7 +93,7 @@ const StartStep = ({ nextStep }: { nextStep: () => void }) => (
   </Box>
 )
 
-const JsosStep = ({ onSubmit, defaultValues, prevStep }: StepWithLoginProps) => (
+const JsosStep = ({ onSubmit, defaultValues, validationSchema, prevStep }: StepWithLoginProps) => (
   <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
     <StyledSidebar>
       <GoBackButton color={THEME.colors.palette.purple} count={1} onClick={prevStep} />
@@ -102,21 +102,21 @@ const JsosStep = ({ onSubmit, defaultValues, prevStep }: StepWithLoginProps) => 
       <Space size={2} />
       <LoginForm
         color={THEME.colors.palette.purple}
-        {...{ onSubmit, defaultValues }}
+        {...{ onSubmit, defaultValues, validationSchema }}
         loginPlaceholder="pwr######"
-        validationSchema={jsosValidationSchema}
       />
       <Space size={2} />
       <FooterInfo color={THEME.colors.palette.purple.light}>
-        Aktualnie jedyną informacją pobieraną z JSOS jest siatka zajęć. Cały proces wykonywany jest wewnątrz aplikacji i
-        nie różni się od logowania przez przeglądarkę.
+        Aktualnie jedyną informacją pobieraną z JSOS jest siatka zajęć oraz lista kursów. Cały proces wykonywany jest
+        wewnątrz aplikacji i nie różni się od logowania przez przeglądarkę. Twoje dane obsługane są tylko na twoim
+        komputerze oraz serwerze Politechniki.
       </FooterInfo>
     </StyledSidebar>
     <ConfigurationMockup color={THEME.colors.palette.purple.light} src={img2} />
   </Box>
 )
 
-const MailStep = ({ onSubmit, defaultValues, prevStep }: StepWithLoginProps) => (
+const MailStep = ({ onSubmit, defaultValues, validationSchema, prevStep }: StepWithLoginProps) => (
   <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
     <StyledSidebar>
       <GoBackButton color={THEME.colors.palette.blue} count={2} onClick={prevStep} />
@@ -125,9 +125,8 @@ const MailStep = ({ onSubmit, defaultValues, prevStep }: StepWithLoginProps) => 
       <Space size={2} />
       <LoginForm
         color={THEME.colors.palette.blue}
-        {...{ onSubmit, defaultValues }}
+        {...{ onSubmit, defaultValues, validationSchema }}
         loginPlaceholder="indeks@student.pwr.edu.pl"
-        validationSchema={mailValidationSchema}
       />
       <Space size={2} />
       <FooterInfo color={THEME.colors.palette.blue.light}>
@@ -174,7 +173,9 @@ const SavePasswordStep = (props: { prevStep: () => void; onPasswordSave: (hasAgr
         </Button>
         <Space size={2} />
         <FooterInfo color={THEME.colors.palette.teal.light}>
-          Jeśli dane nie zostaną zapamiętane, trzeba będzie wpisać je na nowo podczas każdego uruchomienia aplikacji.
+          Jak w przeglądarce zapisujemy dane logowania, żeby nie wpisywać ich za każdym razem. Kto chciałby wpisywać to
+          samo co 5 minut? Oczywiście wszystko jest bezpieczne, dane logowania zapisywane są w tzw. bezpiecznej enklawie
+          twojego systemu operacyjnego, miejsca specjalnie przeznaczonego do zapisywania haseł.
         </FooterInfo>
       </StyledSidebar>
       <ConfigurationMockup color={THEME.colors.palette.teal.light} />
@@ -260,8 +261,20 @@ const ConfigurationPage = () => {
 
   return [
     <StartStep key={0} nextStep={goToNextStep} />,
-    <JsosStep key={1} onSubmit={handleJsosLogin} defaultValues={jsosDataLogin} prevStep={goToPrevStep} />,
-    <MailStep key={2} onSubmit={handleMailLogin} defaultValues={mailDataLogin} prevStep={goToPrevStep} />,
+    <JsosStep
+      key={1}
+      onSubmit={handleJsosLogin}
+      defaultValues={jsosDataLogin}
+      prevStep={goToPrevStep}
+      validationSchema={jsosValidationSchema}
+    />,
+    <MailStep
+      key={2}
+      onSubmit={handleMailLogin}
+      defaultValues={mailDataLogin}
+      prevStep={goToPrevStep}
+      validationSchema={mailValidationSchema}
+    />,
     <SavePasswordStep key={3} onPasswordSave={handleSavePassword} prevStep={goToPrevStep} />,
     <CongratulationsStep key={4} onConfigurationExit={handleExitConfiguration} />,
   ][activeStepIndex]
