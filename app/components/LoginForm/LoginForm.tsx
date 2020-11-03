@@ -3,10 +3,25 @@ import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { ObjectSchema } from 'yup'
 
-import { CircularProgress, Typography } from '@material-ui/core'
+import { CircularProgress } from '@material-ui/core'
 import Input from 'components/Input'
 import Button from 'components/Button'
 import Space from 'components/Space'
+import styled from '@emotion/styled'
+import { keyframes } from '@emotion/core'
+
+const showAnim = keyframes`
+  0% { height: 0; opacity: 0; }
+  100% { height: 14px; opacity: 1; }
+`
+
+const ErrorMsg = styled.p`
+  margin: 0;
+  text-align: center;
+  font-size: 14px;
+  color: #ff487f;
+  animation: ${showAnim} 0.1s ease-in-out;
+`
 
 export type LoginFormProps = {
   onSubmit: (login: string, password: string) => Promise<void>
@@ -52,7 +67,7 @@ const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder, validatio
         textColor={color.dark}
         autoFocus
         defaultValue={defaultValues?.login ?? ''}
-        placeholder={loginPlaceholder ?? 'login'}
+        placeholder={loginPlaceholder ?? 'Login'}
         disabled={isLoading}
         error={errors.login?.message}
       />
@@ -62,7 +77,7 @@ const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder, validatio
         type="password"
         textColor={color.dark}
         defaultValue={defaultValues?.password ?? ''}
-        placeholder="hasło"
+        placeholder="Hasło"
         ref={register}
         disabled={isLoading}
         error={errors.password?.message}
@@ -71,14 +86,8 @@ const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder, validatio
       <Button type="submit" glow color={color.main} variant="primary" fullWidth disabled={isLoading}>
         {isLoading ? <CircularProgress size="1em" color="inherit" /> : 'Zaloguj'}
       </Button>
-      {!!apiError && (
-        <>
-          <Space size={1} />
-          <Typography color="error" align="center">
-            {apiError}
-          </Typography>
-        </>
-      )}
+      <Space size={0.5} />
+      {!!apiError && <ErrorMsg>{apiError}</ErrorMsg>}
     </form>
   )
 }

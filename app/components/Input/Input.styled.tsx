@@ -64,5 +64,5 @@ export const StyledInputLabel = styled.span`
 
   ${StyledInput}:not(:placeholder-shown) + & {
     opacity: 0;
-  },
+  }
 `

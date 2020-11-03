@@ -5,7 +5,7 @@ import moment from 'moment'
 import EventInfo from 'components/EventInfo'
 import { IEvent } from 'domain/event'
 import { RootState } from 'store'
-import { eventColor } from 'utils/courseTypes'
+import { eventColor, eventFullText } from 'utils/courseTypes'
 import {
   ComingLessonsWrapper,
   EventInfoContent,
@@ -24,12 +24,16 @@ type EventItemProps = { event: IEvent; onClick: () => void }
 
 const EventItem = ({ event, onClick }: EventItemProps) => {
   const color = eventColor(event.type)
+  const eventTypeFullText = eventFullText(event.type).toLowerCase()
+
   return (
     <EventItemWrapper>
       <EventItemButton type="button" onClick={onClick}>
         <EventItemColor color={color} />
         <EventInfoContent>
-          <EventItemTime>{moment(event.start).fromNow()}</EventItemTime>
+          <EventItemTime>
+            {moment(event.start).fromNow()} {eventTypeFullText}
+          </EventItemTime>
           <EventItemName>{event.name}</EventItemName>
         </EventInfoContent>
       </EventItemButton>

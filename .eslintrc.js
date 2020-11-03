@@ -9,6 +9,7 @@ module.exports = {
     'no-void': 'off',
     'react/require-default-props': 'off',
     'no-console': ['warn', { allow: ['warn', 'error'] }],
+    'react/display-name': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,

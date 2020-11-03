@@ -46,14 +46,14 @@ export const EventItemButton = styled.button`
   border: none;
   background: #f3f5f8;
   border-radius: 16px;
-  padding: 20px;
+  padding: 16px;
   cursor: pointer;
   outline: none;
 `
 
 export const EventItemColor = styled.div<{ color: string }>`
   width: 8px;
-  height: 45px;
+  height: 40px;
   background: ${({ color }) => color};
   margin-right: 16px;
   border-radius: 5px;
@@ -68,13 +68,13 @@ export const EventInfoContent = styled.div`
 export const EventItemTime = styled.p`
   margin: 0;
   font-weight: 600;
-  font-size: 14px;
+  font-size: 13px;
   color: #405775;
 `
 
 export const EventItemName = styled.p`
   margin: 0;
-  font-weight: 900;
-  font-size: 18px;
+  font-weight: 700;
+  font-size: 16px;
   color: #405775;
 `
