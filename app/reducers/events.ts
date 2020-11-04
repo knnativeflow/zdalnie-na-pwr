@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { ADD_EVENT_ZOOM_LINKS, ADD_EVENTS, CLEAR_EVENTS } from 'constants/actionTypes'
 import { ActionEvents } from 'actions/events'
 import { IEvent } from 'domain/event'
@@ -14,7 +15,9 @@ const eventsReducer = (state = INIT_STATE, action: ActionEvents) => {
       const { zoomLinks, overwriteExisting } = action.payload
       return state.map((event) => {
         const foundLink = zoomLinks.find(
-          (zoomLink) => zoomLink.courseName.startsWith(event.name) && zoomLink.date === event.start
+          (zoomLink) =>
+            zoomLink.courseName.startsWith(event.name) &&
+            Math.abs(moment(zoomLink.date).unix() - moment(event.start).unix()) > 300 // 5 minut
         )
 
         const updateEventWithLink = !event.platform.zoom?.url || overwriteExisting

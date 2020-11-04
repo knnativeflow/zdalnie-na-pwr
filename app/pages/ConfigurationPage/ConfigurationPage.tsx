@@ -226,7 +226,18 @@ const ConfigurationPage = () => {
 
     const iCalendarString = await jsosExtractor.downloadCalendar()
     const events = iCalendar.getEventsFromString(iCalendarString)
-    dispatch(addEvents(events))
+
+    const eventsWithCode = events.map((event) => {
+      const courseEvent = courses.find((course) => course.name.startsWith(event.name) && course.type === event.type)
+
+      if (courseEvent) {
+        return { ...event, code: courseEvent.classesCode, name: courseEvent.name }
+      }
+
+      return event
+    })
+
+    dispatch(addEvents(eventsWithCode))
 
     goToNextStep()
   }
