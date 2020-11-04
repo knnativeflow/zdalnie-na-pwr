@@ -56,7 +56,7 @@ const SettingsPage = () => {
       </Text>
       <Text>
         Rozwijane przez{' '}
-        <a href="https://knnativeflow.napwr.pl" onClick={handleLink}>
+        <a href="https://nativeflow.napwr.pl" onClick={handleLink}>
           KN Native Flow
         </a>
       </Text>

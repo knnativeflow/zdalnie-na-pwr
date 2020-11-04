@@ -6,9 +6,9 @@
   "description": "Aplikacja wspierająca e-learning na Politechnice Wrocławskiej",
   "main": "./main.prod.js",
   "author": {
-    "name": "KN Native Flow - Wachu",
-    "email": "knnativeflow@napwr.pl",
-    "url": "https://knnativeflow.napwr.pl"
+    "name": "KN Native Flow",
+    "email": "nativeflow@napwr.pl",
+    "url": "https://nativeflow.napwr.pl"
   },
   "scripts": {
     "electron-rebuild": "node -r ../internals/scripts/BabelRegister.js ../internals/scripts/ElectronRebuild.js",

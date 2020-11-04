@@ -128,9 +128,9 @@
     "url": "git+https://github.com/knnativeflow/zdalnie-na-pwr.git"
   },
   "author": {
-    "name": "KN Native Flow - Wachu",
-    "email": "knnativeflow@napwr.pl",
-    "url": "https://knnativeflow.napwr.pl"
+    "name": "KN Native Flow",
+    "email": "nativeflow@napwr.pl",
+    "url": "https://nativeflow.napwr.pl"
   },
   "license": "MIT",
   "jest": {
