@@ -18,7 +18,7 @@ export type Props = {
 const Button = (props: Props) => {
   const { children, color = THEME.colors.mid, ...rest } = props
   return (
-    <StyledButton btnColor={color} {...rest}>
+    <StyledButton btnColor={rest.disabled ? THEME.colors.mid : color} {...rest}>
       {children}
     </StyledButton>
   )

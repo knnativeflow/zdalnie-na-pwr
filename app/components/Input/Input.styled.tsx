@@ -60,7 +60,7 @@ export const StyledInputLabel = styled.span`
   transform: translateY(-50%);
   transition: opacity 0.1s ease;
   pointer-events: none;
-  opacity: 0.75;
+  opacity: 0.6;
 
   ${StyledInput}:not(:placeholder-shown) + & {
     opacity: 0;

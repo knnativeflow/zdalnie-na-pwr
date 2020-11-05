@@ -19,6 +19,7 @@ import { RootState } from 'store'
 import { THEME } from 'base/theme/theme'
 import { eventColor, eventFullText } from 'utils/courseTypes'
 import InfoWithIcon from 'components/InfoWithIcon'
+import EventInfoNote from 'components/EventInfo/EventInfoNote'
 
 const EventInfoWrapper = styled.div`
   padding: 16px;
@@ -85,9 +86,12 @@ const EventInfo = ({ event }: Props) => {
     (course) => course.name.startsWith(event.name) && course.type === event.type
   )
 
+  if (!eventCourse) return <EventInfoWrapper>Nastąpił błąd :(</EventInfoWrapper>
+  const { note, classesCode } = eventCourse
+
   const { name, type, start, end, lecturer, platforms: platformsEvent } = event
-  const mergedPlatforms = { ...eventCourse?.platforms, ...platformsEvent }
-  const usingZoomPlatform = events.some((event) => event.code === eventCourse?.classesCode && event.platforms.zoom)
+  const mergedPlatforms = { ...eventCourse.platforms, ...platformsEvent }
+  const usingZoomPlatform = events.some((event) => event.code === classesCode && event.platforms.zoom)
   const hasPlatforms = !!Object.values(mergedPlatforms).length || usingZoomPlatform
   const color = eventColor(type)
 
@@ -101,7 +105,7 @@ const EventInfo = ({ event }: Props) => {
           {eventFullText(type)}
         </InfoWithIcon>
         <InfoWithIcon icon={FaHashtag} title="Kod grupy" color={color}>
-          {eventCourse?.classesCode}
+          {classesCode}
         </InfoWithIcon>
         <InfoWithIcon icon={FaCalendarAlt} title="Termin" color={color}>
           {moment(start).format('dddd, HH:mm')} - {moment(end).format('HH:mm')}
@@ -156,10 +160,7 @@ const EventInfo = ({ event }: Props) => {
           )}
         </InfoGrid>
       )}
-
-      <Subheader>Pozostałe</Subheader>
-      <NoInfoText>Nie znaleziono pozostałych informacji dla tego kursu</NoInfoText>
-      {/* TODO: add note from course */}
+      <EventInfoNote savedText={note} classesCode={classesCode} color={color} />
     </EventInfoWrapper>
   )
 }
