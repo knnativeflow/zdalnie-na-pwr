@@ -68,6 +68,8 @@ interface IStoreV1 {
 }
 
 const migrations = {
+  0: (state: IStoreV1) => state,
+  1: (state: IStoreV1) => state,
   2: (state: IStoreV1) => ({
     ...state,
     courses: state.courses.map(({ additional, ...course }) => ({

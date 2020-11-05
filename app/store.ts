@@ -4,7 +4,7 @@ import { routerMiddleware } from 'connected-react-router'
 import { createLogger } from 'redux-logger'
 import { ThunkAction } from 'redux-thunk'
 import { persistStore, persistReducer, createMigrate } from 'redux-persist'
-// import createElectronStorage from 'redux-persist-electron-storage' // TODO: turn on the prod
+// import createElectronStorage from 'redux-persist-electron-storage'
 // import ElectronStore from 'electron-store'
 import storage from 'redux-persist/lib/storage'
 
@@ -30,7 +30,7 @@ const persistConfig = {
   // storage: createElectronStorage({
   //   electronStore,
   // }),
-  version: process.env.npm_package_versionNumber ? Number(process.env.npm_package_versionNumber) : 1,
+  version: 2,
   storage,
   blacklist: ['router'],
   // @ts-ignore
