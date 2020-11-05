@@ -75,10 +75,18 @@ const migrations = {
       platforms: course.platforms.teams ? { teams: course.platforms.teams } : {},
       note: '',
     })),
-    events: state.events.map(({ additional, ...event }) => ({
-      ...event,
-      platforms: event.platform.zoom?.url ? { zoom: { url: event.platform.zoom.url } } : {},
-    })),
+    events: state.events.map(({ additional, ...event }) => {
+      const courseEvent = state.courses.find(
+        (course) => course.name.startsWith(event.name) && course.type === event.type
+      )
+      const platforms = event.platform.zoom?.url ? { zoom: { url: event.platform.zoom.url } } : {}
+
+      if (courseEvent) {
+        return { ...event, code: courseEvent.classesCode, name: courseEvent.name, platforms }
+      }
+
+      return { ...event, platforms }
+    }),
   }),
 }
 
