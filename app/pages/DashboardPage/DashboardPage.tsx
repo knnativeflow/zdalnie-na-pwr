@@ -32,7 +32,9 @@ const EventItem = ({ event, onClick }: EventItemProps) => {
         <EventItemColor color={color} />
         <EventInfoContent>
           <EventItemTime>
-            {moment(event.start).fromNow()} {eventTypeFullText}
+            {moment().isAfter(moment(event.start))
+              ? 'w trakcie'
+              : `${moment(event.start).fromNow()} ${eventTypeFullText}`}
           </EventItemTime>
           <EventItemName>{event.name}</EventItemName>
         </EventInfoContent>
