@@ -1,5 +1,6 @@
 import { CLEAR_USER, UPDATE_USER } from 'constants/actionTypes'
 import { ActionUser } from 'actions/user'
+import { IUser } from 'domain/user'
 
 const INIT_STATE: IUser = { configured: false }
 

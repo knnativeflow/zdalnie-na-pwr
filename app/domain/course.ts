@@ -6,18 +6,19 @@ export enum CourseType {
   P = 'P',
 }
 
-export interface IPlatforms {
-  zoom?: {
-    url: string
-  }
-  teams?: {
-    name: string
-    url: string
-  }
-  ePortal?: {
-    name: string
-    url: string
-  }
+export enum PlatformType {
+  ZOOM = 'zoom',
+  TEAMS = 'teams',
+  EPORTAL = 'ePortal',
+}
+
+interface IPlatform {
+  url: string
+  name?: string
+}
+
+export type IPlatforms = {
+  [key in PlatformType]?: IPlatform
 }
 
 export enum WeekType {

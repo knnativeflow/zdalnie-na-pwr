@@ -16,8 +16,8 @@ import {
   EventItemTime,
   EventItemWrapper,
   EventsList,
-  Wrapper,
   Title,
+  Wrapper,
 } from './DashboardPage.styled'
 
 type EventItemProps = { event: IEvent; onClick: () => void }

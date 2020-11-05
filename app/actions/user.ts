@@ -1,4 +1,5 @@
 import { UPDATE_USER, CLEAR_USER } from 'constants/actionTypes'
+import { IUser } from 'domain/user'
 
 interface IActionUpdateUser {
   type: typeof UPDATE_USER

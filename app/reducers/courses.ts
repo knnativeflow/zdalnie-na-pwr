@@ -1,4 +1,11 @@
-import { ADD_COURSE_TEAMS_LINKS, ADD_COURSES, CLEAR_COURSES, SET_COURSE_NOTE } from 'constants/actionTypes'
+import {
+  ADD_COURSE_TEAMS_LINKS,
+  ADD_COURSES,
+  CLEAR_COURSE_PLATFORM,
+  CLEAR_COURSES,
+  SET_COURSE_NOTE,
+  SET_COURSE_PLATFORM,
+} from 'constants/actionTypes'
 import { ActionCourses } from 'actions/courses'
 import { ICourse } from 'domain/course'
 
@@ -23,6 +30,30 @@ const reducerCourses = (state = INIT_STATE, action: ActionCourses) => {
       return state.map((course) => {
         return course.classesCode === action.payload.code ? { ...course, note: action.payload.note } : course
       })
+    case SET_COURSE_PLATFORM:
+      return state.map((course) =>
+        course.classesCode === action.payload.code
+          ? {
+              ...course,
+              platforms: {
+                ...course.platforms,
+                [action.payload.type]: { url: action.payload.url, name: action.payload.name },
+              },
+            }
+          : course
+      )
+    case CLEAR_COURSE_PLATFORM:
+      return state.map((course) =>
+        course.classesCode === action.payload.code
+          ? {
+              ...course,
+              platforms: {
+                ...course.platforms,
+                [action.payload.type]: undefined,
+              },
+            }
+          : course
+      )
     case CLEAR_COURSES:
       return []
     default:

@@ -1,5 +1,12 @@
-import { ADD_COURSE_TEAMS_LINKS, ADD_COURSES, CLEAR_COURSES, SET_COURSE_NOTE } from 'constants/actionTypes'
-import { ICourse, ICourseTeamsLink } from 'domain/course'
+import {
+  ADD_COURSE_TEAMS_LINKS,
+  ADD_COURSES,
+  CLEAR_COURSE_PLATFORM,
+  CLEAR_COURSES,
+  SET_COURSE_NOTE,
+  SET_COURSE_PLATFORM,
+} from 'constants/actionTypes'
+import { ICourse, ICourseTeamsLink, PlatformType } from 'domain/course'
 
 interface IActionAddCourses {
   type: typeof ADD_COURSES
@@ -23,7 +30,31 @@ interface IActionSetCourseNote {
   }
 }
 
-export type ActionCourses = IActionAddCourses | IActionClearCourse | IActionAddTeamsLinks | IActionSetCourseNote
+interface IActionSetCoursePlatform {
+  type: typeof SET_COURSE_PLATFORM
+  payload: {
+    code: string
+    type: PlatformType
+    url: string
+    name?: string
+  }
+}
+
+interface IActionClearCoursePlatform {
+  type: typeof CLEAR_COURSE_PLATFORM
+  payload: {
+    code: string
+    type: PlatformType
+  }
+}
+
+export type ActionCourses =
+  | IActionAddCourses
+  | IActionClearCourse
+  | IActionAddTeamsLinks
+  | IActionSetCourseNote
+  | IActionSetCoursePlatform
+  | IActionClearCoursePlatform
 
 export const addCourses = (courses: ICourse[]): IActionAddCourses => {
   return {
@@ -51,3 +82,26 @@ export const setCourseNote = (code: string, note: string): IActionSetCourseNote 
     payload: { code, note },
   }
 }
+
+export const setCoursePlatform = (
+  code: string,
+  type: PlatformType,
+  url: string,
+  name?: string
+): IActionSetCoursePlatform => ({
+  type: SET_COURSE_PLATFORM,
+  payload: {
+    code,
+    type,
+    url,
+    name,
+  },
+})
+
+export const clearCoursePlatform = (code: string, type: PlatformType): IActionClearCoursePlatform => ({
+  type: CLEAR_COURSE_PLATFORM,
+  payload: {
+    code,
+    type,
+  },
+})
