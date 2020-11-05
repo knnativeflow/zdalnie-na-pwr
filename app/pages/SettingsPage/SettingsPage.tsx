@@ -1,9 +1,13 @@
-import React, { SyntheticEvent } from 'react'
+import React, { SyntheticEvent, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { shell } from 'electron'
 
 import { clearUser } from 'actions/user'
 import styled from '@emotion/styled'
+import Button from 'components/Button'
+import { THEME } from 'base/theme/theme'
+import SmailPasswordChangeModal from 'components/SmailModal/SmailPasswordChangeModal'
+import Space from 'components/Space'
 
 const APP_VERSION = process.env.npm_package_version
 
@@ -41,10 +45,19 @@ const Text = styled.p`
 const SettingsPage = () => {
   const dispatch = useDispatch()
   const logoutUser = () => dispatch(clearUser())
+  const [isPasswordChangeModalOpen, setIsPasswordChangeModal] = useState(false)
 
   const handleLink = (e: SyntheticEvent<HTMLAnchorElement>) => {
     e.preventDefault()
     shell.openExternal(e.currentTarget.href)
+  }
+
+  const handlePasswordChange = () => {
+    setIsPasswordChangeModal(true)
+  }
+
+  const closePasswordChangeModal = () => {
+    setIsPasswordChangeModal(false)
   }
 
   return (
@@ -62,6 +75,11 @@ const SettingsPage = () => {
       </Text>
       <Text>Wersja aplikacji {APP_VERSION}</Text>
       <ClearDataButton onClick={logoutUser}>Wyczyść dane aplikacji</ClearDataButton>
+      <Button glow color={THEME.colors.palette.purple.main} variant="primary" onClick={handlePasswordChange}>
+        Zmien hasło do poczty
+      </Button>
+      <Space size={1} />
+      <SmailPasswordChangeModal open={isPasswordChangeModalOpen} onSuccess={closePasswordChangeModal} onClose={closePasswordChangeModal} />
     </Wrapper>
   )
 }

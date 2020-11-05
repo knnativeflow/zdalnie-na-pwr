@@ -26,16 +26,20 @@ const ErrorMsg = styled.p`
 export type LoginFormProps = {
   onSubmit: (login: string, password: string) => Promise<void>
   validationSchema: ObjectSchema
-  defaultValues?: { login: string; password: string }
+  defaultValues?: { login?: string; password?: string }
   loginPlaceholder?: string
   color: {
     light: string
     main: string
     dark: string
+  },
+  disabledFields?: {
+    login?: boolean
+    password?: boolean
   }
 }
 
-const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder, validationSchema }: LoginFormProps) => {
+const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder, validationSchema, disabledFields }: LoginFormProps) => {
   const [apiError, setApiError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -65,10 +69,10 @@ const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder, validatio
         name="login"
         ref={register}
         textColor={color.dark}
-        autoFocus
+        autoFocus={!disabledFields?.login}
         defaultValue={defaultValues?.login ?? ''}
         placeholder={loginPlaceholder ?? 'Login'}
-        disabled={isLoading}
+        disabled={isLoading || !!disabledFields?.login}
         error={errors.login?.message}
       />
       <Space size={0.5} />
@@ -79,7 +83,7 @@ const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder, validatio
         defaultValue={defaultValues?.password ?? ''}
         placeholder="Hasło"
         ref={register}
-        disabled={isLoading}
+        disabled={isLoading || !!defaultValues?.password}
         error={errors.password?.message}
       />
       <Space size={1} />
