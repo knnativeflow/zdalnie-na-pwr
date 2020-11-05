@@ -1,16 +1,16 @@
-// import ElectronStore from 'electron-store'
 import { configureStore, Action } from '@reduxjs/toolkit'
 import { createHashHistory } from 'history'
 import { routerMiddleware } from 'connected-react-router'
 import { createLogger } from 'redux-logger'
 import { ThunkAction } from 'redux-thunk'
-
-import { persistStore, persistReducer } from 'redux-persist'
+import { persistStore, persistReducer, createMigrate } from 'redux-persist'
 // import createElectronStorage from 'redux-persist-electron-storage' // TODO: turn on the prod
+// import ElectronStore from 'electron-store'
 import storage from 'redux-persist/lib/storage'
 
 // eslint-disable-next-line import/no-cycle
 import createRootReducer from 'reducers/rootReducer'
+import migrations from './migrations'
 
 export const history = createHashHistory()
 const rootReducer = createRootReducer(history)
@@ -33,7 +33,8 @@ const persistConfig = {
   version: process.env.npm_package_versionNumber ? Number(process.env.npm_package_versionNumber) : 1,
   storage,
   blacklist: ['router'],
-  // migrate: // TODO: turn on when update app
+  // @ts-ignore
+  migrate: createMigrate(migrations),
 }
 
 const persistedReducer = persistReducer<RootState>(persistConfig, rootReducer)
