@@ -16,7 +16,8 @@ const eventsReducer = (state = INIT_STATE, action: ActionEvents) => {
       return state.map((event) => {
         const foundLink = zoomLinks.find(
           (zoomLink) =>
-            zoomLink.courseName.startsWith(event.name) &&
+            // TODO: think about how recognize different name the same course
+            // zoomLink.courseName.startsWith(event.name) &&
             Math.abs(moment(zoomLink.date).unix() - moment(event.start).unix()) < 300 // 5 minut
         )
 

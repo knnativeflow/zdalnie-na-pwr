@@ -38,7 +38,7 @@ class StudentMail {
       : Promise.reject(new Error('Unrecognized variable type.'))
   }
 
-  private async getEventFromMail(mailId: number): Promise<IEventZoomLink> {
+  private async getEventFromMail(mailId: number): Promise<IEventZoomLink | null> {
     const response = await superagent.get(`${STUDENT_MAIL_URL}/iwc/svc/wmap/attach/ical.ics`).query({
       token: this.token,
       mbox: 'INBOX',
@@ -54,7 +54,8 @@ class StudentMail {
     const eventKeys = Object.keys(events)
 
     if (eventKeys.length !== 1) {
-      throw new Error('Unexpected ical file')
+      console.error('Invalid ical file', response.text)
+      return null
     }
 
     const event = events[eventKeys[0]]
@@ -63,10 +64,14 @@ class StudentMail {
       throw new Error('Invalid data in ical')
     }
 
-    const foundUrl = event.description.match(/https:\/\/pwr-edu.zoom.us\/j\/[0-9]+\?pwd=[a-zA-Z0-9]+/g)?.[0]
+    const foundUrl = event.description.match(/https:\/\/pwr-edu.zoom.us\/j\/[0-9]+(\?pwd=[a-zA-Z0-9]+)*/g)?.[0]
+
+    if (!foundUrl || !event.summary || !event.start) {
+      return null
+    }
 
     return {
-      url: foundUrl || '',
+      url: foundUrl,
       courseName: event.summary,
       date: moment(event.start).format('YYYY-MM-DDTHH:mm:ss'),
     }
@@ -110,7 +115,7 @@ class StudentMail {
       const event = await this.getEventFromMail(mail.id)
 
       await promiseTimeout(200)
-      return [...agg, event]
+      return event ? [...agg, event] : agg
     }, Promise.resolve([]))
   }
 
