@@ -17,15 +17,15 @@ const eventsReducer = (state = INIT_STATE, action: ActionEvents) => {
         const foundLink = zoomLinks.find(
           (zoomLink) =>
             zoomLink.courseName.startsWith(event.name) &&
-            Math.abs(moment(zoomLink.date).unix() - moment(event.start).unix()) > 300 // 5 minut
+            Math.abs(moment(zoomLink.date).unix() - moment(event.start).unix()) < 300 // 5 minut
         )
 
-        const updateEventWithLink = !event.platform.zoom?.url || overwriteExisting
+        const updateEventWithLink = !event.platforms.zoom?.url || overwriteExisting
 
         return foundLink && updateEventWithLink
           ? {
               ...event,
-              platform: { ...event.platform, zoom: { recurrent: false, url: foundLink.url } },
+              platforms: { ...event.platforms, zoom: { url: foundLink.url } },
             }
           : event
       })

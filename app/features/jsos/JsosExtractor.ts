@@ -1,5 +1,5 @@
-import jsosAuth, { HttpMethod } from './JsosAuth'
 import { ICourse, WeekType } from 'domain/course'
+import jsosAuth, { HttpMethod } from './JsosAuth'
 
 export class ExtractedCourse {
   constructor(
@@ -35,6 +35,7 @@ class JsosExtractor {
           const { start, end, isTP, isTN } = this.extractDate(selector, element)
           const hoursInSemester = selector(element).find('td').eq(4).text()
           const ECTSes = selector(element).find('td').eq(5).text()
+
           return {
             name,
             type: courseCode.slice(-1),
@@ -47,13 +48,13 @@ class JsosExtractor {
             hoursInSemester,
             ECTSes,
             platforms: {},
-            additional: {},
+            note: '',
           }
         })
         .get()
-    } else {
-      throw new Error('Bład poczas parsowania strony z zajęciami.')
     }
+
+    throw new Error('Bład poczas parsowania strony z zajęciami.')
   }
 
   private extractDate(
@@ -109,7 +110,7 @@ class JsosExtractor {
       console.log(activeStudents[0], typeof activeStudents[0])
 
       const activeStudentId = activeStudents[0]
-      console.log('Aktywny student to:' + activeStudentId)
+      console.log(`Aktywny student to: ${activeStudentId}`)
 
       await jsosAuth.requestWithAuthorization({
         form: {

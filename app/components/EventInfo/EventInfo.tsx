@@ -7,7 +7,6 @@ import {
   FaBookOpen,
   FaCalendarAlt,
   FaChalkboardTeacher,
-  FaClipboard,
   FaHashtag,
   FaUserFriends,
   FaVideo,
@@ -72,6 +71,7 @@ interface Props {
 
 const EventInfo = ({ event }: Props) => {
   const courses = useSelector((state: RootState) => state.courses)
+  const events = useSelector((state: RootState) => state.events)
 
   if (!event) {
     return (
@@ -85,11 +85,10 @@ const EventInfo = ({ event }: Props) => {
     (course) => course.name.startsWith(event.name) && course.type === event.type
   )
 
-  const { name, type, start, end, lecturer, platform, additional } = event
-  const mergedPlatforms = { ...eventCourse?.platforms, ...platform }
-  const mergedAdditional = { ...eventCourse?.additional, ...additional }
-  const mappedAdditional = Object.entries(mergedAdditional)
-  const hasPlatforms = !!Object.values(mergedPlatforms).length
+  const { name, type, start, end, lecturer, platforms: platformsEvent } = event
+  const mergedPlatforms = { ...eventCourse?.platforms, ...platformsEvent }
+  const usingZoomPlatform = events.some((event) => event.code === eventCourse?.classesCode && event.platforms.zoom)
+  const hasPlatforms = !!Object.values(mergedPlatforms).length || usingZoomPlatform
   const color = eventColor(type)
 
   const handleOpenLink = (url: string) => () => shell.openExternal(url)
@@ -120,21 +119,21 @@ const EventInfo = ({ event }: Props) => {
 
       {hasPlatforms && (
         <InfoGrid>
-          {mergedPlatforms.zoom &&
-            (mergedPlatforms.zoom.url ? (
-              <InfoWithIcon
-                onClick={handleOpenLink(mergedPlatforms.zoom.url)}
-                icon={FaVideo}
-                title="ZOOM"
-                color={THEME.colors.brand.zoom}
-              >
-                {mergedPlatforms.zoom.recurrent ? 'spotkanie cotygodniowe' : 'spotkanie jednorazowe'}
-              </InfoWithIcon>
-            ) : (
-              <InfoWithIcon icon={FaVideoSlash} title="ZOOM" asDisabledButton>
-                brak aktualnego linka
-              </InfoWithIcon>
-            ))}
+          {mergedPlatforms.zoom?.url && (
+            <InfoWithIcon
+              onClick={handleOpenLink(mergedPlatforms.zoom.url)}
+              icon={FaVideo}
+              title="ZOOM"
+              color={THEME.colors.brand.zoom}
+            >
+              {platformsEvent.zoom ? 'spotkanie jednorazowe' : 'spotkanie cotygodniowe'}
+            </InfoWithIcon>
+          )}
+          {usingZoomPlatform && !mergedPlatforms.zoom && (
+            <InfoWithIcon icon={FaVideoSlash} title="ZOOM" asDisabledButton>
+              brak aktualnego linka
+            </InfoWithIcon>
+          )}
           {mergedPlatforms.teams && (
             <InfoWithIcon
               onClick={handleOpenLink(mergedPlatforms.teams.url)}
@@ -159,14 +158,8 @@ const EventInfo = ({ event }: Props) => {
       )}
 
       <Subheader>Pozostałe</Subheader>
-
-      {!mappedAdditional.length && <NoInfoText>Nie znaleziono pozostałych informacji dla tego kursu</NoInfoText>}
-
-      {mappedAdditional?.map(([key, value]) => (
-        <InfoWithIcon key={key} title={key} icon={FaClipboard}>
-          {value}
-        </InfoWithIcon>
-      ))}
+      <NoInfoText>Nie znaleziono pozostałych informacji dla tego kursu</NoInfoText>
+      {/* TODO: add note from course */}
     </EventInfoWrapper>
   )
 }

@@ -15,7 +15,6 @@ import {
   FaBookReader,
   FaCalendarAlt,
   FaChalkboardTeacher,
-  FaClipboard,
   FaHashtag,
   FaUserFriends,
   FaVideo,
@@ -28,7 +27,6 @@ import Button from 'components/Button'
  * It's still here because it'll be used in the future for small windows
  */
 
-// END TEST DATA
 interface Props {
   event?: IEvent
   onClose: () => void
@@ -37,6 +35,7 @@ interface Props {
 
 const EventModal = ({ event, onClose, isOpen }: Props) => {
   const courses = useSelector((state: RootState) => state.courses)
+  const events = useSelector((state: RootState) => state.events)
 
   if (!event) return null
 
@@ -44,11 +43,10 @@ const EventModal = ({ event, onClose, isOpen }: Props) => {
     (course) => course.name.startsWith(event.name) && course.type === event.type
   )
 
-  const { name, type, start, end, lecturer, platform, additional } = event
-  const mergedPlatforms = { ...(eventCourse?.platforms || {}), ...platform }
-  const mergedAdditional = { ...(eventCourse?.additional || {}), ...additional }
-  const mappedAdditional = Object.entries(mergedAdditional)
-  const hasPlatforms = !!Object.values(mergedPlatforms).length
+  const { name, type, start, end, lecturer, platforms: platformsEvent } = event
+  const mergedPlatforms = { ...eventCourse?.platforms, ...platformsEvent }
+  const usingZoomPlatform = events.some((event) => event.code === eventCourse?.classesCode && event.platforms.zoom)
+  const hasPlatforms = !!Object.values(mergedPlatforms).length || usingZoomPlatform
 
   const handleOpenLink = (url: string) => () => shell.openExternal(url)
 
@@ -104,25 +102,25 @@ const EventModal = ({ event, onClose, isOpen }: Props) => {
 
           {hasPlatforms && (
             <Grid container spacing={1}>
-              {mergedPlatforms.zoom &&
-                (mergedPlatforms.zoom.url ? (
-                  <Grid item xs={12} sm={6}>
-                    <InfoWithIcon
-                      onClick={handleOpenLink(mergedPlatforms.zoom.url)}
-                      icon={FaVideo}
-                      title="ZOOM"
-                      color={THEME.colors.brand.zoom}
-                    >
-                      {mergedPlatforms.zoom.recurrent ? 'spotkanie cotygodniowe' : 'spotkanie jednorazowe'}
-                    </InfoWithIcon>
-                  </Grid>
-                ) : (
-                  <Grid item xs={12} sm={6}>
-                    <InfoWithIcon icon={FaVideoSlash} title="ZOOM" disabled>
-                      brak aktualnego linka
-                    </InfoWithIcon>
-                  </Grid>
-                ))}
+              {mergedPlatforms.zoom?.url && (
+                <Grid item xs={12} sm={6}>
+                  <InfoWithIcon
+                    onClick={handleOpenLink(mergedPlatforms.zoom.url)}
+                    icon={FaVideo}
+                    title="ZOOM"
+                    color={THEME.colors.brand.zoom}
+                  >
+                    {platformsEvent.zoom ? 'spotkanie jednorazowe' : 'spotkanie cotygodniowe'}
+                  </InfoWithIcon>
+                </Grid>
+              )}
+              {usingZoomPlatform && !mergedPlatforms.zoom && (
+                <Grid item xs={12} sm={6}>
+                  <InfoWithIcon icon={FaVideoSlash} title="ZOOM" asDisabledButton>
+                    brak aktualnego linka
+                  </InfoWithIcon>
+                </Grid>
+              )}
               {mergedPlatforms?.teams && (
                 <Grid item xs={12} sm={6}>
                   <InfoWithIcon
@@ -155,32 +153,18 @@ const EventModal = ({ event, onClose, isOpen }: Props) => {
           <Box fontWeight="bold" mb={2} fontSize="subtitle1.fontSize">
             Pozostałe
           </Box>
-
-          {!mappedAdditional.length && (
-            <Box
-              textAlign="center"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              color="text.secondary"
-              fontSize="subtitle2.fontSize"
-              py={1}
-            >
-              Nie dodano dodatkowych danych o zajęciach lub kursie.
-            </Box>
-          )}
-
-          {!!mappedAdditional.length && (
-            <Grid container spacing={2}>
-              {mappedAdditional.map(([key, value]) => (
-                <Grid key={key} item xs={12}>
-                  <InfoWithIcon title={key} icon={FaClipboard}>
-                    {value}
-                  </InfoWithIcon>
-                </Grid>
-              ))}
-            </Grid>
-          )}
+          <Box
+            textAlign="center"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            color="text.secondary"
+            fontSize="subtitle2.fontSize"
+            py={1}
+          >
+            Nie dodano dodatkowych danych o zajęciach lub kursie.
+          </Box>
+          {/* TODO: add note */}
         </Box>
       </DialogContent>
       <DialogActions>

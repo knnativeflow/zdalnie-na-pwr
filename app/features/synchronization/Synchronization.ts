@@ -23,7 +23,7 @@ export default class Synchronization {
     const { events } = this.redux.store.getState()
     const isLessThen10Minutes = (e: IEvent) => moment.duration(moment().diff(moment(e.start))).minutes() < 10
     const upcomingEvents = events.filter(isLessThen10Minutes)
-    const haveDefineZoomLink = upcomingEvents.every((e) => e.platform.zoom?.url && !e.platform.zoom?.recurrent)
+    const haveDefineZoomLink = upcomingEvents.every((e) => e.platforms.zoom)
     if (!haveDefineZoomLink) {
       void this.refreshSmail()
     }

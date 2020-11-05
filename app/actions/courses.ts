@@ -1,4 +1,4 @@
-import { ADD_COURSE_TEAMS_LINKS, ADD_COURSES, CLEAR_COURSES } from 'constants/actionTypes'
+import { ADD_COURSE_TEAMS_LINKS, ADD_COURSES, CLEAR_COURSES, SET_COURSE_NOTE } from 'constants/actionTypes'
 import { ICourse, ICourseTeamsLink } from 'domain/course'
 
 interface IActionAddCourses {
@@ -15,7 +15,15 @@ interface IActionAddTeamsLinks {
   payload: ICourseTeamsLink[]
 }
 
-export type ActionCourses = IActionAddCourses | IActionClearCourse | IActionAddTeamsLinks
+interface IActionSetCourseNote {
+  type: typeof SET_COURSE_NOTE
+  payload: {
+    code: string
+    note: string
+  }
+}
+
+export type ActionCourses = IActionAddCourses | IActionClearCourse | IActionAddTeamsLinks | IActionSetCourseNote
 
 export const addCourses = (courses: ICourse[]): IActionAddCourses => {
   return {
@@ -34,5 +42,12 @@ export const addTeamsLinks = (teamsLinks: ICourseTeamsLink[]): IActionAddTeamsLi
 export const clearCourses = (): IActionClearCourse => {
   return {
     type: CLEAR_COURSES,
+  }
+}
+
+export const setCourseNote = (code: string, note: string): IActionSetCourseNote => {
+  return {
+    type: SET_COURSE_NOTE,
+    payload: { code, note },
   }
 }

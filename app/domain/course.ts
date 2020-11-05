@@ -8,8 +8,7 @@ export enum CourseType {
 
 export interface IPlatforms {
   zoom?: {
-    recurrent: boolean
-    url?: string
+    url: string
   }
   teams?: {
     name: string
@@ -39,9 +38,7 @@ export interface ICourse {
   hoursInSemester: string
   ECTSes: string
   platforms: IPlatforms
-  additional: {
-    [key: string]: string
-  }
+  note: string
 }
 
 export interface ICourseTeamsLink {

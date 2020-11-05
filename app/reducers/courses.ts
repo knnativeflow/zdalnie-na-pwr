@@ -1,4 +1,4 @@
-import { ADD_COURSE_TEAMS_LINKS, ADD_COURSES, CLEAR_COURSES } from 'constants/actionTypes'
+import { ADD_COURSE_TEAMS_LINKS, ADD_COURSES, CLEAR_COURSES, SET_COURSE_NOTE } from 'constants/actionTypes'
 import { ActionCourses } from 'actions/courses'
 import { ICourse } from 'domain/course'
 
@@ -18,6 +18,10 @@ const reducerCourses = (state = INIT_STATE, action: ActionCourses) => {
               platforms: { ...course.platforms, teams: { url: foundLink.url, name: foundLink.name } },
             }
           : course
+      })
+    case SET_COURSE_NOTE:
+      return state.map((course) => {
+        return course.classesCode === action.payload.code ? { ...course, note: action.payload.note } : course
       })
     case CLEAR_COURSES:
       return []

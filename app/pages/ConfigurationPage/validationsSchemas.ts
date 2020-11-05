@@ -9,7 +9,7 @@ const ERROR_MESSAGES = {
 export const jsosValidationSchema = yup.object({
   login: yup
     .string()
-    .matches(/pwr[0-9]{6}/, { excludeEmptyString: true, message: ERROR_MESSAGES.jsosRegex })
+    .matches(/^pwr[0-9]{6}$/, { excludeEmptyString: true, message: ERROR_MESSAGES.jsosRegex })
     .required(ERROR_MESSAGES.required),
   password: yup.string().required(ERROR_MESSAGES.required),
 })
@@ -17,7 +17,7 @@ export const jsosValidationSchema = yup.object({
 export const mailValidationSchema = yup.object({
   login: yup
     .string()
-    .matches(/[0-9]{6}/, { excludeEmptyString: true, message: ERROR_MESSAGES.mailRegex })
+    .matches(/^[0-9]{6}$/, { excludeEmptyString: true, message: ERROR_MESSAGES.mailRegex })
     .required(ERROR_MESSAGES.required),
   password: yup.string().required(ERROR_MESSAGES.required),
 })

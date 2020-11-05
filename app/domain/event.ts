@@ -7,10 +7,7 @@ export interface IEvent {
   end: string
   code: string | null
   lecturer: string | null
-  platform: IPlatforms
-  additional: {
-    [key: string]: string
-  }
+  platforms: IPlatforms
 }
 
 export interface IEventZoomLink {

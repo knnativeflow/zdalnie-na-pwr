@@ -27,8 +27,7 @@ const parseEvents = (icalEvents: ical.CalendarResponse): IEvent[] => {
           start: parseDateToString(start),
           end: parseDateToString(end),
           lecturer: description || null,
-          platform: {},
-          additional: {},
+          platforms: {},
         },
       ]
     }
