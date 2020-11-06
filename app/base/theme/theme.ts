@@ -25,7 +25,7 @@ export const THEME = {
     brand: {
       zoom: '#2D8CFF',
       teams: '#464EB8',
-      ePortal: '#FA7F0E',
+      ePortal: '#de6c04',
     },
     palette: {
       pink: {

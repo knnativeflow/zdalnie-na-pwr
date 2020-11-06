@@ -19,7 +19,8 @@ import { RootState } from 'store'
 import { THEME } from 'base/theme/theme'
 import { eventColor, eventFullText } from 'utils/courseTypes'
 import InfoWithIcon from 'components/InfoWithIcon'
-import EventInfoNote from 'components/EventInfo/EventInfoNote'
+import EventInfoNote from './EventInfoNote'
+import EventInfoLinksModal from './EventInfoLinksModal'
 
 const EventInfoWrapper = styled.div`
   padding: 16px;
@@ -27,17 +28,15 @@ const EventInfoWrapper = styled.div`
 
 const Title = styled.p`
   font-weight: 700;
-  margin: 0;
-  margin-bottom: 24px;
+  margin: 0 0 24px;
 `
 
 const InfoGrid = styled.div`
-  margin: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: auto;
   grid-gap: 8px;
-  margin-bottom: 24px;
+  margin: 0 0 24px;
 
   @media (max-width: 1200px) {
     // TODO: use variable
@@ -45,16 +44,8 @@ const InfoGrid = styled.div`
   }
 `
 
-const Subheader = styled.p`
-  margin: 0;
-  margin-bottom: 10px;
-  font-weight: 700;
-  font-size: 14px;
-`
-
 const NoInfoText = styled.p`
-  margin: 0;
-  margin-bottom: 24px;
+  margin: 0 0 24px;
   font-size: 12px;
   color: rgba(0, 0, 0, 0.54);
   text-align: center;
@@ -92,7 +83,7 @@ const EventInfo = ({ event }: Props) => {
   const { name, type, start, end, lecturer, platforms: platformsEvent } = event
   const mergedPlatforms = { ...eventCourse.platforms, ...platformsEvent }
   const usingZoomPlatform = events.some((event) => event.code === classesCode && event.platforms.zoom)
-  const hasPlatforms = !!Object.values(mergedPlatforms).length || usingZoomPlatform
+  const hasPlatforms = !!Object.values(mergedPlatforms).filter((plaform) => !!plaform).length || usingZoomPlatform
   const color = eventColor(type)
 
   const handleOpenLink = (url: string) => () => shell.openExternal(url)
@@ -117,7 +108,7 @@ const EventInfo = ({ event }: Props) => {
         </InfoWithIcon>
       </InfoGrid>
 
-      <Subheader>Zdalne nauczanie</Subheader>
+      <EventInfoLinksModal {...{ classesCode, color, eventCourse }} />
 
       {!hasPlatforms && <NoInfoText>Nie znaleziono informacji o zdalnym nauczaniu dla tych zajęć</NoInfoText>}
 
@@ -160,7 +151,8 @@ const EventInfo = ({ event }: Props) => {
           )}
         </InfoGrid>
       )}
-      <EventInfoNote savedText={note} classesCode={classesCode} color={color} />
+
+      <EventInfoNote savedText={note} {...{ classesCode, color }} />
     </EventInfoWrapper>
   )
 }
