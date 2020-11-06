@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import styled from '@emotion/styled'
 import Button from 'components/Button'
 import { FaBookReader, FaCamera, FaPen, FaUserFriends } from 'react-icons/all'
@@ -43,11 +43,13 @@ const InputSectionTitle = styled.div`
   align-items: center;
 `
 
-const useInput = (initialState: string): [string, (e: ChangeEvent<HTMLInputElement>) => void] => {
+type UseInputProps = [string, (e: ChangeEvent<HTMLInputElement>) => void, (value: string) => void]
+
+const useInput = (initialState: string): UseInputProps => {
   const [state, setState] = useState(initialState)
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => setState(e.target.value)
 
-  return [state, handleOnChange]
+  return [state, handleOnChange, setState]
 }
 
 type Props = {
@@ -60,9 +62,16 @@ const EventInfoLinksModal = ({ color, classesCode, eventCourse }: Props) => {
   const dispatch = useDispatch()
   const [isModalOpen, openModal, closeModal] = useModal()
   const { zoom, teams, ePortal } = eventCourse.platforms
-  const [zoomValue, setZoomValue] = useInput(zoom?.url ?? '')
-  const [teamsValue, setTeamsValue] = useInput(teams?.url ?? '')
-  const [ePortalValue, setEPortalValue] = useInput(ePortal?.url ?? '')
+  const [zoomValue, onZoomValue, setZoomValue] = useInput('')
+  const [teamsValue, onTeamsValue, setTeamsValue] = useInput('')
+  const [ePortalValue, onEPortalValue, setEPortalValue] = useInput('')
+
+  useEffect(() => {
+    if (!isModalOpen) return
+    setZoomValue(zoom?.url ?? '')
+    setTeamsValue(teams?.url ?? '')
+    setEPortalValue(ePortal?.url ?? '')
+  }, [isModalOpen])
 
   const handleSubmit = () => {
     if (zoomValue) dispatch(setCoursePlatform(classesCode, PlatformType.ZOOM, zoomValue))
@@ -72,12 +81,13 @@ const EventInfoLinksModal = ({ color, classesCode, eventCourse }: Props) => {
     else if (teams?.url) dispatch(clearCoursePlatform(classesCode, PlatformType.TEAMS))
 
     if (ePortalValue) dispatch(setCoursePlatform(classesCode, PlatformType.EPORTAL, ePortalValue))
-    else if (teams?.url) dispatch(clearCoursePlatform(classesCode, PlatformType.TEAMS))
+    else if (ePortal?.url) dispatch(clearCoursePlatform(classesCode, PlatformType.EPORTAL))
 
     closeModal()
   }
 
-  const isChanged = zoom?.url !== zoomValue || teams?.url !== teamsValue || ePortal?.url !== ePortalValue
+  const isChanged =
+    (zoom?.url ?? '') !== zoomValue || (teams?.url ?? '') !== teamsValue || (ePortal?.url ?? '') !== ePortalValue
 
   // TODO: ADD URL VALIDATION
 
@@ -103,7 +113,7 @@ const EventInfoLinksModal = ({ color, classesCode, eventCourse }: Props) => {
               <InputSection icon={FaCamera} title="Zoom" color={THEME.colors.brand.zoom}>
                 <Input
                   value={zoomValue}
-                  onChange={setZoomValue}
+                  onChange={onZoomValue}
                   textColor={THEME.colors.brand.zoom}
                   placeholder="Link do Zooma"
                 />
@@ -113,7 +123,7 @@ const EventInfoLinksModal = ({ color, classesCode, eventCourse }: Props) => {
               <InputSection icon={FaUserFriends} title="Teams" color={THEME.colors.brand.teams}>
                 <Input
                   value={teamsValue}
-                  onChange={setTeamsValue}
+                  onChange={onTeamsValue}
                   textColor={THEME.colors.brand.teams}
                   placeholder="Link do Teams"
                 />
@@ -123,7 +133,7 @@ const EventInfoLinksModal = ({ color, classesCode, eventCourse }: Props) => {
               <InputSection icon={FaBookReader} title="EPortal" color={THEME.colors.brand.ePortal}>
                 <Input
                   value={ePortalValue}
-                  onChange={setEPortalValue}
+                  onChange={onEPortalValue}
                   textColor={THEME.colors.brand.ePortal}
                   placeholder="Link do EPortalu"
                 />
