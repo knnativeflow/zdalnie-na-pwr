@@ -1,19 +1,20 @@
 import React from 'react'
 import styled from '@emotion/styled'
-import Button from 'components/Button'
+import { useForm } from 'react-hook-form'
+import { Dialog } from '@material-ui/core'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { IconType } from 'react-icons'
+import { useDispatch } from 'react-redux'
 import { FaBookReader, FaCamera, FaPen, FaUserFriends } from 'react-icons/all'
+
+import Button from 'components/Button'
 import Space from 'components/Space'
 import Text from 'components/Text'
 import useModal from 'hooks/useModal'
-import { Dialog } from '@material-ui/core'
 import Input from 'components/Input'
 import { parseSize, THEME } from 'base/theme/theme'
-import { IconType } from 'react-icons'
-import { useDispatch } from 'react-redux'
 import { clearCoursePlatform, setCoursePlatform } from 'actions/courses'
 import { ICourse, PlatformType } from 'domain/course'
-import { useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
 import { platformsValidationSchema } from 'pages/ConfigurationPage/validationsSchemas'
 
 const StyledButtonContainer = styled.div`
@@ -60,9 +61,7 @@ type Props = {
 }
 
 type SubmitProps = {
-  zoom: string
-  teams: string
-  ePortal: string
+  [key in PlatformType]: string
 }
 
 const EventInfoLinksModal = ({ classesCode, eventCourse }: Props) => {
