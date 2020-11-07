@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from 'react'
+import React from 'react'
 import styled from '@emotion/styled'
 import Button from 'components/Button'
 import { FaBookReader, FaCamera, FaPen, FaUserFriends } from 'react-icons/all'
@@ -12,6 +12,9 @@ import { IconType } from 'react-icons'
 import { useDispatch } from 'react-redux'
 import { clearCoursePlatform, setCoursePlatform } from 'actions/courses'
 import { ICourse, PlatformType } from 'domain/course'
+import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { platformsValidationSchema } from 'pages/ConfigurationPage/validationsSchemas'
 
 const StyledButtonContainer = styled.div`
   display: flex;
@@ -51,37 +54,31 @@ const InputSectionTitle = styled.div`
   align-items: center;
 `
 
-type UseInputProps = [string, (e: ChangeEvent<HTMLInputElement>) => void, (value: string) => void]
-
-const useInput = (initialState: string): UseInputProps => {
-  const [state, setState] = useState(initialState)
-  const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => setState(e.target.value)
-
-  return [state, handleOnChange, setState]
-}
-
 type Props = {
-  color: string
   classesCode: string
   eventCourse: ICourse
 }
 
-const EventInfoLinksModal = ({ color, classesCode, eventCourse }: Props) => {
+type SubmitProps = {
+  zoom: string
+  teams: string
+  ePortal: string
+}
+
+const EventInfoLinksModal = ({ classesCode, eventCourse }: Props) => {
   const dispatch = useDispatch()
   const [isModalOpen, openModal, closeModal] = useModal()
   const { zoom, teams, ePortal } = eventCourse.platforms
-  const [zoomValue, onZoomValue, setZoomValue] = useInput('')
-  const [teamsValue, onTeamsValue, setTeamsValue] = useInput('')
-  const [ePortalValue, onEPortalValue, setEPortalValue] = useInput('')
 
-  useEffect(() => {
-    if (!isModalOpen) return
-    setZoomValue(zoom?.url ?? '')
-    setTeamsValue(teams?.url ?? '')
-    setEPortalValue(ePortal?.url ?? '')
-  }, [isModalOpen])
+  const { handleSubmit: handleSubmitReactFrom, errors, register, watch } = useForm({
+    resolver: yupResolver(platformsValidationSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
+  })
 
-  const handleSubmit = () => {
+  const { zoom: zoomValue, teams: teamsValue, ePortal: ePortalValue } = watch()
+
+  const handleSubmit = async ({ zoom: zoomValue, teams: teamsValue, ePortal: ePortalValue }: SubmitProps) => {
     if (zoomValue) dispatch(setCoursePlatform(classesCode, PlatformType.ZOOM, zoomValue))
     else if (zoom?.url) dispatch(clearCoursePlatform(classesCode, PlatformType.ZOOM))
 
@@ -97,8 +94,6 @@ const EventInfoLinksModal = ({ color, classesCode, eventCourse }: Props) => {
   const isChanged =
     (zoom?.url ?? '') !== zoomValue || (teams?.url ?? '') !== teamsValue || (ePortal?.url ?? '') !== ePortalValue
 
-  // TODO: ADD URL VALIDATION
-
   return (
     <>
       <StyledButtonContainer>
@@ -106,7 +101,7 @@ const EventInfoLinksModal = ({ color, classesCode, eventCourse }: Props) => {
           Zdalne nauczanie
         </Text>
         <Space grow />
-        <Button compact even variant="primary" color={color} onClick={openModal}>
+        <Button compact even onClick={openModal}>
           <FaPen />
         </Button>
       </StyledButtonContainer>
@@ -117,26 +112,32 @@ const EventInfoLinksModal = ({ color, classesCode, eventCourse }: Props) => {
           </Text>
           <Space size={2} />
           <InputSectionContainer>
-            <InputSection icon={FaBookReader} title="EPortal" color={THEME.colors.brand.ePortal}>
+            <InputSection icon={FaBookReader} title="ePortal" color={THEME.colors.brand.ePortal}>
               <Input
-                value={ePortalValue}
-                onChange={onEPortalValue}
+                name="ePortal"
+                error={errors.ePortal?.message}
+                defaultValue={ePortal?.url ?? ''}
+                ref={register}
                 textColor={THEME.colors.brand.ePortal}
-                placeholder="Link do EPortalu"
+                placeholder="Link do ePortalu"
               />
             </InputSection>
             <InputSection icon={FaUserFriends} title="Teams" color={THEME.colors.brand.teams}>
               <Input
-                value={teamsValue}
-                onChange={onTeamsValue}
+                name="teams"
+                error={errors.teams?.message}
+                defaultValue={teams?.url ?? ''}
+                ref={register}
                 textColor={THEME.colors.brand.teams}
                 placeholder="Link do Teams"
               />
             </InputSection>
             <InputSection icon={FaCamera} title="Zoom" color={THEME.colors.brand.zoom}>
               <Input
-                value={zoomValue}
-                onChange={onZoomValue}
+                name="zoom"
+                error={errors.zoom?.message}
+                defaultValue={zoom?.url ?? ''}
+                ref={register}
                 textColor={THEME.colors.brand.zoom}
                 placeholder="Link do Zooma"
               />
@@ -144,9 +145,16 @@ const EventInfoLinksModal = ({ color, classesCode, eventCourse }: Props) => {
           </InputSectionContainer>
         </StyledModalContainer>
         <StyledButtonsContainer>
-          <Button onClick={closeModal}>Anuluj</Button>
+          <Button color={THEME.colors.palette.blue.dark} onClick={closeModal}>
+            Anuluj
+          </Button>
           <Space horizontal size={0.5} />
-          <Button disabled={!isChanged} variant="primary" onClick={handleSubmit}>
+          <Button
+            color={THEME.colors.palette.blue.dark}
+            disabled={!isChanged}
+            variant="primary"
+            onClick={handleSubmitReactFrom(handleSubmit)}
+          >
             Zapisz
           </Button>
         </StyledButtonsContainer>

@@ -5,6 +5,7 @@ import moment from 'moment'
 import styled from '@emotion/styled'
 import {
   FaBookOpen,
+  FaBookReader,
   FaCalendarAlt,
   FaChalkboardTeacher,
   FaHashtag,
@@ -132,21 +133,21 @@ const EventInfo = ({ event }: Props) => {
           {mergedPlatforms.teams && (
             <InfoWithIcon
               onClick={handleOpenLink(mergedPlatforms.teams.url)}
-              icon={FaVideoSlash}
-              title="Teams"
+              icon={FaUserFriends}
+              title={mergedPlatforms.teams.name && 'Teams'}
               color={THEME.colors.brand.teams}
             >
-              {mergedPlatforms.teams.name}
+              {mergedPlatforms.teams.name ?? <b>Teams</b>}
             </InfoWithIcon>
           )}
           {mergedPlatforms.ePortal && (
             <InfoWithIcon
               onClick={handleOpenLink(mergedPlatforms.ePortal.url)}
-              icon={FaUserFriends}
-              title="EPortal"
+              icon={FaBookReader}
+              title={mergedPlatforms.ePortal.name && 'ePortal'}
               color={THEME.colors.brand.ePortal}
             >
-              {mergedPlatforms.ePortal.name}
+              {mergedPlatforms.ePortal.name ?? <b>ePortal</b>}
             </InfoWithIcon>
           )}
         </InfoGrid>

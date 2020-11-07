@@ -138,7 +138,7 @@ const EventModal = ({ event, onClose, isOpen }: Props) => {
                   <InfoWithIcon
                     onClick={handleOpenLink(mergedPlatforms.ePortal?.url)}
                     icon={FaBookReader}
-                    title="EPortal"
+                    title="ePortal"
                     color={THEME.colors.brand.ePortal}
                   >
                     {mergedPlatforms.ePortal?.name}

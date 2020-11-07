@@ -31,7 +31,7 @@ const StyledButton = styled.button<Props>`
   cursor: pointer;
   background-color: ${({ btnColor }) => `${btnColor}20`};
   color: ${({ btnColor }) => btnColor};
-  transition: transform 0.2s ease;
+  transition: opacity 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,7 +40,7 @@ const StyledButton = styled.button<Props>`
   text-align: ${({ align }) => align};
 
   &:hover {
-    transform: scale(0.95);
+    opacity: 0.65;
   }
 
   &:focus-visible {

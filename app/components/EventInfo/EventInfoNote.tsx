@@ -94,8 +94,8 @@ const EventInfoNote = ({ savedText, classesCode }: Props) => {
           Notatki
         </Text>
         <Space horizontal size={0.25} />
-        {isLoading && <CircularProgress size="1em" color="inherit" />}
-        {isSaved && <DisappearingSaveIcon />}
+        {isLoading && <CircularProgress size="0.8em" color="inherit" />}
+        {isSaved && <DisappearingSaveIcon size="0.8em" />}
       </StyledButtonContainer>
       <StyledTextarea onChange={handleChange} value={content} />
     </>
