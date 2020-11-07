@@ -4,9 +4,9 @@ export const parseSize = (size: string | number) => (typeof size === 'number' ? 
 
 export const THEME = {
   borderRadius: {
-    sm: '8px',
-    md: '12px',
-    lg: '16px',
+    sm: '4px',
+    md: '8px',
+    lg: '12px',
   },
   spacing: 4,
   colors: {
@@ -73,7 +73,7 @@ const muiTheme = createMuiTheme({
     },
   },
   shape: {
-    borderRadius: 12,
+    borderRadius: 8,
   },
 })
 

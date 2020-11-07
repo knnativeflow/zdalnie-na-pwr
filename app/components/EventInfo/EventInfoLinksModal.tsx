@@ -5,7 +5,7 @@ import { FaBookReader, FaCamera, FaPen, FaUserFriends } from 'react-icons/all'
 import Space from 'components/Space'
 import Text from 'components/Text'
 import useModal from 'hooks/useModal'
-import { Dialog, Grid } from '@material-ui/core'
+import { Dialog } from '@material-ui/core'
 import Input from 'components/Input'
 import { parseSize, THEME } from 'base/theme/theme'
 import { IconType } from 'react-icons'
@@ -19,19 +19,27 @@ const StyledButtonContainer = styled.div`
   margin-bottom: 10px;
 `
 
-const StyledModalWrapper = styled.div`
-  padding: ${parseSize(2)};
+const StyledModalContainer = styled.div`
+  padding: ${parseSize(1.5)};
+`
+
+const InputSectionContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
 `
 
 const InputSectionWrapper = styled.div<{ color: string }>`
   background-color: ${({ color }) => `${color}10`};
   color: ${({ color }) => color};
   border-radius: ${THEME.borderRadius.md};
-  flex-grow: 1;
   padding: ${parseSize(0.5)} ${parseSize(1)} ${parseSize(1)};
+  width: calc(50% - 1em);
+  margin: 0.5em;
 `
 
-const StyledButtonsWrapper = styled.div`
+const StyledButtonsContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -103,56 +111,45 @@ const EventInfoLinksModal = ({ color, classesCode, eventCourse }: Props) => {
         </Button>
       </StyledButtonContainer>
       <Dialog open={isModalOpen} onClose={closeModal}>
-        <StyledModalWrapper>
-          <Text size={1.5} fontWeight="bold">
+        <StyledModalContainer>
+          <Text size={1.25} fontWeight="bold">
             Edycja linków
           </Text>
           <Space size={2} />
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <InputSection icon={FaCamera} title="Zoom" color={THEME.colors.brand.zoom}>
-                <Input
-                  value={zoomValue}
-                  onChange={onZoomValue}
-                  textColor={THEME.colors.brand.zoom}
-                  placeholder="Link do Zooma"
-                />
-              </InputSection>
-            </Grid>
-            <Grid item xs={6}>
-              <InputSection icon={FaUserFriends} title="Teams" color={THEME.colors.brand.teams}>
-                <Input
-                  value={teamsValue}
-                  onChange={onTeamsValue}
-                  textColor={THEME.colors.brand.teams}
-                  placeholder="Link do Teams"
-                />
-              </InputSection>
-            </Grid>
-            <Grid item xs={6}>
-              <InputSection icon={FaBookReader} title="EPortal" color={THEME.colors.brand.ePortal}>
-                <Input
-                  value={ePortalValue}
-                  onChange={onEPortalValue}
-                  textColor={THEME.colors.brand.ePortal}
-                  placeholder="Link do EPortalu"
-                />
-              </InputSection>
-            </Grid>
-          </Grid>
-        </StyledModalWrapper>
-        <StyledButtonsWrapper>
+          <InputSectionContainer>
+            <InputSection icon={FaBookReader} title="EPortal" color={THEME.colors.brand.ePortal}>
+              <Input
+                value={ePortalValue}
+                onChange={onEPortalValue}
+                textColor={THEME.colors.brand.ePortal}
+                placeholder="Link do EPortalu"
+              />
+            </InputSection>
+            <InputSection icon={FaUserFriends} title="Teams" color={THEME.colors.brand.teams}>
+              <Input
+                value={teamsValue}
+                onChange={onTeamsValue}
+                textColor={THEME.colors.brand.teams}
+                placeholder="Link do Teams"
+              />
+            </InputSection>
+            <InputSection icon={FaCamera} title="Zoom" color={THEME.colors.brand.zoom}>
+              <Input
+                value={zoomValue}
+                onChange={onZoomValue}
+                textColor={THEME.colors.brand.zoom}
+                placeholder="Link do Zooma"
+              />
+            </InputSection>
+          </InputSectionContainer>
+        </StyledModalContainer>
+        <StyledButtonsContainer>
           <Button onClick={closeModal}>Anuluj</Button>
           <Space horizontal size={0.5} />
-          <Button
-            disabled={!isChanged}
-            variant="primary"
-            color={THEME.colors.palette.purple.main}
-            onClick={handleSubmit}
-          >
+          <Button disabled={!isChanged} variant="primary" onClick={handleSubmit}>
             Zapisz
           </Button>
-        </StyledButtonsWrapper>
+        </StyledButtonsContainer>
       </Dialog>
     </>
   )
