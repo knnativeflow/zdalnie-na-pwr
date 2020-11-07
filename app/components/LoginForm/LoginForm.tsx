@@ -36,10 +36,11 @@ export type LoginFormProps = {
   disabledFields?: {
     login?: boolean
     password?: boolean
-  }
+  },
+  submitText?: string
 }
 
-const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder, validationSchema, disabledFields }: LoginFormProps) => {
+const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder, validationSchema, disabledFields, submitText }: LoginFormProps) => {
   const [apiError, setApiError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -88,7 +89,7 @@ const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder, validatio
       />
       <Space size={1} />
       <Button type="submit" glow color={color.main} variant="primary" fullWidth disabled={isLoading}>
-        {isLoading ? <CircularProgress size="1em" color="inherit" /> : 'Zaloguj'}
+        {isLoading ? <CircularProgress size="1em" color="inherit" /> : submitText ?? 'Zaloguj'}
       </Button>
       <Space size={0.5} />
       {!!apiError && <ErrorMsg>{apiError}</ErrorMsg>}

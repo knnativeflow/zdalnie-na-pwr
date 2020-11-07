@@ -23,6 +23,9 @@ const Routes = () => {
       <Switch>
         <Route path={routes.CALENDAR} component={CalendarPage} exact />
         <Route path={routes.SETTINGS} component={SettingsPage} exact />
+        <Route path={routes.SETTINGS_PASSWORD_UPDATE} exact>
+          <SettingsPage forcePasswordUpdate />
+        </Route>
         <Route path={routes.INDEX} component={DashboardPage} exact />
       </Switch>
     </AppWithNavigation>

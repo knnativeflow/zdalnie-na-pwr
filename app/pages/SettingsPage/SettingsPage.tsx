@@ -42,10 +42,14 @@ const Text = styled.p`
   color: #292b31;
 `
 
-const SettingsPage = () => {
+export interface Props {
+  forcePasswordUpdate?: boolean
+}
+
+const SettingsPage = ({forcePasswordUpdate}: Props) => {
   const dispatch = useDispatch()
   const logoutUser = () => dispatch(clearUser())
-  const [isPasswordChangeModalOpen, setIsPasswordChangeModal] = useState(false)
+  const [isPasswordChangeModalOpen, setIsPasswordChangeModal] = useState(forcePasswordUpdate ?? false)
 
   const handleLink = (e: SyntheticEvent<HTMLAnchorElement>) => {
     e.preventDefault()
@@ -79,7 +83,12 @@ const SettingsPage = () => {
         Zmien hasło do poczty
       </Button>
       <Space size={1} />
-      <SmailPasswordChangeModal open={isPasswordChangeModalOpen} onSuccess={closePasswordChangeModal} onClose={closePasswordChangeModal} />
+      <SmailPasswordChangeModal
+        forcedUpdate={forcePasswordUpdate ?? false}
+        open={isPasswordChangeModalOpen}
+        onSuccess={closePasswordChangeModal}
+        onClose={closePasswordChangeModal}
+      />
     </Wrapper>
   )
 }
