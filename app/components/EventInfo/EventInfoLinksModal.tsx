@@ -70,13 +70,11 @@ const EventInfoLinksModal = ({ classesCode, eventCourse }: Props) => {
   const [isModalOpen, openModal, closeModal] = useModal()
   const { zoom, teams, ePortal } = eventCourse.platforms
 
-  const { handleSubmit: handleSubmitReactFrom, errors, register, watch } = useForm({
+  const { handleSubmit: handleSubmitReactFrom, errors, register } = useForm({
     resolver: yupResolver(platformsValidationSchema),
     mode: 'onBlur',
     reValidateMode: 'onChange',
   })
-
-  const { zoom: zoomValue, teams: teamsValue, ePortal: ePortalValue } = watch()
 
   const handleSubmit = async ({ zoom: zoomValue, teams: teamsValue, ePortal: ePortalValue }: SubmitProps) => {
     if (zoomValue) dispatch(setCoursePlatform(classesCode, PlatformType.ZOOM, zoomValue))
@@ -90,9 +88,6 @@ const EventInfoLinksModal = ({ classesCode, eventCourse }: Props) => {
 
     closeModal()
   }
-
-  const isChanged =
-    (zoom?.url ?? '') !== zoomValue || (teams?.url ?? '') !== teamsValue || (ePortal?.url ?? '') !== ePortalValue
 
   return (
     <>
@@ -151,7 +146,6 @@ const EventInfoLinksModal = ({ classesCode, eventCourse }: Props) => {
           <Space horizontal size={0.5} />
           <Button
             color={THEME.colors.palette.blue.dark}
-            disabled={!isChanged}
             variant="primary"
             onClick={handleSubmitReactFrom(handleSubmit)}
           >
