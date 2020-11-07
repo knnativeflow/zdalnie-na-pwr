@@ -4,7 +4,7 @@ const ERROR_MESSAGES = {
   required: 'Pole jest wymagane',
   jsosRegex: 'Niepoprawny format loginu',
   mailRegex: 'Niepoprawny format indeksu',
-  ePortalRegex: 'Niepoprawny link do ePortalu',
+  url: 'Niepoprawny format linku',
 }
 
 export const jsosValidationSchema = yup.object({
@@ -23,11 +23,8 @@ export const mailValidationSchema = yup.object({
   password: yup.string().required(ERROR_MESSAGES.required),
 })
 
-// TODO: CHECK IF REGEXES ARE CORRECT
 export const platformsValidationSchema = yup.object({
-  zoom: yup.string().url(),
-  ePortal: yup
-    .string()
-    .matches(/^$|^https:\/\/eportal.pwr.edu.pl\/course\/view\.php\?id=[0-9]{2,}$/, ERROR_MESSAGES.ePortalRegex),
-  teams: yup.string().url(),
+  zoom: yup.string().url(ERROR_MESSAGES.url),
+  ePortal: yup.string().url(ERROR_MESSAGES.url),
+  teams: yup.string().url(ERROR_MESSAGES.url),
 })
