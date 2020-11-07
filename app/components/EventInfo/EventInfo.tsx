@@ -152,7 +152,7 @@ const EventInfo = ({ event }: Props) => {
         </InfoGrid>
       )}
 
-      <EventInfoNote savedText={note} {...{ classesCode, color }} />
+      <EventInfoNote savedText={note} classesCode={classesCode} />
     </EventInfoWrapper>
   )
 }

@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled from '@emotion/styled'
 import { THEME } from 'base/theme/theme'
-import Button from 'components/Button'
 import { useDispatch } from 'react-redux'
 import { setCourseNote } from 'actions/courses'
-import { FaSave, FaUndoAlt } from 'react-icons/all'
+import { FaSave } from 'react-icons/all'
 import Space from 'components/Space'
 import Text from 'components/Text'
+import { CircularProgress } from '@material-ui/core'
+import { keyframes } from '@emotion/core'
 
 type Props = {
   savedText: string
   classesCode: string
-  color: string
 }
 
 const StyledTextarea = styled.textarea`
@@ -36,20 +36,51 @@ const StyledButtonContainer = styled.div`
   margin-bottom: 10px;
 `
 
-const EventInfoNote = ({ savedText, classesCode, color }: Props) => {
+const fadeOut = keyframes`
+  0% {
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.75;
+  }
+  20% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 0;
+  }
+`
+
+const DisappearingSaveIcon = styled(FaSave)`
+  animation: ${fadeOut} 3s linear both;
+`
+
+const EventInfoNote = ({ savedText, classesCode }: Props) => {
   const dispatch = useDispatch()
-  const [content, setContent] = useState<string>(savedText)
+  const [content, setContent] = useState(savedText)
+  const [isLoading, setLoading] = useState(false)
+  const [isSaved, setSaved] = useState(false)
+  const inputTimeout = useRef<NodeJS.Timeout>()
+  const loadingTimeout = useRef<NodeJS.Timeout>()
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value)
-  }
+    const { value } = e.target
 
-  const handleSaveText = () => {
-    dispatch(setCourseNote(classesCode, content))
-  }
+    setLoading(false)
+    setContent(value)
+    if (inputTimeout.current) clearTimeout(inputTimeout.current)
+    if (loadingTimeout.current) clearTimeout(loadingTimeout.current)
 
-  const handleCancelText = () => {
-    setContent(savedText)
+    inputTimeout.current = setTimeout(() => {
+      setLoading(false)
+      setSaved(true)
+      dispatch(setCourseNote(classesCode, value))
+    }, 3000)
+
+    loadingTimeout.current = setTimeout(() => {
+      setLoading(true)
+      setSaved(false)
+    }, 1000)
   }
 
   useEffect(() => {
@@ -62,14 +93,9 @@ const EventInfoNote = ({ savedText, classesCode, color }: Props) => {
         <Text size="14px" fontWeight={700}>
           Notatki
         </Text>
-        <Space grow />
-        <Button compact even color={color} disabled={savedText === content} onClick={handleCancelText}>
-          <FaUndoAlt />
-        </Button>
-        <Space size={0.25} horizontal />
-        <Button compact even variant="primary" color={color} disabled={savedText === content} onClick={handleSaveText}>
-          <FaSave />
-        </Button>
+        <Space horizontal size={0.25} />
+        {isLoading && <CircularProgress size="1em" color="inherit" />}
+        {isSaved && <DisappearingSaveIcon />}
       </StyledButtonContainer>
       <StyledTextarea onChange={handleChange} value={content} />
     </>
