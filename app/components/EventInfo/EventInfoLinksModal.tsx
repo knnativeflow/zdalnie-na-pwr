@@ -75,16 +75,14 @@ const EventInfoLinksModal = ({ classesCode, eventCourse }: Props) => {
     reValidateMode: 'onChange',
   })
 
-  const handleSubmit = async ({ zoom: zoomValue, teams: teamsValue, ePortal: ePortalValue }: SubmitProps) => {
-    if (zoomValue) dispatch(setCoursePlatform(classesCode, PlatformType.ZOOM, zoomValue))
-    else if (zoom?.url) dispatch(clearCoursePlatform(classesCode, PlatformType.ZOOM))
-
-    if (teamsValue) dispatch(setCoursePlatform(classesCode, PlatformType.TEAMS, teamsValue))
-    else if (teams?.url) dispatch(clearCoursePlatform(classesCode, PlatformType.TEAMS))
-
-    if (ePortalValue) dispatch(setCoursePlatform(classesCode, PlatformType.EPORTAL, ePortalValue))
-    else if (ePortal?.url) dispatch(clearCoursePlatform(classesCode, PlatformType.EPORTAL))
-
+  const handleSubmit = async (platforms: SubmitProps) => {
+    Object.values(PlatformType).forEach((key) => {
+      if (platforms[key]) {
+        dispatch(setCoursePlatform(classesCode, key, platforms[key]))
+      } else if (eventCourse.platforms[key]?.url) {
+        dispatch(clearCoursePlatform(classesCode, key))
+      }
+    })
     closeModal()
   }
 
