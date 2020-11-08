@@ -1,9 +1,13 @@
-import React, { SyntheticEvent } from 'react'
+import React, { SyntheticEvent, useState } from 'react'
+import { useHistory } from 'react-router'
 import { useDispatch } from 'react-redux'
-import { shell } from 'electron'
 
+import { shell } from 'electron'
 import { clearUser } from 'actions/user'
 import styled from '@emotion/styled'
+import Button from 'components/Button'
+import { THEME } from 'base/theme/theme'
+import SmailPasswordChangeModal from 'components/SmailModal/SmailPasswordChangeModal'
 
 const APP_VERSION = process.env.npm_package_version
 
@@ -41,10 +45,22 @@ const Text = styled.p`
 const SettingsPage = () => {
   const dispatch = useDispatch()
   const logoutUser = () => dispatch(clearUser())
+  const history = useHistory()
+  const urlParams = new URLSearchParams(history.location.search)
+  const forcePasswordUpdate = urlParams.get('forcePasswordUpdate') === 'true'
+  const [isPasswordChangeModalOpen, setIsPasswordChangeModal] = useState(forcePasswordUpdate)
 
   const handleLink = (e: SyntheticEvent<HTMLAnchorElement>) => {
     e.preventDefault()
     shell.openExternal(e.currentTarget.href)
+  }
+
+  const handlePasswordChange = () => {
+    setIsPasswordChangeModal(true)
+  }
+
+  const closePasswordChangeModal = () => {
+    setIsPasswordChangeModal(false)
   }
 
   return (
@@ -62,6 +78,22 @@ const SettingsPage = () => {
       </Text>
       <Text>Wersja aplikacji {APP_VERSION}</Text>
       <ClearDataButton onClick={logoutUser}>Wyczyść dane aplikacji</ClearDataButton>
+      <div style={{margin: '20px 0'}}>
+        <Button
+          glow
+          color={THEME.colors.palette.purple.main}
+          variant="primary"
+          onClick={handlePasswordChange}
+        >
+          Zmien hasło do poczty
+        </Button>
+      </div>
+      <SmailPasswordChangeModal
+        forcedUpdate={forcePasswordUpdate}
+        open={isPasswordChangeModalOpen}
+        onSuccess={closePasswordChangeModal}
+        onClose={closePasswordChangeModal}
+      />
     </Wrapper>
   )
 }
