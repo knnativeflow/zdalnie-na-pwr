@@ -100,10 +100,7 @@ const JsosStep = ({ onSubmit, fields, validationSchema, prevStep }: StepWithLogi
       <Space size={2} />
       <h2>Zaloguj się do JSOS</h2>
       <Space size={2} />
-      <LoginForm
-        color={THEME.colors.palette.purple}
-        {...{ onSubmit, fields, validationSchema }}
-      />
+      <LoginForm color={THEME.colors.palette.purple} {...{ onSubmit, fields, validationSchema }} />
       <Space size={2} />
       <FooterInfo color={THEME.colors.palette.purple.light}>
         Aktualnie jedyną informacją pobieraną z JSOS jest siatka zajęć oraz lista kursów. Cały proces wykonywany jest
@@ -122,10 +119,7 @@ const MailStep = ({ onSubmit, fields, validationSchema, prevStep }: StepWithLogi
       <Space size={2} />
       <h2>Zaloguj się do poczty studenckiej</h2>
       <Space size={2} />
-      <LoginForm
-        color={THEME.colors.palette.blue}
-        {...{ onSubmit, fields: fields, validationSchema }}
-      />
+      <LoginForm color={THEME.colors.palette.blue} {...{ onSubmit, fields, validationSchema }} />
       <Space size={2} />
       <FooterInfo color={THEME.colors.palette.blue.light}>
         Logowanie do poczty wymagane jest do pobierania automatycznie linków do Zooma oraz linków do Teamsów. Po co
@@ -270,8 +264,8 @@ const ConfigurationPage = () => {
   }
 
   const mailFields = {
-    login: { defaultValue: mailDataLogin.login, placeholder: 'indeks' },
-    password: { defaultValue: mailDataLogin.password }
+    login: { defaultValue: mailDataLogin.login, placeholder: 'Indeks' },
+    password: { defaultValue: mailDataLogin.password },
   }
 
   const handleExitConfiguration = () => {

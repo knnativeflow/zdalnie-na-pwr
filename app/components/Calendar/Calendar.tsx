@@ -2,11 +2,12 @@ import React, { useRef } from 'react'
 import FullCalendar, { EventClickArg } from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import locale from '@fullcalendar/core/locales/pl'
+import { EventContentArg } from '@fullcalendar/core'
+import { FaChevronLeft, FaChevronRight, FaLink } from 'react-icons/all'
+import styled from '@emotion/styled'
 
 import { IEvent, IEventFullCalendar } from 'domain/event'
-import { FaChevronLeft, FaChevronRight } from 'react-icons/all'
-import styled from '@emotion/styled'
-import { EventContentArg } from '@fullcalendar/core'
+import { PlatformType } from 'domain/course'
 
 interface Props {
   events: IEventFullCalendar[]
@@ -19,6 +20,38 @@ const CalendarWrapper = styled.div`
   display: flex;
   height: 100%;
   overflow: hidden;
+
+  --fc-border-color: #dfeafa;
+
+  .fc-scrollgrid {
+    border: none;
+  }
+
+  .fc-timegrid-slots {
+    border: 1px solid var(--fc-border-color, #ddd);
+  }
+
+  .fc-col-header-cell-cushion {
+    font-size: 13px;
+  }
+
+  .fc-timegrid-axis {
+    border: none;
+  }
+
+  .fc-theme-standard th {
+    border: none;
+  }
+
+  .fc-scrollgrid-section-sticky > * {
+    background: #e7f1ff;
+    padding: 6px 0;
+  }
+
+  .fc-timegrid-slot-label-cushion {
+    font-size: 13px;
+    color: #7e91a9;
+  }
 
   .fc-toolbar.fc-header-toolbar {
     margin-bottom: 10px;
@@ -40,6 +73,27 @@ const CalendarWrapper = styled.div`
 
   .fc-view-harness {
     overflow-y: auto;
+  }
+
+  .fc-button-primary {
+    background: #1e97ff;
+    border: none;
+    border-color: transparent;
+    border-radius: 8px;
+
+    &:hover {
+      background: #0d74ce;
+    }
+
+    &:focus,
+    &:active {
+      box-shadow: none;
+      border-color: transparent;
+    }
+
+    &:disabled {
+      background: #a5a5a5;
+    }
   }
 `
 
@@ -70,6 +124,13 @@ const EventType = styled.span`
   font-weight: 700;
 `
 
+const EventLink = styled.span`
+  position: absolute;
+  right: 3px;
+  bottom: 5px;
+  font-size: 12px;
+`
+
 const EventName = styled.span`
   margin: 0;
   font-weight: 600;
@@ -77,6 +138,8 @@ const EventName = styled.span`
   line-height: 1.2;
   overflow-wrap: break-word;
 `
+
+const TYPES = [PlatformType.ZOOM, PlatformType.TEAMS]
 
 const Calendar = ({ events, onEventClick }: Props) => {
   const calendarRef = useRef<FullCalendar | null>(null)
@@ -109,12 +172,19 @@ const Calendar = ({ events, onEventClick }: Props) => {
   // TODO: improve styles
   const renderEventContent = (eventInfo: EventContentArg) => {
     const event = eventInfo.event.extendedProps.resource
+    const hasLink = TYPES.some((item) => event.platforms[item])
+
     return (
       <EventContent>
         <EventHeader>
           {eventInfo.timeText} <EventType>{event.type}</EventType>
         </EventHeader>
         <EventName>{event.name}</EventName>
+        {hasLink && (
+          <EventLink>
+            <FaLink />
+          </EventLink>
+        )}
       </EventContent>
     )
   }
@@ -127,7 +197,9 @@ const Calendar = ({ events, onEventClick }: Props) => {
         height="auto"
         timeZone="local"
         plugins={[timeGridPlugin]}
-        initialView="timeGridWeek"
+        initialView="timeGrid"
+        dayCount={5}
+        duration={{ days: 5 }}
         allDaySlot={false}
         slotDuration="00:30:00"
         slotMinTime="07:00:00"

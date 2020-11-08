@@ -19,27 +19,14 @@ const Wrapper = styled.div`
   justify-content: center;
   align-items: center;
 `
-// TODO: use correct colors
-const ClearDataButton = styled.button`
-  border: none;
-  background: #b81e44;
-  color: #fff;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-weight: 600;
-  transition: all 0.1s ease-in-out;
-  box-shadow: 0 5px 8px -2px #ddaab7;
-  margin-top: 50px;
-  cursor: pointer;
-
-  &:hover {
-    background: #830827;
-  }
-`
 
 const Text = styled.p`
   font-size: 15px;
   color: #292b31;
+
+  a {
+    color: #1078ff;
+  }
 `
 
 const SettingsPage = () => {
@@ -77,12 +64,19 @@ const SettingsPage = () => {
         </a>
       </Text>
       <Text>Wersja aplikacji {APP_VERSION}</Text>
-      <ClearDataButton onClick={logoutUser}>Wyczyść dane aplikacji</ClearDataButton>
-      <div style={{ margin: '20px 0' }}>
-        <Button glow color={THEME.colors.palette.purple.main} variant="primary" onClick={handlePasswordChange}>
-          Zmien hasło do poczty
-        </Button>
-      </div>
+      <Button
+        glow
+        color={THEME.colors.palette.purple.main}
+        variant="primary"
+        onClick={handlePasswordChange}
+        style={{ margin: '16px 0' }}
+      >
+        Zmień hasło do poczty
+      </Button>
+
+      <Button glow color="#b81e44" variant="primary" onClick={logoutUser}>
+        Wyczyść dane aplikacji
+      </Button>
       <SmailPasswordChangeModal
         forcedUpdate={forcePasswordUpdate}
         open={isPasswordChangeModalOpen}

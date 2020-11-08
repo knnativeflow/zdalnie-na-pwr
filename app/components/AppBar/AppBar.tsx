@@ -15,7 +15,7 @@ import { setFetchStatusMail } from 'actions/mail'
 import { parseDateToString } from 'utils/date'
 
 const AppBarWrapper = styled.div<{ isFullscreen: boolean }>`
-  background: #759ccb;
+  background: #41aaff;
   height: 60px;
   margin-top: ${({ isFullscreen }) => (isFullscreen ? 0 : MENU_BAR_HEIGHT)};
   flex-shrink: 0;
@@ -24,7 +24,8 @@ const AppBarWrapper = styled.div<{ isFullscreen: boolean }>`
   align-items: center;
   justify-content: space-between;
   padding: 0 10px;
-  box-shadow: 0 2px 6px 0 #bed0e6;
+  box-shadow: 0 2px 6px 0 #9ed0ff;
+  z-index: 999;
 `
 
 const ActionsWrapper = styled.div`
