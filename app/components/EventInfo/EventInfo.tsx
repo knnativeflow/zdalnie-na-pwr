@@ -5,6 +5,7 @@ import moment from 'moment'
 import styled from '@emotion/styled'
 import {
   FaBookOpen,
+  FaBookReader,
   FaCalendarAlt,
   FaChalkboardTeacher,
   FaHashtag,
@@ -19,6 +20,8 @@ import { RootState } from 'store'
 import { THEME } from 'base/theme/theme'
 import { eventColor, eventFullText } from 'utils/courseTypes'
 import InfoWithIcon from 'components/InfoWithIcon'
+import EventInfoNote from './EventInfoNote'
+import EventInfoLinksModal from './EventInfoLinksModal'
 
 const EventInfoWrapper = styled.div`
   padding: 16px;
@@ -26,17 +29,15 @@ const EventInfoWrapper = styled.div`
 
 const Title = styled.p`
   font-weight: 700;
-  margin: 0;
-  margin-bottom: 24px;
+  margin: 0 0 24px;
 `
 
 const InfoGrid = styled.div`
-  margin: 0;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: auto;
   grid-gap: 8px;
-  margin-bottom: 24px;
+  margin: 0 0 24px;
 
   @media (max-width: 1200px) {
     // TODO: use variable
@@ -44,16 +45,8 @@ const InfoGrid = styled.div`
   }
 `
 
-const Subheader = styled.p`
-  margin: 0;
-  margin-bottom: 10px;
-  font-weight: 700;
-  font-size: 14px;
-`
-
 const NoInfoText = styled.p`
-  margin: 0;
-  margin-bottom: 24px;
+  margin: 0 0 24px;
   font-size: 12px;
   color: rgba(0, 0, 0, 0.54);
   text-align: center;
@@ -85,10 +78,13 @@ const EventInfo = ({ event }: Props) => {
     (course) => course.name.startsWith(event.name) && course.type === event.type
   )
 
+  if (!eventCourse) return <EventInfoWrapper>Nastąpił błąd :(</EventInfoWrapper>
+  const { note, classesCode } = eventCourse
+
   const { name, type, start, end, lecturer, platforms: platformsEvent } = event
-  const mergedPlatforms = { ...eventCourse?.platforms, ...platformsEvent }
-  const usingZoomPlatform = events.some((event) => event.code === eventCourse?.classesCode && event.platforms.zoom)
-  const hasPlatforms = !!Object.values(mergedPlatforms).length || usingZoomPlatform
+  const mergedPlatforms = { ...eventCourse.platforms, ...platformsEvent }
+  const usingZoomPlatform = events.some((event) => event.code === classesCode && event.platforms.zoom)
+  const hasPlatforms = !!Object.values(mergedPlatforms).filter((plaform) => !!plaform).length || usingZoomPlatform
   const color = eventColor(type)
 
   const handleOpenLink = (url: string) => () => shell.openExternal(url)
@@ -101,7 +97,7 @@ const EventInfo = ({ event }: Props) => {
           {eventFullText(type)}
         </InfoWithIcon>
         <InfoWithIcon icon={FaHashtag} title="Kod grupy" color={color}>
-          {eventCourse?.classesCode}
+          {classesCode}
         </InfoWithIcon>
         <InfoWithIcon icon={FaCalendarAlt} title="Termin" color={color}>
           {moment(start).format('dddd, HH:mm')} - {moment(end).format('HH:mm')}
@@ -113,7 +109,7 @@ const EventInfo = ({ event }: Props) => {
         </InfoWithIcon>
       </InfoGrid>
 
-      <Subheader>Zdalne nauczanie</Subheader>
+      <EventInfoLinksModal {...{ classesCode, color, eventCourse }} />
 
       {!hasPlatforms && <NoInfoText>Nie znaleziono informacji o zdalnym nauczaniu dla tych zajęć</NoInfoText>}
 
@@ -137,29 +133,27 @@ const EventInfo = ({ event }: Props) => {
           {mergedPlatforms.teams && (
             <InfoWithIcon
               onClick={handleOpenLink(mergedPlatforms.teams.url)}
-              icon={FaVideoSlash}
-              title="Teams"
+              icon={FaUserFriends}
+              title={mergedPlatforms.teams.name && 'Teams'}
               color={THEME.colors.brand.teams}
             >
-              {mergedPlatforms.teams.name}
+              {mergedPlatforms.teams.name ?? <b>Teams</b>}
             </InfoWithIcon>
           )}
           {mergedPlatforms.ePortal && (
             <InfoWithIcon
               onClick={handleOpenLink(mergedPlatforms.ePortal.url)}
-              icon={FaUserFriends}
-              title="EPortal"
+              icon={FaBookReader}
+              title={mergedPlatforms.ePortal.name && 'ePortal'}
               color={THEME.colors.brand.ePortal}
             >
-              {mergedPlatforms.ePortal.name}
+              {mergedPlatforms.ePortal.name ?? <b>ePortal</b>}
             </InfoWithIcon>
           )}
         </InfoGrid>
       )}
 
-      <Subheader>Pozostałe</Subheader>
-      <NoInfoText>Nie znaleziono pozostałych informacji dla tego kursu</NoInfoText>
-      {/* TODO: add note from course */}
+      <EventInfoNote savedText={note} classesCode={classesCode} />
     </EventInfoWrapper>
   )
 }

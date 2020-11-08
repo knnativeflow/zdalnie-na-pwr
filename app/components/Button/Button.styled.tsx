@@ -23,15 +23,15 @@ const StyledButton = styled.button<Props>`
   overflow: hidden;
   border: 0;
   border-radius: ${THEME.borderRadius.md};
-  padding-top: ${withSpacing(({ spacing }) => parseSize(spacing))};
-  padding-bottom: ${withSpacing(({ spacing }) => parseSize(spacing))};
-  padding-left: ${withSpacing(({ spacing }) => parseSize(spacing * 2))};
-  padding-right: ${withSpacing(({ spacing }) => parseSize(spacing * 2))};
-  font-weight: 700;
+  padding-top: ${withSpacing(({ spacing }) => parseSize(spacing * 0.75))};
+  padding-bottom: ${withSpacing(({ spacing }) => parseSize(spacing * 0.75))};
+  padding-left: ${withSpacing(({ spacing }) => parseSize(spacing * 1.5))};
+  padding-right: ${withSpacing(({ spacing }) => parseSize(spacing * 1.5))};
+  font-weight: 600;
   cursor: pointer;
   background-color: ${({ btnColor }) => `${btnColor}20`};
   color: ${({ btnColor }) => btnColor};
-  transition: transform 0.2s ease;
+  transition: opacity 0.2s ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -40,7 +40,7 @@ const StyledButton = styled.button<Props>`
   text-align: ${({ align }) => align};
 
   &:hover {
-    transform: scale(0.975);
+    opacity: 0.65;
   }
 
   &:focus-visible {
@@ -99,7 +99,7 @@ const StyledButton = styled.button<Props>`
   ${({ disabled }) =>
     disabled &&
     css`
-      opacity: 0.75;
+      opacity: 0.35;
       pointer-events: none;
     `}
 
@@ -114,8 +114,8 @@ const StyledButton = styled.button<Props>`
     ({ even, spacing }) =>
       even &&
       css`
-        padding-left: ${parseSize(spacing)};
-        padding-right: ${parseSize(spacing)};
+        padding-left: ${parseSize(spacing * 0.75)};
+        padding-right: ${parseSize(spacing * 0.75)};
       `
   )}
 `
