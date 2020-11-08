@@ -4,6 +4,7 @@ import { Response as RequestResponse } from 'request'
 
 const URL_OAUTH_PAGE = 'https://oauth.pwr.edu.pl/oauth'
 const URL_LOGIN_PAGE = 'https://jsos.pwr.edu.pl/index.php/site/loginAsStudent'
+const ENABLE_LOGGER = false
 
 const j = defaultRequest.jar()
 
@@ -11,17 +12,17 @@ interface Response<T> extends RequestResponse {
   body: T
 }
 
+
 async function request<T>(config: IRequestOptions): Promise<Response<T>> {
   const request = defaultRequest.defaults({ jar: j })
-  console.log(`Request ${config.method} [${config.url}] body: ${JSON.stringify(config.form)}`)
+  if(ENABLE_LOGGER) console.info(`Request ${config.method} [${config.url}] body: ${JSON.stringify(config.form)}`)
   return request(config)
     .then((response: Response<T>) => {
-      console.log(`Response from ${config.method} [${config.url}]: ${response.body}`)
+      if(ENABLE_LOGGER) console.info(`Response from ${config.method} [${config.url}]: ${response.body}`)
       return response
     })
     .catch((err) => {
-      console.log(`Error response from ${config.method} [${config.url}]`)
-      console.error(err)
+      console.error(`Error response from ${config.method} [${config.url}]:`, err)
       throw err
     })
 }
@@ -35,8 +36,8 @@ class JsosAuth {
   lastTimeRequest: Date | null = null
 
   public async requestWithAuthorization(requestOps: IRequestOptions): Promise<ResponseWithSelector> {
-    try {
-      let response: ResponseWithSelector = await request({
+    return this.retry<ResponseWithSelector>(async () => {
+      const response: ResponseWithSelector = await request({
         resolveWithFullResponse: true,
         followAllRedirects: true,
         ...requestOps,
@@ -45,18 +46,13 @@ class JsosAuth {
           ...(requestOps.addCsrfToken ? { [this.csrfToken.key]: this.csrfToken.value } : {}),
         },
       })
-
-      response.selector = cheerio.load(response.body)
-
-      return response
-    } catch (err) {
-      console.error(err)
-      throw new Error('Błąd podczas wykonania żądania z wymaganą autoryzacją.')
-    }
+      const selector = cheerio.load(response.body)
+      return { ...response, selector} as ResponseWithSelector
+    })
   }
 
   public async signIn(login: string, password: string): Promise<IAuthenticationData> {
-    try {
+    return this.retry<IAuthenticationData>(async () => {
       const loginPageRequestOptions = {
         method: HttpMethod.GET,
         url: URL_LOGIN_PAGE,
@@ -125,10 +121,32 @@ class JsosAuth {
         oauthToken: this.oauthToken,
         csrfToken: this.csrfToken,
       }
-    } catch (err) {
-      console.error(err)
-      throw new Error('Błąd podczas logowania do JSOSa')
+    })
+  }
+
+  private async retry<T>(operation: () => Promise<T>): Promise<T> {
+    let retryCounter = 0
+    const retryer = async (): Promise<T> => {
+      try {
+        return await operation()
+      } catch (e) {
+        const isGatewayTimeout = e?.statusCode > 400
+        if(isGatewayTimeout && retryCounter < 3) {
+          retryCounter++
+          return retryer()
+        } else if (isGatewayTimeout) {
+          throw new Error(`
+          Próbowaliśmy trzy razy połączyć Cię z Jsosem.
+          Jednak jak wiesz, jesteś jednym z tysięcy użytkowników próbujących się do niego dostać w tej chwili;) \n
+          Daj biedakowi chwilę wytchnienia i spróbuj ponownie za jakiś czas.
+          `)
+        } else {
+          console.error('Błąd podczas wykonywania operacji na JSOS', e)
+          throw e
+        }
+      }
     }
+    return retryer()
   }
 
   public async logout(): Promise<any> {

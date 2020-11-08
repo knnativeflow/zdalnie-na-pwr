@@ -26,16 +26,26 @@ const ErrorMsg = styled.p`
 export type LoginFormProps = {
   onSubmit: (login: string, password: string) => Promise<void>
   validationSchema: ObjectSchema
-  defaultValues?: { login: string; password: string }
-  loginPlaceholder?: string
   color: {
     light: string
     main: string
     dark: string
-  }
+  },
+  fields: {
+    login?: {
+      defaultValue?: string,
+      disabled?: boolean,
+      placeholder?: string
+    },
+    password?: {
+      defaultValue?: string,
+      disabled?: boolean
+    }
+  },
+  submitText?: string
 }
 
-const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder, validationSchema }: LoginFormProps) => {
+const LoginForm = ({ onSubmit, color, validationSchema, submitText, fields }: LoginFormProps) => {
   const [apiError, setApiError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -65,10 +75,10 @@ const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder, validatio
         name="login"
         ref={register}
         textColor={color.dark}
-        autoFocus
-        defaultValue={defaultValues?.login ?? ''}
-        placeholder={loginPlaceholder ?? 'Login'}
-        disabled={isLoading}
+        autoFocus={!fields.login?.disabled}
+        defaultValue={fields.login?.defaultValue ?? ''}
+        placeholder={fields.login?.placeholder ?? 'Login'}
+        disabled={isLoading || !!fields.login?.disabled}
         error={errors.login?.message}
       />
       <Space size={0.5} />
@@ -76,15 +86,16 @@ const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder, validatio
         name="password"
         type="password"
         textColor={color.dark}
-        defaultValue={defaultValues?.password ?? ''}
+        autoFocus={fields.login?.disabled && !fields.password?.disabled}
+        defaultValue={fields.password?.defaultValue ?? ''}
         placeholder="Hasło"
         ref={register}
-        disabled={isLoading}
+        disabled={isLoading || !!fields.password?.disabled}
         error={errors.password?.message}
       />
       <Space size={1} />
       <Button type="submit" glow color={color.main} variant="primary" fullWidth disabled={isLoading}>
-        {isLoading ? <CircularProgress size="1em" color="inherit" /> : 'Zaloguj'}
+        {isLoading ? <CircularProgress size="1em" color="inherit" /> : submitText ?? 'Zaloguj'}
       </Button>
       <Space size={0.5} />
       {!!apiError && <ErrorMsg>{apiError}</ErrorMsg>}

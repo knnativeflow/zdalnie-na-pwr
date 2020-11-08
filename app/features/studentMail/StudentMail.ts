@@ -9,6 +9,12 @@ import { loginResponseDecoder } from './decoders'
 
 const STUDENT_MAIL_URL = 'https://s.student.pwr.edu.pl'
 
+export enum SMAIL_ERRORS {
+  WRONG_RESPONSE = 'Błędna odpowiedź serwera poczty studenckiej',
+  WRONG_LOGIN_PASSWORD = 'Błędy login lub hasło',
+  UNKNOWN = 'Nieznany błąd',
+}
+
 interface IBaseMail {
   id: number
   author: string
@@ -91,17 +97,17 @@ class StudentMail {
     const decoded = loginResponseDecoder.decode(json)
 
     if (!isRight(decoded)) {
-      throw new Error('Błędna odpowiedź serwera poczty studenckiej')
+      throw new Error(SMAIL_ERRORS.WRONG_RESPONSE)
     }
 
     const errorCode = decoded.right.iwcp['error-code']
 
     if (errorCode === '1') {
-      throw new Error('Błędy login lub hasło')
+      throw new Error(SMAIL_ERRORS.WRONG_LOGIN_PASSWORD)
     }
 
     if (errorCode !== '0') {
-      throw new Error('Nieznany błąd')
+      throw new Error(SMAIL_ERRORS.UNKNOWN)
     }
 
     this.token = decoded.right.iwcp.loginResponse?.appToken.split('=')[1] || ''
