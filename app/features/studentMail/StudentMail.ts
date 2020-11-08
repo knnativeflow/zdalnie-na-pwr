@@ -12,7 +12,7 @@ const STUDENT_MAIL_URL = 'https://s.student.pwr.edu.pl'
 export enum SMAIL_ERRORS {
   WRONG_RESPONSE = 'Błędna odpowiedź serwera poczty studenckiej',
   WRONG_LOGIN_PASSWORD = 'Błędy login lub hasło',
-  UNKOWN = 'Nieznany błąd',
+  UNKNOWN = 'Nieznany błąd',
 }
 
 interface IBaseMail {
@@ -107,7 +107,7 @@ class StudentMail {
     }
 
     if (errorCode !== '0') {
-      throw new Error(SMAIL_ERRORS.UNKOWN)
+      throw new Error(SMAIL_ERRORS.UNKNOWN)
     }
 
     this.token = decoded.right.iwcp.loginResponse?.appToken.split('=')[1] || ''

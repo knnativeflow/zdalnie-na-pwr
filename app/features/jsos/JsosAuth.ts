@@ -4,6 +4,7 @@ import { Response as RequestResponse } from 'request'
 
 const URL_OAUTH_PAGE = 'https://oauth.pwr.edu.pl/oauth'
 const URL_LOGIN_PAGE = 'https://jsos.pwr.edu.pl/index.php/site/loginAsStudent'
+const ENABLE_LOGGER = false
 
 const j = defaultRequest.jar()
 
@@ -11,17 +12,17 @@ interface Response<T> extends RequestResponse {
   body: T
 }
 
+
 async function request<T>(config: IRequestOptions): Promise<Response<T>> {
   const request = defaultRequest.defaults({ jar: j })
-  console.log(`Request ${config.method} [${config.url}] body: ${JSON.stringify(config.form)}`)
+  if(ENABLE_LOGGER) console.info(`Request ${config.method} [${config.url}] body: ${JSON.stringify(config.form)}`)
   return request(config)
     .then((response: Response<T>) => {
-      console.log(`Response from ${config.method} [${config.url}]: ${response.body}`)
+      if(ENABLE_LOGGER) console.info(`Response from ${config.method} [${config.url}]: ${response.body}`)
       return response
     })
     .catch((err) => {
-      console.log(`Error response from ${config.method} [${config.url}]`)
-      console.error(err)
+      console.error(`Error response from ${config.method} [${config.url}]:`, err)
       throw err
     })
 }
@@ -129,7 +130,7 @@ class JsosAuth {
       try {
         return await operation()
       } catch (e) {
-        const isGatewayTimeout = e?.statusCode == 504
+        const isGatewayTimeout = e?.statusCode > 400
         if(isGatewayTimeout && retryCounter < 3) {
           retryCounter++
           return retryer()

@@ -7,7 +7,6 @@ import styled from '@emotion/styled'
 import Button from 'components/Button'
 import { THEME } from 'base/theme/theme'
 import SmailPasswordChangeModal from 'components/SmailModal/SmailPasswordChangeModal'
-import Space from 'components/Space'
 import { useHistory } from 'react-router'
 
 const APP_VERSION = process.env.npm_package_version
@@ -79,10 +78,16 @@ const SettingsPage = () => {
       </Text>
       <Text>Wersja aplikacji {APP_VERSION}</Text>
       <ClearDataButton onClick={logoutUser}>Wyczyść dane aplikacji</ClearDataButton>
-      <Button glow color={THEME.colors.palette.purple.main} variant="primary" onClick={handlePasswordChange}>
-        Zmien hasło do poczty
-      </Button>
-      <Space size={1} />
+      <div style={{margin: '20px 0'}}>
+        <Button
+          glow
+          color={THEME.colors.palette.purple.main}
+          variant="primary"
+          onClick={handlePasswordChange}
+        >
+          Zmien hasło do poczty
+        </Button>
+      </div>
       <SmailPasswordChangeModal
         forcedUpdate={forcePasswordUpdate}
         open={isPasswordChangeModalOpen}

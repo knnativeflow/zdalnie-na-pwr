@@ -32,8 +32,7 @@ const SmailPasswordChangeModal = (props: Props): JSX.Element => {
 
   const login = useSelector((state: RootState) => state.user.indeks)
 
-  const defaultValues = {login}
-  const disabledFields = {login: true}
+  const fields = { login: { defaultValue: login, disabled: true } }
   const submitText = 'Zapisz'
 
   const onSubmit = async (login: string, password: string) => {
@@ -53,8 +52,8 @@ const SmailPasswordChangeModal = (props: Props): JSX.Element => {
         <Space size={1} />
         <LoginForm
           color={THEME.colors.palette.purple}
-          {...{ onSubmit, defaultValues, validationSchema: mailValidationSchema, disabledFields, submitText }}
-          loginPlaceholder="pwr######"
+          {...{ onSubmit, fields, validationSchema: mailValidationSchema, submitText }}
+          loginPlaceholder="indeks"
         />
         <Button glow color={THEME.colors.palette.purple.dark} fullWidth variant="primary" onClick={onClose}>
           Anuluj

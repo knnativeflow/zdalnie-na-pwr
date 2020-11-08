@@ -26,7 +26,6 @@ const ErrorMsg = styled.p`
 export type LoginFormProps = {
   onSubmit: (login: string, password: string) => Promise<void>
   validationSchema: ObjectSchema
-  defaultValues?: { login?: string; password?: string }
   loginPlaceholder?: string
   color: {
     light: string
@@ -37,10 +36,20 @@ export type LoginFormProps = {
     login?: boolean
     password?: boolean
   },
+  fields: {
+    login?: {
+      defaultValue?: string,
+      disabled?: boolean
+    },
+    password?: {
+      defaultValue?: string,
+      disabled?: boolean
+    }
+  },
   submitText?: string
 }
 
-const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder, validationSchema, disabledFields, submitText }: LoginFormProps) => {
+const LoginForm = ({ onSubmit, color, loginPlaceholder, validationSchema, submitText, fields }: LoginFormProps) => {
   const [apiError, setApiError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -70,10 +79,10 @@ const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder, validatio
         name="login"
         ref={register}
         textColor={color.dark}
-        autoFocus={!disabledFields?.login}
-        defaultValue={defaultValues?.login ?? ''}
+        autoFocus={!fields.login?.disabled}
+        defaultValue={fields.login?.defaultValue ?? ''}
         placeholder={loginPlaceholder ?? 'Login'}
-        disabled={isLoading || !!disabledFields?.login}
+        disabled={isLoading || !!fields.login?.disabled}
         error={errors.login?.message}
       />
       <Space size={0.5} />
@@ -81,10 +90,11 @@ const LoginForm = ({ onSubmit, defaultValues, color, loginPlaceholder, validatio
         name="password"
         type="password"
         textColor={color.dark}
-        defaultValue={defaultValues?.password ?? ''}
+        autoFocus={fields.login?.disabled && !fields.password?.disabled}
+        defaultValue={fields.password?.defaultValue ?? ''}
         placeholder="Hasło"
         ref={register}
-        disabled={isLoading || !!defaultValues?.password}
+        disabled={isLoading || !!fields.password?.disabled}
         error={errors.password?.message}
       />
       <Space size={1} />

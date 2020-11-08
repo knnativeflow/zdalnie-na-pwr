@@ -93,7 +93,7 @@ const StartStep = ({ nextStep }: { nextStep: () => void }) => (
   </Box>
 )
 
-const JsosStep = ({ onSubmit, defaultValues, validationSchema, prevStep }: StepWithLoginProps) => (
+const JsosStep = ({ onSubmit, fields, validationSchema, prevStep }: StepWithLoginProps) => (
   <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
     <StyledSidebar>
       <GoBackButton color={THEME.colors.palette.purple} count={1} onClick={prevStep} />
@@ -102,7 +102,7 @@ const JsosStep = ({ onSubmit, defaultValues, validationSchema, prevStep }: StepW
       <Space size={2} />
       <LoginForm
         color={THEME.colors.palette.purple}
-        {...{ onSubmit, defaultValues, validationSchema }}
+        {...{ onSubmit, fields, validationSchema }}
         loginPlaceholder="pwr######"
       />
       <Space size={2} />
@@ -116,7 +116,7 @@ const JsosStep = ({ onSubmit, defaultValues, validationSchema, prevStep }: StepW
   </Box>
 )
 
-const MailStep = ({ onSubmit, defaultValues, validationSchema, prevStep }: StepWithLoginProps) => (
+const MailStep = ({ onSubmit, fields, validationSchema, prevStep }: StepWithLoginProps) => (
   <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
     <StyledSidebar>
       <GoBackButton color={THEME.colors.palette.blue} count={2} onClick={prevStep} />
@@ -125,7 +125,7 @@ const MailStep = ({ onSubmit, defaultValues, validationSchema, prevStep }: StepW
       <Space size={2} />
       <LoginForm
         color={THEME.colors.palette.blue}
-        {...{ onSubmit, defaultValues, validationSchema }}
+        {...{ onSubmit, fields: fields, validationSchema }}
         loginPlaceholder="indeks"
       />
       <Space size={2} />
@@ -266,6 +266,16 @@ const ConfigurationPage = () => {
     goToNextStep()
   }
 
+  const jsosFields = {
+    login: { defaultValue: jsosDataLogin.login },
+    password: { defaultValue: jsosDataLogin.password }
+  }
+
+  const mailFields = {
+    login: { defaultValue: mailDataLogin.login },
+    password: { defaultValue: mailDataLogin.password }
+  }
+
   const handleExitConfiguration = () => {
     dispatch(updateUser({ configured: true }))
   }
@@ -275,14 +285,14 @@ const ConfigurationPage = () => {
     <JsosStep
       key={1}
       onSubmit={handleJsosLogin}
-      defaultValues={jsosDataLogin}
+      fields={jsosFields}
       prevStep={goToPrevStep}
       validationSchema={jsosValidationSchema}
     />,
     <MailStep
       key={2}
       onSubmit={handleMailLogin}
-      defaultValues={mailDataLogin}
+      fields={mailFields}
       prevStep={goToPrevStep}
       validationSchema={mailValidationSchema}
     />,
