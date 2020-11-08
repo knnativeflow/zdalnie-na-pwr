@@ -103,7 +103,6 @@ const JsosStep = ({ onSubmit, fields, validationSchema, prevStep }: StepWithLogi
       <LoginForm
         color={THEME.colors.palette.purple}
         {...{ onSubmit, fields, validationSchema }}
-        loginPlaceholder="pwr######"
       />
       <Space size={2} />
       <FooterInfo color={THEME.colors.palette.purple.light}>
@@ -126,7 +125,6 @@ const MailStep = ({ onSubmit, fields, validationSchema, prevStep }: StepWithLogi
       <LoginForm
         color={THEME.colors.palette.blue}
         {...{ onSubmit, fields: fields, validationSchema }}
-        loginPlaceholder="indeks"
       />
       <Space size={2} />
       <FooterInfo color={THEME.colors.palette.blue.light}>
@@ -267,12 +265,12 @@ const ConfigurationPage = () => {
   }
 
   const jsosFields = {
-    login: { defaultValue: jsosDataLogin.login },
-    password: { defaultValue: jsosDataLogin.password }
+    login: { defaultValue: jsosDataLogin.login, placeholder: 'pwr######' },
+    password: { defaultValue: jsosDataLogin.password },
   }
 
   const mailFields = {
-    login: { defaultValue: mailDataLogin.login },
+    login: { defaultValue: mailDataLogin.login, placeholder: 'indeks' },
     password: { defaultValue: mailDataLogin.password }
   }
 

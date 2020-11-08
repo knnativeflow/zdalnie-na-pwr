@@ -53,7 +53,6 @@ const SmailPasswordChangeModal = (props: Props): JSX.Element => {
         <LoginForm
           color={THEME.colors.palette.purple}
           {...{ onSubmit, fields, validationSchema: mailValidationSchema, submitText }}
-          loginPlaceholder="indeks"
         />
         <Button glow color={THEME.colors.palette.purple.dark} fullWidth variant="primary" onClick={onClose}>
           Anuluj

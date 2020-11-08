@@ -1,13 +1,13 @@
 import React, { SyntheticEvent, useState } from 'react'
+import { useHistory } from 'react-router'
 import { useDispatch } from 'react-redux'
-import { shell } from 'electron'
 
+import { shell } from 'electron'
 import { clearUser } from 'actions/user'
 import styled from '@emotion/styled'
 import Button from 'components/Button'
 import { THEME } from 'base/theme/theme'
 import SmailPasswordChangeModal from 'components/SmailModal/SmailPasswordChangeModal'
-import { useHistory } from 'react-router'
 
 const APP_VERSION = process.env.npm_package_version
 
@@ -47,7 +47,7 @@ const SettingsPage = () => {
   const logoutUser = () => dispatch(clearUser())
   const history = useHistory()
   const urlParams = new URLSearchParams(history.location.search)
-  const forcePasswordUpdate = (!!urlParams.get('forcePasswordUpdate') && urlParams.get('forcePasswordUpdate') == 'true') ?? false
+  const forcePasswordUpdate = urlParams.get('forcePasswordUpdate') === 'true'
   const [isPasswordChangeModalOpen, setIsPasswordChangeModal] = useState(forcePasswordUpdate)
 
   const handleLink = (e: SyntheticEvent<HTMLAnchorElement>) => {
