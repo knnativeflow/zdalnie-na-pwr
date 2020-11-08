@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { forwardRef, useState } from 'react'
+import React, { forwardRef, useEffect, useState } from 'react'
 import { FaEye, FaEyeSlash } from 'react-icons/all'
 import styled from '@emotion/styled'
 import { keyframes } from '@emotion/core'
@@ -34,6 +34,10 @@ const Input = forwardRef(
   ) => {
     const [isPasswordShown, setPasswordShown] = useState(rest.type !== 'password')
     const type = rest.type === 'password' && isPasswordShown ? 'text' : rest.type
+
+    useEffect(() => {
+      if (disabled && isPasswordShown) setPasswordShown(false)
+    }, [disabled, isPasswordShown])
 
     return (
       <>
