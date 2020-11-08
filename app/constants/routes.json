@@ -1,6 +1,5 @@
 {
   "INDEX": "/",
   "CALENDAR": "/calendar",
-  "SETTINGS": "/settings",
-  "SETTINGS_PASSWORD_UPDATE": "/settings/password-update"
+  "SETTINGS": "/settings"
 }

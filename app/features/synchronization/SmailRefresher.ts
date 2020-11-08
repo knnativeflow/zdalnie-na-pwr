@@ -16,7 +16,7 @@ class SmailRefresher {
       return studentMail.getZoomLinks()
     } catch (e) {
       if(e.message == SMAIL_ERRORS.WRONG_LOGIN_PASSWORD) {
-        history.push(routes.SETTINGS_PASSWORD_UPDATE)
+        history.push(routes.SETTINGS + '?forcePasswordUpdate=true')
       }
       throw e
     }

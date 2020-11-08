@@ -8,6 +8,7 @@ import Button from 'components/Button'
 import { THEME } from 'base/theme/theme'
 import SmailPasswordChangeModal from 'components/SmailModal/SmailPasswordChangeModal'
 import Space from 'components/Space'
+import { useHistory } from 'react-router'
 
 const APP_VERSION = process.env.npm_package_version
 
@@ -42,14 +43,13 @@ const Text = styled.p`
   color: #292b31;
 `
 
-export interface Props {
-  forcePasswordUpdate?: boolean
-}
-
-const SettingsPage = ({forcePasswordUpdate}: Props) => {
+const SettingsPage = () => {
   const dispatch = useDispatch()
   const logoutUser = () => dispatch(clearUser())
-  const [isPasswordChangeModalOpen, setIsPasswordChangeModal] = useState(forcePasswordUpdate ?? false)
+  const history = useHistory()
+  const urlParams = new URLSearchParams(history.location.search)
+  const forcePasswordUpdate = (!!urlParams.get('forcePasswordUpdate') && urlParams.get('forcePasswordUpdate') == 'true') ?? false
+  const [isPasswordChangeModalOpen, setIsPasswordChangeModal] = useState(forcePasswordUpdate)
 
   const handleLink = (e: SyntheticEvent<HTMLAnchorElement>) => {
     e.preventDefault()
@@ -84,7 +84,7 @@ const SettingsPage = ({forcePasswordUpdate}: Props) => {
       </Button>
       <Space size={1} />
       <SmailPasswordChangeModal
-        forcedUpdate={forcePasswordUpdate ?? false}
+        forcedUpdate={forcePasswordUpdate}
         open={isPasswordChangeModalOpen}
         onSuccess={closePasswordChangeModal}
         onClose={closePasswordChangeModal}
