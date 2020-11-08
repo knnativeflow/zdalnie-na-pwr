@@ -30,18 +30,18 @@ export type LoginFormProps = {
     light: string
     main: string
     dark: string
-  },
+  }
   fields: {
     login?: {
-      defaultValue?: string,
-      disabled?: boolean,
+      defaultValue?: string
+      disabled?: boolean
       placeholder?: string
-    },
+    }
     password?: {
-      defaultValue?: string,
+      defaultValue?: string
       disabled?: boolean
     }
-  },
+  }
   submitText?: string
 }
 

@@ -1,15 +1,15 @@
 import React, { SyntheticEvent, useState } from 'react'
 import { useHistory } from 'react-router'
 import { useDispatch } from 'react-redux'
+import { remote, shell } from 'electron'
 
-import { shell } from 'electron'
 import { clearUser } from 'actions/user'
 import styled from '@emotion/styled'
 import Button from 'components/Button'
 import { THEME } from 'base/theme/theme'
 import SmailPasswordChangeModal from 'components/SmailModal/SmailPasswordChangeModal'
 
-const APP_VERSION = process.env.npm_package_version
+const APP_VERSION = remote.app.getVersion()
 
 const Wrapper = styled.div`
   padding: 16px;
@@ -78,13 +78,8 @@ const SettingsPage = () => {
       </Text>
       <Text>Wersja aplikacji {APP_VERSION}</Text>
       <ClearDataButton onClick={logoutUser}>Wyczyść dane aplikacji</ClearDataButton>
-      <div style={{margin: '20px 0'}}>
-        <Button
-          glow
-          color={THEME.colors.palette.purple.main}
-          variant="primary"
-          onClick={handlePasswordChange}
-        >
+      <div style={{ margin: '20px 0' }}>
+        <Button glow color={THEME.colors.palette.purple.main} variant="primary" onClick={handlePasswordChange}>
           Zmien hasło do poczty
         </Button>
       </div>
