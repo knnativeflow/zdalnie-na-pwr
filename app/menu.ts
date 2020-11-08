@@ -45,26 +45,19 @@ export default class MenuBuilder {
       label: 'Electron',
       submenu: [
         {
-          label: 'About ElectronReact',
+          label: 'Wersja aplikacji',
           selector: 'orderFrontStandardAboutPanel:',
         },
         { type: 'separator' },
-        { label: 'Services', submenu: [] },
-        { type: 'separator' },
         {
-          label: 'Hide ElectronReact',
+          label: 'Ukryj aplikację',
           accelerator: 'Command+H',
           selector: 'hide:',
         },
-        {
-          label: 'Hide Others',
-          accelerator: 'Command+Shift+H',
-          selector: 'hideOtherApplications:',
-        },
-        { label: 'Show All', selector: 'unhideAllApplications:' },
+        { label: 'Pokaż aplikację', selector: 'unhideAllApplications:' },
         { type: 'separator' },
         {
-          label: 'Quit',
+          label: 'Zamknij aplikację',
           accelerator: 'Command+Q',
           click: () => {
             app.quit()
@@ -73,16 +66,13 @@ export default class MenuBuilder {
       ],
     }
     const subMenuEdit: DarwinMenuItemConstructorOptions = {
-      label: 'Edit',
+      label: 'Edytuj',
       submenu: [
-        { label: 'Undo', accelerator: 'Command+Z', selector: 'undo:' },
-        { label: 'Redo', accelerator: 'Shift+Command+Z', selector: 'redo:' },
-        { type: 'separator' },
-        { label: 'Cut', accelerator: 'Command+X', selector: 'cut:' },
-        { label: 'Copy', accelerator: 'Command+C', selector: 'copy:' },
-        { label: 'Paste', accelerator: 'Command+V', selector: 'paste:' },
+        { label: 'Wytnij', accelerator: 'Command+X', selector: 'cut:' },
+        { label: 'Kopiuj', accelerator: 'Command+C', selector: 'copy:' },
+        { label: 'Wklej', accelerator: 'Command+V', selector: 'paste:' },
         {
-          label: 'Select All',
+          label: 'Zaznacz wszystko',
           accelerator: 'Command+A',
           selector: 'selectAll:',
         },
@@ -115,10 +105,10 @@ export default class MenuBuilder {
       ],
     }
     const subMenuViewProd: MenuItemConstructorOptions = {
-      label: 'View',
+      label: 'Widok',
       submenu: [
         {
-          label: 'Toggle Full Screen',
+          label: 'Przełącz tryb pełnoekranowy',
           accelerator: 'Ctrl+Command+F',
           click: () => {
             this.mainWindow.setFullScreen(!this.mainWindow.isFullScreen())
@@ -127,43 +117,42 @@ export default class MenuBuilder {
       ],
     }
     const subMenuWindow: DarwinMenuItemConstructorOptions = {
-      label: 'Window',
+      label: 'Okno',
       submenu: [
         {
-          label: 'Minimize',
+          label: 'Minimalizuj okno',
           accelerator: 'Command+M',
           selector: 'performMiniaturize:',
         },
-        { label: 'Close', accelerator: 'Command+W', selector: 'performClose:' },
-        { type: 'separator' },
-        { label: 'Bring All to Front', selector: 'arrangeInFront:' },
+        { label: 'Zamknij okno', accelerator: 'Command+W', selector: 'performClose:' },
       ],
     }
     const subMenuHelp: MenuItemConstructorOptions = {
-      label: 'Help',
+      label: 'Pomoc',
       submenu: [
         {
-          label: 'Learn More',
+          label: 'Strona aplikacji',
           click() {
-            shell.openExternal('https://electronjs.org')
+            shell.openExternal('https://zdalnie.napwr.pl')
           },
         },
         {
-          label: 'Documentation',
+          label: 'Publiczny kod aplikacji',
           click() {
-            shell.openExternal('https://github.com/electron/electron/tree/master/docs#readme')
+            shell.openExternal('https://github.com/knnativeflow/zdalnie-na-pwr')
           },
         },
         {
-          label: 'Community Discussions',
+          label: 'Fanpage KN Native Flow',
           click() {
-            shell.openExternal('https://www.electronjs.org/community')
+            shell.openExternal('https://facebook.com/knnativeflow')
           },
         },
+        { type: 'separator' },
         {
-          label: 'Search Issues',
+          label: 'Zgłoś błąd',
           click() {
-            shell.openExternal('https://github.com/electron/electron/issues')
+            shell.openExternal('https://www.facebook.com/messages/t/knnativeflow')
           },
         },
       ],
@@ -231,30 +220,31 @@ export default class MenuBuilder {
               ],
       },
       {
-        label: 'Help',
+        label: 'Pomoc',
         submenu: [
           {
-            label: 'Learn More',
+            label: 'Strona aplikacji',
             click() {
-              shell.openExternal('https://electronjs.org')
+              shell.openExternal('https://zdalnie.napwr.pl')
             },
           },
           {
-            label: 'Documentation',
+            label: 'Publiczny kod aplikacji',
             click() {
-              shell.openExternal('https://github.com/electron/electron/tree/master/docs#readme')
+              shell.openExternal('https://github.com/knnativeflow/zdalnie-na-pwr')
             },
           },
           {
-            label: 'Community Discussions',
+            label: 'Fanpage KN Native Flow',
             click() {
-              shell.openExternal('https://www.electronjs.org/community')
+              shell.openExternal('https://facebook.com/knnativeflow')
             },
           },
+          { type: 'separator' },
           {
-            label: 'Search Issues',
+            label: 'Zgłoś błąd',
             click() {
-              shell.openExternal('https://github.com/electron/electron/issues')
+              shell.openExternal('https://www.facebook.com/messages/t/knnativeflow')
             },
           },
         ],

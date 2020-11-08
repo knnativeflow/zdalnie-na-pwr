@@ -16,6 +16,7 @@ import { app, BrowserWindow } from 'electron'
 
 import AppUpdater from './features/appUpdater'
 import initSentry from './initSentry'
+import MenuBuilder from './menu'
 
 const IS_DEV = process.env.NODE_ENV === 'development'
 const IS_MAC = process.platform === 'darwin'
@@ -80,7 +81,8 @@ const createWindow = async () => {
           },
   })
 
-  mainWindow.setMenu(null)
+  const builderMenu = new MenuBuilder(mainWindow)
+  builderMenu.buildMenu()
 
   mainWindow.loadURL(`file://${__dirname}/app.html`)
 
