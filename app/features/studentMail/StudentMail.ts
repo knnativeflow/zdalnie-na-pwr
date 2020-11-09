@@ -9,7 +9,7 @@ import { loginResponseDecoder } from './decoders'
 
 const STUDENT_MAIL_URL = 'https://s.student.pwr.edu.pl'
 
-export enum SMAIL_ERRORS {
+export enum SmailErrors {
   WRONG_RESPONSE = 'Błędna odpowiedź serwera poczty studenckiej',
   WRONG_LOGIN_PASSWORD = 'Błędy login lub hasło',
   UNKNOWN = 'Nieznany błąd',
@@ -97,17 +97,17 @@ class StudentMail {
     const decoded = loginResponseDecoder.decode(json)
 
     if (!isRight(decoded)) {
-      throw new Error(SMAIL_ERRORS.WRONG_RESPONSE)
+      throw new Error(SmailErrors.WRONG_RESPONSE)
     }
 
     const errorCode = decoded.right.iwcp['error-code']
 
     if (errorCode === '1') {
-      throw new Error(SMAIL_ERRORS.WRONG_LOGIN_PASSWORD)
+      throw new Error(SmailErrors.WRONG_LOGIN_PASSWORD)
     }
 
     if (errorCode !== '0') {
-      throw new Error(SMAIL_ERRORS.UNKNOWN)
+      throw new Error(SmailErrors.UNKNOWN)
     }
 
     this.token = decoded.right.iwcp.loginResponse?.appToken.split('=')[1] || ''
@@ -116,7 +116,7 @@ class StudentMail {
   public async getZoomLinks(): Promise<IEventZoomLink[]> {
     const baseMailList = await this.getMailList(15, { subject: 'Planowany termin zdal' })
 
-    return baseMailList.reduce<Promise<IEventZoomLink[]>>(async (promiseAgg, mail) => {
+    return baseMailList.reverse().reduce<Promise<IEventZoomLink[]>>(async (promiseAgg, mail) => {
       const agg = await promiseAgg
       const event = await this.getEventFromMail(mail.id)
 

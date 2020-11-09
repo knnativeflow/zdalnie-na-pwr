@@ -1,7 +1,7 @@
-import {history} from 'store'
+import { history } from 'store'
 import PasswordManager from 'features/passwords'
 import studentMail from 'features/studentMail'
-import { SMAIL_ERRORS } from 'features/studentMail/StudentMail'
+import { SmailErrors } from 'features/studentMail/StudentMail'
 import { IEventZoomLink } from 'domain/event'
 
 import routes from 'constants/routes.json'
@@ -15,12 +15,11 @@ class SmailRefresher {
 
       return studentMail.getZoomLinks()
     } catch (e) {
-      if(e.message == SMAIL_ERRORS.WRONG_LOGIN_PASSWORD) {
-        history.push(routes.SETTINGS + '?forcePasswordUpdate=true')
+      if (e.message === SmailErrors.WRONG_LOGIN_PASSWORD) {
+        history.push(`${routes.SETTINGS}?forcePasswordUpdate=true`)
       }
       throw e
     }
-
   }
 }
 

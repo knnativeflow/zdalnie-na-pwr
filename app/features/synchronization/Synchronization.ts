@@ -33,7 +33,7 @@ export default class Synchronization {
     try {
       this.redux.store.dispatch(setFetchStatusMail({ isLoading: true, error: '' }))
       const zoomLinks = await SmailRefresher.refresh()
-      this.redux.store.dispatch(addZoomLinks(zoomLinks, false))
+      this.redux.store.dispatch(addZoomLinks(zoomLinks, true))
       this.redux.store.dispatch(
         setFetchStatusMail({ isLoading: false, error: '', lastScan: parseDateToString(new Date()) })
       )

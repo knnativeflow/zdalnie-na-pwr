@@ -124,7 +124,7 @@ const AppBar = () => {
     try {
       dispatch(setFetchStatusMail({ isLoading: true, error: '' }))
       const zoomLinks = await SmailRefresher.refresh()
-      dispatch(addZoomLinks(zoomLinks, false))
+      dispatch(addZoomLinks(zoomLinks, true))
       dispatch(setFetchStatusMail({ isLoading: false, lastScan: parseDateToString(new Date()), error: '' }))
     } catch (e) {
       dispatch(setFetchStatusMail({ isLoading: false, error: e.message }))
