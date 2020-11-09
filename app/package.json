@@ -1,8 +1,7 @@
 {
   "name": "zdalnie-na-pwr",
   "productName": "Zdalnie na PWr",
-  "version": "0.1.1",
-  "versionNumber": 2,
+  "version": "0.1.2",
   "description": "Aplikacja wspierająca e-learning na Politechnice Wrocławskiej",
   "main": "./main.prod.js",
   "author": {
