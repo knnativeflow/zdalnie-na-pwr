@@ -60,13 +60,14 @@ class StudentMail {
     const eventKeys = Object.keys(events)
 
     if (eventKeys.length !== 1) {
-      console.error('Invalid ical file', response.text)
+      console.error('StudentMail.ts', 'getEventFromMail', 'Invalid ical file', response.text)
       return null
     }
 
     const event = events[eventKeys[0]]
 
     if (!(event.start instanceof Date) || typeof event.summary !== 'string' || typeof event.description !== 'string') {
+      console.error('StudentMail.ts', 'getEventFromMail', 'Invalid data from ical', event)
       throw new Error('Invalid data in ical')
     }
 
@@ -97,6 +98,7 @@ class StudentMail {
     const decoded = loginResponseDecoder.decode(json)
 
     if (!isRight(decoded)) {
+      console.error('StudentMail.ts', 'login', SmailErrors.WRONG_RESPONSE, response.text)
       throw new Error(SmailErrors.WRONG_RESPONSE)
     }
 
@@ -107,6 +109,7 @@ class StudentMail {
     }
 
     if (errorCode !== '0') {
+      console.error('StudentMail.ts', 'login', SmailErrors.UNKNOWN, response.text)
       throw new Error(SmailErrors.UNKNOWN)
     }
 
@@ -137,6 +140,7 @@ class StudentMail {
       const fullMail = await this.getMail(mail)
 
       if (!fullMail) {
+        console.error('StudentMail.ts', 'getTeamsLinks')
         return agg
       }
 
@@ -187,6 +191,7 @@ class StudentMail {
     const mailList = parsedResponse[6]
 
     if (!Array.isArray(mailList)) {
+      console.error('StudentMail.ts', 'getMailList', response.text)
       return Promise.reject(new Error('Unrecognized variable type.'))
     }
 
@@ -212,6 +217,7 @@ class StudentMail {
     const parsedResponse: Array<unknown> = await StudentMail.parseResponse(response.text)
 
     if (Array.isArray(parsedResponse[8]) && parsedResponse[8].length !== 3) {
+      console.error('StudentMail.ts', 'getMail', 'Invalid mail', response.text)
       return null
     }
 

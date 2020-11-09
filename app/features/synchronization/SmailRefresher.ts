@@ -14,11 +14,11 @@ class SmailRefresher {
       await studentMail.login(account, password)
 
       return studentMail.getZoomLinks()
-    } catch (e) {
-      if (e.message === SmailErrors.WRONG_LOGIN_PASSWORD) {
+    } catch (error) {
+      if (error.message === SmailErrors.WRONG_LOGIN_PASSWORD) {
         history.push(`${routes.SETTINGS}?forcePasswordUpdate=true`)
       }
-      throw e
+      throw error
     }
   }
 }

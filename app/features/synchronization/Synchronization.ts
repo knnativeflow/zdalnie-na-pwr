@@ -37,9 +37,9 @@ export default class Synchronization {
       this.redux.store.dispatch(
         setFetchStatusMail({ isLoading: false, error: '', lastScan: parseDateToString(new Date()) })
       )
-    } catch (e) {
-      console.error('Bład podczas odświeżania maili z Poczty Studenckiej.', e)
-      this.redux.store.dispatch(setFetchStatusMail({ isLoading: false, error: e.message }))
+    } catch (error) {
+      console.error('Synchronization.ts', 'refreshSmail', error?.message, error)
+      this.redux.store.dispatch(setFetchStatusMail({ isLoading: false, error: error?.message }))
     }
   }
 }

@@ -1,11 +1,8 @@
-import log from 'electron-log'
 import { app, dialog } from 'electron'
 import { autoUpdater } from 'electron-updater'
 
 class AppUpdater {
   constructor() {
-    log.transports.file.level = 'info'
-
     autoUpdater.setFeedURL({
       provider: 'github',
       repo: process.env.REPO_NAME,
@@ -21,7 +18,7 @@ class AppUpdater {
         message: `Wystąpił błąd podczas aktualizacji. Przekaż poniższy komunikat do twórców: \n ${err.message}`,
       })
 
-      console.error('Error auto update', err.message)
+      console.error('appUpdater.ts', 'listener on error', err?.message)
     })
 
     autoUpdater.on('update-downloaded', () => {
@@ -39,7 +36,9 @@ class AppUpdater {
 
           return result
         })
-        .catch((err) => console.log(`Error auto updater dialog ${err.message}`))
+        .catch((error) => {
+          console.error('appUpdater.ts', 'showMessageBox', error?.message)
+        })
     })
 
     void autoUpdater.checkForUpdatesAndNotify()
