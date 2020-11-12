@@ -197,9 +197,7 @@ const Calendar = ({ events, onEventClick }: Props) => {
         height="auto"
         timeZone="local"
         plugins={[timeGridPlugin]}
-        initialView="timeGrid"
-        dayCount={5}
-        duration={{ days: 5 }}
+        initialView="timeGridWeek"
         allDaySlot={false}
         slotDuration="00:30:00"
         slotMinTime="07:00:00"
