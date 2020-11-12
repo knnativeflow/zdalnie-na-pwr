@@ -179,7 +179,7 @@ class JsosAuth {
         if (isGatewayTimeout) {
           throw new Error(`
           Próbowaliśmy trzy razy połączyć Cię z Jsosem.
-          Jednak jak wiesz, jesteś jednym z tysięcy użytkowników próbujących się do niego dostać w tej chwili;) \n
+          Jednak jak wiesz, jesteś jednym z tysięcy użytkowników próbujących się do niego dostać w tej chwili ;) \n
           Daj biedakowi chwilę wytchnienia i spróbuj ponownie za jakiś czas.
           `)
         } else {

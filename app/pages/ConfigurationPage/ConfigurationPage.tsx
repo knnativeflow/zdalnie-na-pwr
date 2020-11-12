@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, PropsWithChildren } from 'react'
 import { useDispatch } from 'react-redux'
 import { Box, FormControlLabel, Radio } from '@material-ui/core'
 import styled from '@emotion/styled'
+import { shell } from 'electron'
 
 import studentMail from 'features/studentMail'
 import { jsosAuth, jsosExtractor } from 'features/jsos'
@@ -21,6 +22,7 @@ import Space from 'components/Space'
 import img1 from 'assets/images/step1.png'
 import img2 from 'assets/images/step2.png'
 import img3 from 'assets/images/step3.png'
+import img4 from 'assets/images/step4.png'
 
 import ConfigurationMockup from './ConfigurationMockup'
 import { jsosValidationSchema, mailValidationSchema } from './validationsSchemas'
@@ -73,6 +75,21 @@ const FooterInfo = ({ children, color }: FooterInfoProps) => (
   </Text>
 )
 
+type LinkProps = PropsWithChildren<{
+  url: string
+  className?: string
+}>
+
+const Link = styled(({ url, children, className }: LinkProps) => (
+  <span onClick={() => shell.openExternal(url)} className={className}>
+    {children}
+  </span>
+))`
+  color: ${THEME.colors.palette.blue.main};
+  font-weight: 700;
+  cursor: pointer;
+`
+
 const StartStep = ({ nextStep }: { nextStep: () => void }) => (
   <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
     <StyledSidebar>
@@ -100,10 +117,7 @@ const JsosStep = ({ onSubmit, fields, validationSchema, prevStep }: StepWithLogi
       <Space size={2} />
       <h2>Zaloguj się do JSOS</h2>
       <Space size={2} />
-      <LoginForm
-        color={THEME.colors.palette.purple}
-        {...{ onSubmit, fields, validationSchema }}
-      />
+      <LoginForm color={THEME.colors.palette.purple} {...{ onSubmit, fields, validationSchema }} />
       <Space size={2} />
       <FooterInfo color={THEME.colors.palette.purple.light}>
         Aktualnie jedyną informacją pobieraną z JSOS jest siatka zajęć oraz lista kursów. Cały proces wykonywany jest
@@ -122,10 +136,7 @@ const MailStep = ({ onSubmit, fields, validationSchema, prevStep }: StepWithLogi
       <Space size={2} />
       <h2>Zaloguj się do poczty studenckiej</h2>
       <Space size={2} />
-      <LoginForm
-        color={THEME.colors.palette.blue}
-        {...{ onSubmit, fields: fields, validationSchema }}
-      />
+      <LoginForm color={THEME.colors.palette.blue} {...{ onSubmit, fields, validationSchema }} />
       <Space size={2} />
       <FooterInfo color={THEME.colors.palette.blue.light}>
         Logowanie do poczty wymagane jest do pobierania automatycznie linków do Zooma oraz linków do Teamsów. Po co
@@ -182,27 +193,55 @@ const SavePasswordStep = (props: { prevStep: () => void; onPasswordSave: (hasAgr
 }
 
 const CongratulationsStep = ({ onConfigurationExit }: { onConfigurationExit: () => void }) => (
-  <Box
-    width="100vw"
-    height="100vh"
-    overflow="hidden"
-    position="relative"
-    display="flex"
-    flexDirection="column"
-    justifyContent="center"
-    alignItems="center"
-  >
-    <Text fontWeight="bold" size={2}>
-      Wszystko gotowe!
-      <span role="img" aria-label="gwiazdki">
-        ✨
-      </span>
-    </Text>
-    <Text>Możesz już zacząć korzystać z aplikacji.</Text>
-    <Space size={2} />
-    <Button color={THEME.colors.palette.pink.main} variant="primary" glow onClick={onConfigurationExit}>
-      Przejdź do aplikacji
-    </Button>
+  <Box width="100vw" height="100vh" overflow="hidden" position="relative" display="flex">
+    <StyledSidebar style={{ minWidth: 425, maxWidth: 500, width: '50%' }}>
+      <Text fontWeight="bold" size={2}>
+        Wszystko gotowe!
+        <span role="img" aria-label="gwiazdki">
+          ✨
+        </span>
+      </Text>
+      <Text size="16px" color="#2B2B2B">
+        Garśc informacji od twórców:
+      </Text>
+      <Space size={5.5} />
+      <Text fontWeight={700} size="20px">
+        <span role="img" aria-label="kawa">
+          ☕️
+        </span>
+        Aplikacja jest w trakcie rozwoju
+      </Text>
+      <Text>
+        ...więc mogą pojawić się błędy. Jesteśmy tylko studentami, a aplikację tworzymy po godzinach nauki i pracy. Poza
+        tym - walka z systemami politechniki to nie lada wyzwanie{' '}
+        <span role="img" aria-label="uśmiechnięta buźka">
+          😅
+        </span>
+      </Text>
+      <Space size={2} />
+      <Text fontWeight={700} size="20px">
+        <span role="img" aria-label="ziemia">
+          ‍🌍
+        </span>
+        Kod dostępny jest publicznie
+      </Text>
+      <Text>
+        Programistów zachęcamy do odwiedzenia{' '}
+        <Link url="https://github.com/knnativeflow/zdalnie-na-pwr">naszego GitHuba</Link> i dodania czegoś od siebie.
+      </Text>
+      <Space size={2} />
+      <Space size={5} />
+      <Button
+        color={THEME.colors.palette.pink.main}
+        variant="primary"
+        glow
+        onClick={onConfigurationExit}
+        style={{ alignSelf: 'center' }}
+      >
+        Przejdź do aplikacji
+      </Button>
+    </StyledSidebar>
+    <ConfigurationMockup color={THEME.colors.palette.pink.light} src={img4} isSummary />
   </Box>
 )
 
@@ -271,7 +310,7 @@ const ConfigurationPage = () => {
 
   const mailFields = {
     login: { defaultValue: mailDataLogin.login, placeholder: 'indeks' },
-    password: { defaultValue: mailDataLogin.password }
+    password: { defaultValue: mailDataLogin.password },
   }
 
   const handleExitConfiguration = () => {

@@ -10,6 +10,9 @@ module.exports = {
     'react/require-default-props': 'off',
     'no-console': ['warn', { allow: ['warn', 'error'] }],
     'react/display-name': 'off',
+    'jsx-a11y/click-events-have-key-events': 'off',
+    'jsx-a11y/no-static-element-interactions': 'off',
+    'jsx-a11y/anchor-is-valid': 'off',
   },
   parserOptions: {
     ecmaVersion: 2020,
