@@ -115,14 +115,24 @@ const EventInfo = ({ event }: Props) => {
 
       {hasPlatforms && (
         <InfoGrid>
-          {mergedPlatforms.zoom?.url && (
+          {eventCourse.platforms.zoom?.url && (
             <InfoWithIcon
-              onClick={handleOpenLink(mergedPlatforms.zoom.url)}
+              onClick={handleOpenLink(eventCourse.platforms.zoom.url)}
               icon={FaVideo}
               title="ZOOM"
               color={THEME.colors.brand.zoom}
             >
-              {platformsEvent.zoom ? 'spotkanie jednorazowe' : 'spotkanie cotygodniowe'}
+              spotkanie odnawialne
+            </InfoWithIcon>
+          )}
+          {event.platforms.zoom?.url && (
+            <InfoWithIcon
+              onClick={handleOpenLink(event.platforms.zoom.url)}
+              icon={FaVideo}
+              title="ZOOM"
+              color={THEME.colors.brand.zoom}
+            >
+              spotkanie jednorazowe
             </InfoWithIcon>
           )}
           {usingZoomPlatform && !mergedPlatforms.zoom && (

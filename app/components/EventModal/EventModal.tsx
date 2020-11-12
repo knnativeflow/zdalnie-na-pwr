@@ -102,15 +102,27 @@ const EventModal = ({ event, onClose, isOpen }: Props) => {
 
           {hasPlatforms && (
             <Grid container spacing={1}>
-              {mergedPlatforms.zoom?.url && (
+              {eventCourse?.platforms.zoom?.url && (
                 <Grid item xs={12} sm={6}>
                   <InfoWithIcon
-                    onClick={handleOpenLink(mergedPlatforms.zoom.url)}
+                    onClick={handleOpenLink(eventCourse.platforms.zoom.url)}
                     icon={FaVideo}
                     title="ZOOM"
                     color={THEME.colors.brand.zoom}
                   >
-                    {platformsEvent.zoom ? 'spotkanie jednorazowe' : 'spotkanie cotygodniowe'}
+                    spotkanie odnawialne
+                  </InfoWithIcon>
+                </Grid>
+              )}
+              {event.platforms.zoom?.url && (
+                <Grid item xs={12} sm={6}>
+                  <InfoWithIcon
+                    onClick={handleOpenLink(event.platforms.zoom.url)}
+                    icon={FaVideo}
+                    title="ZOOM"
+                    color={THEME.colors.brand.zoom}
+                  >
+                    spotkanie jednorazowe
                   </InfoWithIcon>
                 </Grid>
               )}
