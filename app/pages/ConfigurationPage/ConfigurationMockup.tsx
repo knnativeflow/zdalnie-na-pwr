@@ -17,13 +17,14 @@ const StepperFeature = styled.div<FeatureProps>`
 
 type CircleProps = {
   bgColor: string
+  isSummary: boolean
 }
 
 const BackgroundCircle = styled.div<CircleProps>`
   border-radius: 50%;
   width: 130vmax;
   height: 130vmax;
-  right: -70vmax;
+  right: ${({ isSummary }) => (isSummary ? '-75vmax' : '-70vmax')};
   bottom: -35vmax;
   background: ${({ bgColor }) => bgColor};
   position: absolute;
@@ -31,13 +32,14 @@ const BackgroundCircle = styled.div<CircleProps>`
 `
 
 type ConfigurationMockupProps = {
+  isSummary?: boolean
   src?: string
   color: string
 }
 
-const ConfigurationMockup = ({ src = mockup, color }: ConfigurationMockupProps) => (
+const ConfigurationMockup = ({ src = mockup, color, isSummary = false }: ConfigurationMockupProps) => (
   <>
-    <BackgroundCircle bgColor={color} />
+    <BackgroundCircle bgColor={color} isSummary={isSummary} />
     <StepperFeature src={src} />
   </>
 )

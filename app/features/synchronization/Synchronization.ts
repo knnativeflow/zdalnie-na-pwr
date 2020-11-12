@@ -33,13 +33,13 @@ export default class Synchronization {
     try {
       this.redux.store.dispatch(setFetchStatusMail({ isLoading: true, error: '' }))
       const zoomLinks = await SmailRefresher.refresh()
-      this.redux.store.dispatch(addZoomLinks(zoomLinks, false))
+      this.redux.store.dispatch(addZoomLinks(zoomLinks, true))
       this.redux.store.dispatch(
         setFetchStatusMail({ isLoading: false, error: '', lastScan: parseDateToString(new Date()) })
       )
-    } catch (e) {
-      console.error('Bład podczas odświeżania maili z Poczty Studenckiej.', e)
-      this.redux.store.dispatch(setFetchStatusMail({ isLoading: false, error: e.message }))
+    } catch (error) {
+      console.error('Synchronization.ts', 'refreshSmail', error?.message, error)
+      this.redux.store.dispatch(setFetchStatusMail({ isLoading: false, error: error?.message }))
     }
   }
 }

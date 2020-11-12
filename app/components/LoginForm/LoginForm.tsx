@@ -60,6 +60,7 @@ const LoginForm = ({ onSubmit, color, validationSchema, submitText, fields }: Lo
       setIsLoading(true)
       await onSubmit(login, password)
     } catch (error) {
+      console.error('LoginForm.tsx', 'handleSubmit', error?.message, error)
       setApiError(error.message)
       /*
        * It's here beacuse there is page change triggered after success in onSubmit func

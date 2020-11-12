@@ -1,8 +1,7 @@
 {
   "name": "zdalnie-na-pwr",
   "productName": "Zdalnie na PWr",
-  "version": "0.1.1",
-  "versionNumber": 2,
+  "version": "0.1.2",
   "description": "Aplikacja wspierająca e-learning na Politechnice Wrocławskiej",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -286,6 +285,7 @@
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@reduxjs/toolkit": "^1.4.0",
     "@sentry/electron": "^2.0.1",
+    "@sentry/integrations": "^5.27.3",
     "cheerio": "^1.0.0-rc.3",
     "connected-react-router": "^6.6.1",
     "dotenv": "^8.2.0",
