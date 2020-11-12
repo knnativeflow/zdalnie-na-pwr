@@ -2,10 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import styled from '@emotion/styled'
 import { RootState } from 'store'
-import {
-  Dialog, DialogContentText,
-  DialogTitle
-} from '@material-ui/core'
+import { Dialog, DialogContentText, DialogTitle } from '@material-ui/core'
 import Button from 'components/Button'
 import LoginForm from 'components/LoginForm'
 
@@ -23,8 +20,8 @@ interface Props {
 }
 
 const DialogContent = styled.div`
-width: 450px;
-padding: 10px 30px 20px 30px;
+  width: 450px;
+  padding: 10px 30px 20px 30px;
 `
 
 const SmailPasswordChangeModal = (props: Props): JSX.Element => {
@@ -45,16 +42,19 @@ const SmailPasswordChangeModal = (props: Props): JSX.Element => {
     <Dialog open={open} onClose={onClose}>
       <DialogContent>
         <DialogTitle>Zmień hasło do poczty studenckiej</DialogTitle>
-        {forcedUpdate && <DialogContentText>
-          Nie udało się zalogować do poczty zapisanym hasłem.
-          Najprawdopodobniej nastąpiła jego zmiana, prossimy wprowadź nowe.
-        </DialogContentText>}
+        {forcedUpdate && (
+          <DialogContentText>
+            Nie udało się zalogować do poczty zapisanym hasłem. Najprawdopodobniej nastąpiła jego zmiana, prosimy
+            wprowadź nowe.
+          </DialogContentText>
+        )}
         <Space size={1} />
         <LoginForm
           color={THEME.colors.palette.purple}
-          {...{ onSubmit, fields, validationSchema: mailValidationSchema, submitText }}
+          validationSchema={mailValidationSchema}
+          {...{ onSubmit, fields, submitText }}
         />
-        <Button glow color={THEME.colors.palette.purple.dark} fullWidth variant="primary" onClick={onClose}>
+        <Button fullWidth variant="transparent" onClick={onClose}>
           Anuluj
         </Button>
       </DialogContent>

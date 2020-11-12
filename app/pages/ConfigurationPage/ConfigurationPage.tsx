@@ -309,7 +309,7 @@ const ConfigurationPage = () => {
   }
 
   const mailFields = {
-    login: { defaultValue: mailDataLogin.login, placeholder: 'indeks' },
+    login: { defaultValue: mailDataLogin.login, placeholder: 'Indeks' },
     password: { defaultValue: mailDataLogin.password },
   }
 
