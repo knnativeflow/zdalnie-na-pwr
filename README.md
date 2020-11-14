@@ -10,7 +10,7 @@ Udostępniamy kod źródłowy aplikacji z dwóch powodów:
 1. Aplikacja wymaga od użytkownika podania danych logowania do poczty studenckiej oraz JSOSa, które wykorzystywane są tylko w aplikacji. Dla potwierdzenia tego faktu udostępniamy publicznie kod źródłowy.
 2. Aplikacja ma znacznie większy potencjał, niż zaimplementowane do tego momentu funkcjonalności. Zapraszamy każdą osobę, która programuje do pomocy nad rozwojem aplikacji. Jest jeszcze wiele funkcjonalności możliwych do dodania.
 
-### I ty możesz dodać coś siebie
+**I ty możesz dodać coś siebie**
 
 Zainteresowane osoby współtworzeniem aplikacji zapraszamy do kontaktu przez fanapge [KN Native Flow](https://m.me/knnativeflow). Mamy wiele spisanych funkcjonalności, które można zakodować. Jesteśmy również otwarci na nowe propozycje. 
 
