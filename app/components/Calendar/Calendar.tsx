@@ -125,9 +125,15 @@ const EventType = styled.span`
 `
 
 const EventLink = styled.span`
+  width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
   position: absolute;
-  right: 3px;
-  bottom: 5px;
+  right: -1px;
+  bottom: -1px;
   font-size: 12px;
 `
 
@@ -181,7 +187,7 @@ const Calendar = ({ events, onEventClick }: Props) => {
         </EventHeader>
         <EventName>{event.name}</EventName>
         {hasLink && (
-          <EventLink>
+          <EventLink style={{ background: eventInfo.backgroundColor }}>
             <FaLink />
           </EventLink>
         )}
