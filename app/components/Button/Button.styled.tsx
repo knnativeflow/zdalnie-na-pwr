@@ -5,7 +5,7 @@ import { css } from '@emotion/core'
 export type Props = {
   btnColor: string
   fullWidth?: boolean
-  variant?: 'primary' | 'transparent'
+  variant?: 'primary' | 'transparent' | 'outlined'
   shadow?: boolean
   glow?: boolean
   compact?: boolean
@@ -68,8 +68,17 @@ const StyledButton = styled.button<Props>`
   ${({ variant, btnColor }) =>
     variant === 'primary' &&
     css`
+      border: 1px solid ${btnColor};
       background-color: ${btnColor};
       color: ${THEME.colors.light};
+    `}
+
+  ${({ variant, btnColor }) =>
+    variant === 'outlined' &&
+    css`
+      background: none;
+      border: 1px solid ${btnColor};
+      color: ${btnColor};
     `}
 
   ${({ variant }) =>

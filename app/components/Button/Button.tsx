@@ -7,7 +7,7 @@ import StyledButton from './Button.styled'
 export type Props = {
   color?: string
   fullWidth?: boolean
-  variant?: 'primary' | 'transparent'
+  variant?: 'primary' | 'transparent' | 'outlined'
   shadow?: boolean
   glow?: boolean
   compact?: boolean
