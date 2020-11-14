@@ -1,7 +1,7 @@
 import React, { SyntheticEvent, useState } from 'react'
 import { useHistory } from 'react-router'
 import { useDispatch } from 'react-redux'
-import { shell } from 'electron'
+import { remote, shell } from 'electron'
 import styled from '@emotion/styled'
 
 import { clearUser } from 'actions/user'
@@ -23,9 +23,9 @@ const Page = styled.div`
 const Wrapper = styled.div`
   margin: 0 auto;
   display: grid;
-  max-width: 800px;
+  max-width: 900px;
   width: 100%;
-  grid-template-columns: minmax(auto, 360px) minmax(auto, 440px);
+  grid-template-columns: minmax(auto, 450px) minmax(auto, 450px);
   grid-template-rows: auto auto;
   grid-auto-flow: column;
   grid-gap: 16px;
@@ -99,28 +99,62 @@ const SettingsPage = () => {
     setIsPasswordChangeModal(false)
   }
 
+  const handleConfirmClearData = () => {
+    remote.dialog
+      .showMessageBox({
+        type: 'question',
+        buttons: ['Usuń', 'Anuluj'],
+        defaultId: 1,
+        message: `Czy na pewno chcesz usunąć wszystkie dane z aplikacji? Nie będzie można tego cofnać.`,
+      })
+      .then((result) => {
+        if (result.response === 0) {
+          logoutUser()
+        }
+
+        return result
+      })
+      .catch((error) => {
+        console.error('SettingsPage.ts', 'handleConfirmClearData', error?.message)
+      })
+  }
+
   return (
     <Page>
       <Wrapper>
         <Box>
           <Header>Ustawienia</Header>
 
-          <Text>Lorem ipsum dlaczego mogą potrzebować zmienić hasło.</Text>
+          <Text>
+            Zmieniłeś/aś hasło do poczty studenckiej? Zmień hasło również tutaj, żeby zachować dostęp do skanowania
+            linków.
+          </Text>
           <Button glow color={THEME.colors.palette.purple.main} variant="primary" onClick={handlePasswordChange}>
             Zmień hasło do poczty
           </Button>
 
-          <Text>Lorem ipsum z jakimś ostrzeżeniem, że wszystkie dane zostaną usunięte.</Text>
-          <Button color="#b81e44" variant="outlined" onClick={logoutUser}>
+          <Text>
+            Usuwanie wszystkich danych z aplikacji. Zapisane hasła, kursy i zajęcia z JSOSa, znalezione oraz dodane
+            linki zostaną trwale usunięte. <b>Po wykonaniu tej opracji nie będzie możliwości jej cofnięcia.</b>
+          </Text>
+          <Button color="#b81e44" variant="outlined" onClick={handleConfirmClearData}>
             Wyczyść dane aplikacji
           </Button>
         </Box>
 
         <Box>
-          <Header>Zgłaszanie błędów</Header>
+          <Header>Kontakt ogólny/zgłaszanie błędów</Header>
           <Text>
-            Aplikacja cały czas się rozwija bla bla bla. Jeżeli chcesz zgłosić błąd najlepiej zrobić to przez wiadomość
-            na fanpage koła Native Flow.
+            Aplikacja jest w trakcie rozwoju, więc... mogą pojawić się błędy. Jesteśmy tylko studentami, a aplikację
+            tworzymy po godzinach nauki i pracy. Poza tym walka z systemami politechniki to nie lada wyzwanie. Każdy
+            znaleziony błąd można zgłosić do nas przez nasz fanpage koła Native Flow.
+          </Text>
+          <Text>
+            Jesteśmy również otwarci na feedback dotyczący aplikacji. Wszystkie uwagi lub sugestie dotyczące aplikacji
+            będą mile widziane{' '}
+            <span role="img" aria-label="smile icon">
+              😁
+            </span>
           </Text>
           <ContactLink href="https://www.messenger.com/t/knnativeflow" onClick={handleLink}>
             <Messenger /> Skontaktuj się z nami na Messengerze
@@ -143,24 +177,35 @@ const SettingsPage = () => {
             <a href="https://zdalnie.napwr.pl" onClick={handleLink}>
               zdalnie.napwr.pl
             </a>
-            .
+          </Text>
+          <Text>
+            Kod aplikacji dostępny jest publicznie dla potwierdzenia bezpieczeństwa wprowadzanych danych do aplikacji.
+            Poza tym programistów zachęcamy do odwiedzenia{' '}
+            <a href="https://github.com/knnativeflow/zdalnie-na-pwr" onClick={handleLink}>
+              naszego GitHuba
+            </a>{' '}
+            i dodania czegoś od siebie.
           </Text>
         </Box>
         <Box>
           <Header>Informacje</Header>
           <Text>
-            Wersja {APP_VERSION}.<br />
+            Wersja {APP_VERSION}
+            <br />
+            Kod aplikacji dostępny publicznie na{' '}
+            <a href="https://github.com/knnativeflow/zdalnie-na-pwr" onClick={handleLink}>
+              GitHub
+            </a>
+            <br />
             Aplikacja rozwijana przez{' '}
             <a href="https://nativeflow.napwr.pl" onClick={handleLink}>
               KN Native Flow
             </a>
-            .
             <br />
             Za użyczenie konta Apple dziękujemy firmie{' '}
             <a href="http://mindz.it/" onClick={handleLink}>
               Mindz
             </a>
-            .
           </Text>
           <Logos>
             <StyledLogoNF />

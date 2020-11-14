@@ -297,8 +297,6 @@ const ConfigurationPage = () => {
     if (hasAgreed) {
       await PasswordManager.saveJsosCredentials(jsosDataLogin.login, jsosDataLogin.password)
       await PasswordManager.saveSmailCredentials(mailDataLogin.login, mailDataLogin.password)
-
-      dispatch(updateUser({ configured: true }))
     }
     goToNextStep()
   }
