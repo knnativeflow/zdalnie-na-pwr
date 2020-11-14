@@ -4,8 +4,6 @@ import { routerMiddleware } from 'connected-react-router'
 import { createLogger } from 'redux-logger'
 import { ThunkAction } from 'redux-thunk'
 import { persistStore, persistReducer, createMigrate } from 'redux-persist'
-// import createElectronStorage from 'redux-persist-electron-storage'
-// import ElectronStore from 'electron-store'
 import storage from 'redux-persist/lib/storage'
 
 // eslint-disable-next-line import/no-cycle
@@ -16,8 +14,6 @@ export const history = createHashHistory()
 const rootReducer = createRootReducer(history)
 export type RootState = ReturnType<typeof rootReducer>
 
-// const electronStore = new ElectronStore() // TODO: turn on the prod
-
 const router = routerMiddleware(history)
 const middleware = [router]
 
@@ -26,10 +22,6 @@ const shouldIncludeLogger = !excludeLoggerEnvs.includes(process.env.NODE_ENV || 
 
 const persistConfig = {
   key: 'root',
-  // TODO: turn on the prod
-  // storage: createElectronStorage({
-  //   electronStore,
-  // }),
   version: 2,
   storage,
   blacklist: ['router'],
