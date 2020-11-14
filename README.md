@@ -1,6 +1,8 @@
 # Zdalnie na PWr
 
-Aplikacja dla studentów Politechniki Wrocławskiej, która pozwala zapanować nad linkami do zdalnych zajęć. O samej aplikacji, więcej na stronie [zdalnie.napwr.pl](https://zdalnie.napwr.pl).
+Aplikacja dla studentów Politechniki Wrocławskiej, która pozwala zapanować nad linkami do zdalnych zajęć. Dodatkowe informacje oraz aplikacja do pobrania na stronie [zdalnie.napwr.pl](https://zdalnie.napwr.pl).
+
+![Screenshot](/internals/img/screenshot_app.png)
 
 ### Publiczny kod aplikacji (open source)
 
@@ -8,11 +10,18 @@ Udostępniamy kod źródłowy aplikacji z dwóch powodów:
 1. Aplikacja wymaga od użytkownika podania danych logowania do poczty studenckiej oraz JSOSa, które wykorzystywane są tylko w aplikacji. Dla potwierdzenia tego faktu udostępniamy publicznie kod źródłowy.
 2. Aplikacja ma znacznie większy potencjał, niż zaimplementowane do tego momentu funkcjonalności. Zapraszamy każdą osobę, która programuje do pomocy nad rozwojem aplikacji. Jest jeszcze wiele funkcjonalności możliwych do dodania.
 
-### I ty możesz dodać coś siebie
+**I ty możesz dodać coś siebie**
 
 Zainteresowane osoby współtworzeniem aplikacji zapraszamy do kontaktu przez fanapge [KN Native Flow](https://m.me/knnativeflow). Mamy wiele spisanych funkcjonalności, które można zakodować. Jesteśmy również otwarci na nowe propozycje. 
 
 Dla zainteresowanych aplikacja bazuje głównie na takich technologiach jak: TypeScript, Electron i React.
+
+### Zgłaszanie błędów
+
+Aplikacja jest w trakcie rozwoju, więc... mogą pojawić się błędy. Jesteśmy tylko studentami a aplikację tworzymy po godzinach nauki i pracy. Poza tym walka z systemami politechniki to nie lada wyzwanie. Każdy znaleziony błąd można zgłosić do nas najlepiej przez fanpage [KN Native Flow](https://m.me/knnativeflow) lub w formie issue w repozytorium. 
+
+ 
+*** 
  
 ### Uruchomienie wersji deweloperskiej
 
@@ -47,6 +56,12 @@ Do opublikowania aplikacji oraz jej aktualizacji należy wykonać polecenie w te
 yarn package-publish
 ```
 Polecenie buduje aplikację i przygotowuje draft nowego release'a w tym repozytorium. W celu opublikowania wersji wystarczy w repozytorium zatwierdzić draft nowego release'a. 
+
+***
+
+### Kontakt
+
+Wszystkich zainteresowanych kontaktem zapraszamy na nasz fanpage [KN Native Flow](https://m.me/knnativeflow) lub drogą mailową [nativeflow@napwr.pl](mailto:nativeflow@napwr.pl).
 
 ### Twórcy
 
