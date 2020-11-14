@@ -61,19 +61,14 @@ class JsosExtractor {
     selector: CheerioSelector,
     element: CheerioElement
   ): { isTN: boolean; isTP: boolean; start: string; end: string } {
-    if (selector(element).find('td').eq(3).text().includes('Bez terminu')) {
+    const dateColumn = selector(element).find('td').eq(3)
+    if(!dateColumn.text().trim().length ||  dateColumn.text().includes('Bez terminu')) {
       return { start: 'Bez terminu', end: 'Bez terminu', isTP: false, isTN: false }
     }
 
-    const day = selector(element).find('td').eq(3).text().split(',')?.[0].trim()
+    const day = dateColumn.text().split(',')?.[0].trim()
     // @ts-ignore
-    const [, hours] = selector(element)
-      .find('td')
-      .eq(3)
-      .html()
-      .replace(/<sup>/g, ':')
-      .replace(/<\/sup>/g, '')
-      .split(',')
+    const [, hours] = dateColumn.html().replace(/<sup>/g, ':').replace(/<\/sup>/g, '').split(',')
     const [isTP, isTN] = [hours.includes('TP'), hours.includes('TN')]
     const [startHour, endHour] = hours.replace(/TP|TN/, '').trim().split('-')
     return {
@@ -99,27 +94,26 @@ class JsosExtractor {
       method: HttpMethod.GET,
       url: 'https://jsos.pwr.edu.pl/index.php/student/zajecia',
     })
-    console.log(selector)
     if (selector) {
       const selectedOption = selector('#wyborPK option').filter((_, element) => !!selector(element).attr('selected'))
       const isCurrentStudentActive = selector(selectedOption).text().includes('Aktywny')
-      console.log(isCurrentStudentActive)
-      const activeStudents = selector('#wyborPK option')
-        .filter((_, element) => selector(element).text().includes('Aktywny'))
-        .map((_, el) => selector(el).attr('value'))
-      console.log(activeStudents[0], typeof activeStudents[0])
 
-      const activeStudentId = activeStudents[0]
-      console.log(`Aktywny student to: ${activeStudentId}`)
+      if(!isCurrentStudentActive) {
+        const activeStudents = selector('#wyborPK option')
+          .filter((_, element) => selector(element).text().includes('Aktywny'))
+          .map((_, el) => selector(el).attr('value'))
 
-      await jsosAuth.requestWithAuthorization({
-        form: {
-          idSluchacza: activeStudentId,
-        },
-        method: HttpMethod.POST,
-        addCsrfToken: true,
-        url: 'https://jsos.pwr.edu.pl/index.php/site/zmienPK',
-      })
+        const activeStudentId = activeStudents[0]
+
+        await jsosAuth.requestWithAuthorization({
+          form: {
+            idSluchacza: activeStudentId,
+          },
+          method: HttpMethod.POST,
+          addCsrfToken: true,
+          url: 'https://jsos.pwr.edu.pl/index.php/site/zmienPK',
+        })
+      }
     }
   }
 }
