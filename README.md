@@ -1,6 +1,8 @@
 # Zdalnie na PWr
 
-Aplikacja dla studentów Politechniki Wrocławskiej, która pozwala zapanować nad linkami do zdalnych zajęć. O samej aplikacji, więcej na stronie [zdalnie.napwr.pl](https://zdalnie.napwr.pl).
+Aplikacja dla studentów Politechniki Wrocławskiej, która pozwala zapanować nad linkami do zdalnych zajęć. Dodatkowe informacje oraz aplikacja do pobrania na stronie [zdalnie.napwr.pl](https://zdalnie.napwr.pl).
+
+![Screenshot](/internals/img/screenshot_app.png)
 
 ### Publiczny kod aplikacji (open source)
 
@@ -13,6 +15,13 @@ Udostępniamy kod źródłowy aplikacji z dwóch powodów:
 Zainteresowane osoby współtworzeniem aplikacji zapraszamy do kontaktu przez fanapge [KN Native Flow](https://m.me/knnativeflow). Mamy wiele spisanych funkcjonalności, które można zakodować. Jesteśmy również otwarci na nowe propozycje. 
 
 Dla zainteresowanych aplikacja bazuje głównie na takich technologiach jak: TypeScript, Electron i React.
+
+### Zgłaszanie błędów
+
+Aplikacja jest w trakcie rozwoju, więc... mogą pojawić się błędy. Jesteśmy tylko studentami a aplikację tworzymy po godzinach nauki i pracy. Poza tym walka z systemami politechniki to nie lada wyzwanie. Każdy znaleziony błąd można zgłosić do nas najlepiej przez fanpage [KN Native Flow](https://m.me/knnativeflow) lub w formie issue w repozytorium. 
+
+ 
+*** 
  
 ### Uruchomienie wersji deweloperskiej
 
@@ -47,6 +56,12 @@ Do opublikowania aplikacji oraz jej aktualizacji należy wykonać polecenie w te
 yarn package-publish
 ```
 Polecenie buduje aplikację i przygotowuje draft nowego release'a w tym repozytorium. W celu opublikowania wersji wystarczy w repozytorium zatwierdzić draft nowego release'a. 
+
+***
+
+### Kontakt
+
+Wszystkich zainteresowanych kontaktem zapraszamy na nasz fanpage [KN Native Flow](https://m.me/knnativeflow) lub drogą mailową [nativeflow@napwr.pl](mailto:nativeflow@napwr.pl).
 
 ### Twórcy
 
