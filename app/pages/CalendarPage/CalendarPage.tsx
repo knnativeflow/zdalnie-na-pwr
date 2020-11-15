@@ -5,7 +5,7 @@ import styled from '@emotion/styled'
 import Calendar from 'components/Calendar'
 import { RootState } from 'store'
 
-import { IEvent, IEventFullCalendar } from 'domain/event'
+import { IEventFullCalendar, IEventWithCourse } from 'domain/event'
 import { eventColor } from 'utils/courseTypes'
 // import EventModal from 'components/EventModal'
 import useModal from 'hooks/useModal'
@@ -38,13 +38,16 @@ const EventDetailsWrapper = styled.div`
 `
 
 const CalendarPage = () => {
-  const [isModalOpen, openModal, closeModal, modalParams] = useModal<IEvent>()
+  const [isModalOpen, openModal, closeModal, modalParams] = useModal<IEventWithCourse>()
   const events = useSelector((state: RootState) => state.events)
+  const courses = useSelector((state: RootState) => state.courses)
 
   // TODO: move it to calendar component
   const parsedEvents = useMemo<IEventFullCalendar[]>(
     () =>
       events.reduce<IEventFullCalendar[]>((events, event) => {
+        const course = courses.find(({ classesCode }) => classesCode === event.code)
+
         return [
           ...events,
           {
@@ -52,11 +55,11 @@ const CalendarPage = () => {
             end: event.end,
             title: event.name,
             color: eventColor(event.type),
-            resource: event,
+            resource: { ...event, course },
           },
         ]
       }, []),
-    [events]
+    [events, courses]
   )
 
   // TODO: add clear btn for EventInfo

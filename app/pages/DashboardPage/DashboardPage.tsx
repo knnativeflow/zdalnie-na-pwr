@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import moment from 'moment'
 
 import EventInfo from 'components/EventInfo'
-import { IEvent } from 'domain/event'
+import { IEvent, IEventWithCourse } from 'domain/event'
 import { RootState } from 'store'
 import { eventColor, eventFullText } from 'utils/courseTypes'
 import {
@@ -20,7 +20,7 @@ import {
   Wrapper,
 } from './DashboardPage.styled'
 
-type EventItemProps = { event: IEvent; onClick: () => void }
+type EventItemProps = { event: IEventWithCourse; onClick: () => void }
 
 const EventItem = ({ event, onClick }: EventItemProps) => {
   const color = eventColor(event.type)
@@ -47,17 +47,26 @@ const isEndTimeAfterPresent = (event: IEvent) => new Date(event.end).getTime() >
 const sortByEndTime = (a: IEvent, b: IEvent) => (new Date(a.end).getTime() > new Date(b.end).getTime() ? 1 : -1)
 
 const DashboardPage = () => {
-  const [choosenEvent, setChoosenEvent] = useState<IEvent>()
+  const [choosenEvent, setChoosenEvent] = useState<IEventWithCourse>()
   const events = useSelector((state: RootState) => state.events)
+  const courses = useSelector((state: RootState) => state.courses)
 
   const comingEvents = events.filter(isEndTimeAfterPresent).sort(sortByEndTime).slice(0, 5)
+  const comingEventsWithCourses: IEventWithCourse[] = comingEvents.map((event) => {
+    const course = courses.find(({ classesCode }) => classesCode === event.code)
+
+    return {
+      ...event,
+      course,
+    }
+  })
 
   return (
     <Wrapper>
       <ComingLessonsWrapper>
         <Title>Zbliżające się zajęcia</Title>
         <EventsList>
-          {comingEvents.map((event) => (
+          {comingEventsWithCourses.map((event) => (
             <EventItem key={event.start + event.name} {...{ event }} onClick={() => setChoosenEvent(event)} />
           ))}
         </EventsList>

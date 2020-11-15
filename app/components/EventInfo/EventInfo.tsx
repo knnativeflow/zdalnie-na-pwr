@@ -14,8 +14,7 @@ import {
   FaVideoSlash,
 } from 'react-icons/all'
 
-import { IEvent } from 'domain/event'
-import { ICourse } from 'domain/course'
+import { IEventWithCourse } from 'domain/event'
 import { RootState } from 'store'
 import { THEME } from 'base/theme/theme'
 import { eventColor, eventFullText } from 'utils/courseTypes'
@@ -59,11 +58,10 @@ const NoEventText = styled.p`
 `
 
 interface Props {
-  event?: IEvent
+  event?: IEventWithCourse
 }
 
 const EventInfo = ({ event }: Props) => {
-  const courses = useSelector((state: RootState) => state.courses)
   const events = useSelector((state: RootState) => state.events)
 
   if (!event) {
@@ -74,9 +72,7 @@ const EventInfo = ({ event }: Props) => {
     )
   }
 
-  const eventCourse: ICourse | undefined = courses.find(
-    (course) => course.name.startsWith(event.name) && course.type === event.type
-  )
+  const eventCourse = event.course
 
   if (!eventCourse) return <EventInfoWrapper>Nastąpił błąd :(</EventInfoWrapper>
   const { note, classesCode } = eventCourse

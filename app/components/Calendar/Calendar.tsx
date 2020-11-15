@@ -5,8 +5,9 @@ import locale from '@fullcalendar/core/locales/pl'
 import { EventContentArg } from '@fullcalendar/core'
 import { FaChevronLeft, FaChevronRight, FaLink } from 'react-icons/all'
 import styled from '@emotion/styled'
+import { Tooltip } from '@material-ui/core'
 
-import { IEvent, IEventFullCalendar } from 'domain/event'
+import { IEvent, IEventFullCalendar, IEventWithCourse } from 'domain/event'
 import { PlatformType } from 'domain/course'
 
 interface Props {
@@ -175,10 +176,10 @@ const Calendar = ({ events, onEventClick }: Props) => {
     },
   }
 
-  // TODO: improve styles
   const renderEventContent = (eventInfo: EventContentArg) => {
-    const event = eventInfo.event.extendedProps.resource
-    const hasLink = TYPES.some((item) => event.platforms[item])
+    const event = eventInfo.event.extendedProps.resource as IEventWithCourse
+    const platforms = { ...event.platforms, ...event.course?.platforms }
+    const hasLink = TYPES.some((item) => platforms[item])
 
     return (
       <EventContent>
@@ -187,9 +188,16 @@ const Calendar = ({ events, onEventClick }: Props) => {
         </EventHeader>
         <EventName>{event.name}</EventName>
         {hasLink && (
-          <EventLink style={{ background: eventInfo.backgroundColor }}>
-            <FaLink />
-          </EventLink>
+          <Tooltip
+            title={Object.keys(platforms)
+              .filter((namePlatform) => namePlatform !== PlatformType.EPORTAL)
+              .join(', ')}
+            aria-label="platformy"
+          >
+            <EventLink style={{ background: eventInfo.backgroundColor }}>
+              <FaLink />
+            </EventLink>
+          </Tooltip>
         )}
       </EventContent>
     )

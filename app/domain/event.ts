@@ -1,4 +1,4 @@
-import { CourseType, IPlatforms } from './course'
+import { CourseType, IPlatforms, ICourse } from './course'
 
 export interface IEvent {
   type: CourseType
@@ -16,9 +16,13 @@ export interface IEventZoomLink {
   url: string
 }
 
+export interface IEventWithCourse extends IEvent {
+  course?: ICourse
+}
+
 export interface IEventFullCalendar {
   start: string
   end: string
   title: string
-  resource: IEvent
+  resource: IEventWithCourse
 }
