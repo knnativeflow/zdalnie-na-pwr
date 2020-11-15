@@ -169,7 +169,8 @@ class JsosAuth {
       try {
         return await operation()
       } catch (error) {
-        const isGatewayTimeout = error?.statusCode > 400
+        const isBadPassword = error?.statusCode === 500
+        const isGatewayTimeout = error?.statusCode > 400 && !isBadPassword
 
         if (isGatewayTimeout && retryCounter < 3) {
           retryCounter += 1
@@ -182,6 +183,8 @@ class JsosAuth {
           Jednak jak wiesz, jesteś jednym z tysięcy użytkowników próbujących się do niego dostać w tej chwili ;) \n
           Daj biedakowi chwilę wytchnienia i spróbuj ponownie za jakiś czas.
           `)
+        } else if(isBadPassword) {
+          throw new Error(`Błędny login lub hasło.`)
         } else {
           console.error('JsosAuth.ts', 'retry', error?.message, error)
           throw error
