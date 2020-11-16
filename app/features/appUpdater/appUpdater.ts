@@ -7,8 +7,7 @@ class AppUpdater {
       provider: 'github',
       repo: process.env.REPO_NAME,
       owner: process.env.REPO_OWNER,
-      private: true,
-      token: process.env.GH_TOKEN,
+      private: false,
     })
 
     autoUpdater.on('error', (err) => {
