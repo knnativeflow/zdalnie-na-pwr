@@ -75,12 +75,12 @@ const EventInfoNote = ({ savedText, classesCode }: Props) => {
       setLoading(false)
       setSaved(true)
       dispatch(setCourseNote(classesCode, value))
-    }, 3000)
+    }, 1500)
 
     loadingTimeout.current = setTimeout(() => {
       setLoading(true)
       setSaved(false)
-    }, 1000)
+    }, 500)
   }
 
   useEffect(() => {
