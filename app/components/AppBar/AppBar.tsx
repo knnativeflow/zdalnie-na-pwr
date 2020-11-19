@@ -23,7 +23,7 @@ const AppBarWrapper = styled.div<{ isFullscreen: boolean }>`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 10px;
+  padding: 0;
   box-shadow: 0 2px 6px 0 #9ed0ff;
   z-index: 999;
 `
@@ -43,7 +43,7 @@ const link = css`
   border: none;
   opacity: 0.75;
   padding: 15px 0;
-  margin-right: 32px;
+  margin: 0 16px;
   transition: all 0.2s ease-in-out;
   cursor: pointer;
 
@@ -138,7 +138,12 @@ const AppBar = () => {
       <AppBarWrapper isFullscreen={isFullscreen}>
         <ActionsWrapper>
           <Link to={routes.INDEX} activeStyle={activeStyle} exact>
-            <FaRegBookmark /> Panel
+            <FaRegBookmark
+              style={{
+                marginTop: 2, // because of icon shifted center of mass
+              }}
+            />
+            Panel
           </Link>
           <Link to={routes.CALENDAR} activeStyle={activeStyle}>
             <FaRegCalendarAlt /> Kalendarz
