@@ -106,6 +106,7 @@ const SettingsPage = () => {
         buttons: ['Usuń', 'Anuluj'],
         defaultId: 1,
         message: `Czy na pewno chcesz usunąć wszystkie dane z aplikacji? Nie będzie można tego cofnać.`,
+        cancelId: 1,
       })
       .then((result) => {
         if (result.response === 0) {
