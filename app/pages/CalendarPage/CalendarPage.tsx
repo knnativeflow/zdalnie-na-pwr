@@ -5,11 +5,10 @@ import styled from '@emotion/styled'
 import Calendar from 'components/Calendar'
 import { RootState } from 'store'
 
-import { IEventFullCalendar, IEventWithCourse } from 'domain/event'
+import { IEventFullCalendar } from 'domain/event'
 import { eventColor } from 'utils/courseTypes'
-// import EventModal from 'components/EventModal'
-import useModal from 'hooks/useModal'
 import EventInfo from 'components/EventInfo'
+import useEventCompositeKey from 'hooks/useEventCompositeKey'
 
 const CalendarPageWrapper = styled.div`
   display: flex;
@@ -38,7 +37,7 @@ const EventDetailsWrapper = styled.div`
 `
 
 const CalendarPage = () => {
-  const [isModalOpen, openModal, closeModal, modalParams] = useModal<IEventWithCourse>()
+  const { findEventByCompositeKey, setCompositeKey } = useEventCompositeKey()
   const events = useSelector((state: RootState) => state.events)
   const courses = useSelector((state: RootState) => state.courses)
 
@@ -62,20 +61,17 @@ const CalendarPage = () => {
     [events, courses]
   )
 
-  // TODO: add clear btn for EventInfo
-  // TODO: we can still use modal for small screens
+  const choosenEventInfo = parsedEvents.map(({ resource }) => resource).find(findEventByCompositeKey)
   return (
     <>
       <CalendarPageWrapper>
         <CalendarWrapper>
-          <Calendar events={parsedEvents} onEventClick={openModal} />
+          <Calendar events={parsedEvents} onEventClick={({ code, start }) => setCompositeKey({ code, start })} />
         </CalendarWrapper>
         <EventDetailsWrapper>
-          <EventInfo event={modalParams} />
+          <EventInfo event={choosenEventInfo} />
         </EventDetailsWrapper>
       </CalendarPageWrapper>
-      {/* <StudentMailModal open={isOpenStudentMailModal} onClose={() => setIsOpenStudentMailModal(false)} /> */}
-      {/* <EventModal isOpen={isModalOpen} event={modalParams} onClose={closeModal} /> */}
     </>
   )
 }

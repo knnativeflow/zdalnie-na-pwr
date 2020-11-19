@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 import moment from 'moment'
 
+import useEventCompositeKey from 'hooks/useEventCompositeKey'
+import useForceRender from 'hooks/useForceRender'
 import EventInfo from 'components/EventInfo'
 import { IEvent, IEventWithCourse } from 'domain/event'
 import { RootState } from 'store'
@@ -21,6 +23,7 @@ import {
 } from './DashboardPage.styled'
 
 type EventItemProps = { event: IEventWithCourse; onClick: () => void }
+const ONE_MINUTE_IN_MS = 1000 * 60
 
 const EventItem = ({ event, onClick }: EventItemProps) => {
   const color = eventColor(event.type)
@@ -47,7 +50,8 @@ const isEndTimeAfterPresent = (event: IEvent) => new Date(event.end).getTime() >
 const sortByEndTime = (a: IEvent, b: IEvent) => (new Date(a.end).getTime() > new Date(b.end).getTime() ? 1 : -1)
 
 const DashboardPage = () => {
-  const [choosenEvent, setChoosenEvent] = useState<IEventWithCourse>()
+  useForceRender({ intervalTime: ONE_MINUTE_IN_MS })
+  const { findEventByCompositeKey, setCompositeKey } = useEventCompositeKey()
   const events = useSelector((state: RootState) => state.events)
   const courses = useSelector((state: RootState) => state.courses)
 
@@ -61,18 +65,19 @@ const DashboardPage = () => {
     }
   })
 
+  const choosenEventInfo = comingEventsWithCourses.find(findEventByCompositeKey)
   return (
     <Wrapper>
       <ComingLessonsWrapper>
         <Title>Zbliżające się zajęcia</Title>
         <EventsList>
           {comingEventsWithCourses.map((event) => (
-            <EventItem key={event.start + event.name} {...{ event }} onClick={() => setChoosenEvent(event)} />
+            <EventItem key={event.start + event.name} {...{ event }} onClick={() => setCompositeKey(event)} />
           ))}
         </EventsList>
       </ComingLessonsWrapper>
       <EventInfoWrapper>
-        <EventInfo event={choosenEvent} />
+        <EventInfo event={choosenEventInfo} />
       </EventInfoWrapper>
     </Wrapper>
   )
