@@ -67,8 +67,8 @@ class StudentMail {
     const event = events[eventKeys[0]]
 
     if (!(event.start instanceof Date) || typeof event.summary !== 'string' || typeof event.description !== 'string') {
-      console.error('StudentMail.ts', 'getEventFromMail', 'Invalid data from ical', event)
-      throw new Error('Invalid data in ical')
+      console.error('StudentMail.ts', 'getEventFromMail', 'Invalid first event in ical file', event)
+      return null
     }
 
     const foundUrl = event.description.match(/https:\/\/pwr-edu.zoom.us\/j\/[0-9]+(\?pwd=[a-zA-Z0-9]+)*/g)?.[0]
