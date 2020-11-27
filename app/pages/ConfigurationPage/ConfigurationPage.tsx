@@ -7,6 +7,7 @@ import { shell } from 'electron'
 
 import studentMail from 'features/studentMail'
 import { jsosAuth, jsosExtractor } from 'features/jsos'
+import { EducationProgram } from 'features/jsos/JsosExtractor'
 import iCalendar from 'features/iCalendar'
 import PasswordManager from 'features/passwords'
 import { addEvents, addZoomLinks } from 'actions/events'
@@ -18,15 +19,16 @@ import Button from 'components/Button'
 import { THEME } from 'base/theme/theme'
 import { FaChevronLeft } from 'react-icons/all'
 import Text from 'components/Text'
-import Space from 'components/Space'
 
+import Space from 'components/Space'
 import img1 from 'assets/images/step1.png'
 import img2 from 'assets/images/step2.png'
 import img3 from 'assets/images/step3.png'
-import img4 from 'assets/images/step4.png'
 
+import img4 from 'assets/images/step4.png'
 import ConfigurationMockup from './ConfigurationMockup'
 import { jsosValidationSchema, mailValidationSchema } from './validationsSchemas'
+import ProgramSelection from '../../components/ProgramSelection'
 
 const Box = styled.div`
   width: 100vw;
@@ -70,6 +72,12 @@ const BackButtonWrapper = styled.div`
 `
 
 type StepWithLoginProps = Omit<LoginFormProps, 'color'> & { prevStep: () => void }
+
+type SelectionProps<T> = {
+  options: Array<T>,
+  prevStep: () => void,
+  onSelect: (selected: T) => Promise<void>
+}
 
 type GoBackProps = {
   count: number
@@ -157,6 +165,22 @@ const JsosStep = ({ onSubmit, fields, validationSchema, prevStep }: StepWithLogi
           wewnątrz aplikacji i nie różni się od logowania przez przeglądarkę. Twoje dane obsługane są tylko na twoim
           komputerze oraz serwerze Politechniki.
         </FooterInfo>
+      </SidebarContent>
+    </StyledSidebar>
+    <ConfigurationMockup color={THEME.colors.palette.purple.light} src={img2} />
+  </Box>
+)
+
+const EducationProgramSelectionStep = ({prevStep, options, onSelect}: SelectionProps<EducationProgram>) => (
+  <Box>
+    <StyledSidebar>
+      <SidebarContent>
+        <GoBackButton color={THEME.colors.palette.purple} count={1} onClick={prevStep} />
+        <CenterContent>
+          <h2>Wybierz tok studiów:</h2>
+          <Space size={1.5} />
+          <ProgramSelection onSubmit={onSelect} options={options} color={THEME.colors.palette.purple} />
+        </CenterContent>
       </SidebarContent>
     </StyledSidebar>
     <ConfigurationMockup color={THEME.colors.palette.purple.light} src={img2} />
@@ -297,18 +321,39 @@ const ConfigurationPage = () => {
   const [activeStepIndex, setActiveStepIndex] = useState(0)
   const [jsosDataLogin, setJsosDataLogin] = useState({ login: '', password: '' })
   const [mailDataLogin, setMailDataLogin] = useState({ login: '', password: '' })
+  const [availableEducationalPrograms, setAvailableEducationalPrograms] = useState<EducationProgram[]>([])
 
   const goToNextStep = () => setActiveStepIndex(activeStepIndex + 1)
+  const goToNextAfterNextStep = () => setActiveStepIndex(activeStepIndex + 2)
   const goToPrevStep = () => setActiveStepIndex(activeStepIndex - 1)
 
   const handleJsosLogin = async (login: string, password: string): Promise<void> => {
     await jsosAuth.signIn(login, password)
 
     setJsosDataLogin({ login, password })
-    const courses = await jsosExtractor.fetchCourseList()
+    const activeEducationPrograms = await jsosExtractor.fetchActiveEducationPrograms()
+
+    if(activeEducationPrograms.length > 1) {
+      setAvailableEducationalPrograms(activeEducationPrograms)
+      goToNextStep()
+    } else if(activeEducationPrograms.length === 1) {
+      await fetchCourses(activeEducationPrograms[0])
+      goToNextAfterNextStep()
+    } else {
+      throw new Error('Brak aktywnego toku studiów.')
+    }
+  }
+
+  const handleEducationProgramSelection = async (program: EducationProgram) => {
+    await fetchCourses(program)
+    goToNextStep()
+  }
+
+  const fetchCourses = async (educationProgram: EducationProgram) => {
+    const courses = await jsosExtractor.fetchCourseList(educationProgram)
     dispatch(addCourses(courses))
 
-    const iCalendarString = await jsosExtractor.downloadCalendar()
+    const iCalendarString = await jsosExtractor.downloadCalendar(educationProgram)
     const events = iCalendar.getEventsFromString(iCalendarString)
 
     const eventsWithCode = events.map((event) => {
@@ -322,8 +367,6 @@ const ConfigurationPage = () => {
     })
 
     dispatch(addEvents(eventsWithCode))
-
-    goToNextStep()
   }
 
   const handleMailLogin = async (login: string, password: string): Promise<void> => {
@@ -371,15 +414,21 @@ const ConfigurationPage = () => {
       prevStep={goToPrevStep}
       validationSchema={jsosValidationSchema}
     />,
-    <MailStep
+    <EducationProgramSelectionStep
       key={2}
+      options={availableEducationalPrograms}
+      prevStep={goToPrevStep}
+      onSelect={handleEducationProgramSelection}
+    />,
+    <MailStep
+      key={3}
       onSubmit={handleMailLogin}
       fields={mailFields}
       prevStep={goToPrevStep}
       validationSchema={mailValidationSchema}
     />,
-    <SavePasswordStep key={3} onPasswordSave={handleSavePassword} prevStep={goToPrevStep} />,
-    <CongratulationsStep key={4} onConfigurationExit={handleExitConfiguration} />,
+    <SavePasswordStep key={4} onPasswordSave={handleSavePassword} prevStep={goToPrevStep} />,
+    <CongratulationsStep key={5} onConfigurationExit={handleExitConfiguration} />,
   ][activeStepIndex]
 }
 
