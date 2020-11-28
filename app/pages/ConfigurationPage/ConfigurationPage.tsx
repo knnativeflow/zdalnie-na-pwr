@@ -19,16 +19,16 @@ import Button from 'components/Button'
 import { THEME } from 'base/theme/theme'
 import { FaChevronLeft } from 'react-icons/all'
 import Text from 'components/Text'
-
 import Space from 'components/Space'
+import ProgramSelection from 'components/ProgramSelection'
+
 import img1 from 'assets/images/step1.png'
 import img2 from 'assets/images/step2.png'
 import img3 from 'assets/images/step3.png'
-
 import img4 from 'assets/images/step4.png'
+
 import ConfigurationMockup from './ConfigurationMockup'
 import { jsosValidationSchema, mailValidationSchema } from './validationsSchemas'
-import ProgramSelection from '../../components/ProgramSelection'
 
 const Box = styled.div`
   width: 100vw;
