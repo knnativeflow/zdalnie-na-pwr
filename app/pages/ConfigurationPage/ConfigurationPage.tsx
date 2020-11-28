@@ -324,21 +324,22 @@ const ConfigurationPage = () => {
   const [availableEducationalPrograms, setAvailableEducationalPrograms] = useState<EducationProgram[]>([])
 
   const goToNextStep = () => setActiveStepIndex(activeStepIndex + 1)
-  const goToNextAfterNextStep = () => setActiveStepIndex(activeStepIndex + 2)
+  const goNextBy = (n: number) => setActiveStepIndex(activeStepIndex + n)
   const goToPrevStep = () => setActiveStepIndex(activeStepIndex - 1)
+  const goPrevBy = (n: number) => setActiveStepIndex(activeStepIndex - n)
 
   const handleJsosLogin = async (login: string, password: string): Promise<void> => {
     await jsosAuth.signIn(login, password)
 
     setJsosDataLogin({ login, password })
     const activeEducationPrograms = await jsosExtractor.fetchActiveEducationPrograms()
+    setAvailableEducationalPrograms(activeEducationPrograms)
 
     if(activeEducationPrograms.length > 1) {
-      setAvailableEducationalPrograms(activeEducationPrograms)
       goToNextStep()
     } else if(activeEducationPrograms.length === 1) {
       await fetchCourses(activeEducationPrograms[0])
-      goToNextAfterNextStep()
+      goNextBy(2)
     } else {
       throw new Error('Brak aktywnego toku studiów.')
     }
@@ -424,7 +425,7 @@ const ConfigurationPage = () => {
       key={3}
       onSubmit={handleMailLogin}
       fields={mailFields}
-      prevStep={goToPrevStep}
+      prevStep={availableEducationalPrograms.length > 1 ? goToPrevStep : () => goPrevBy(2)}
       validationSchema={mailValidationSchema}
     />,
     <SavePasswordStep key={4} onPasswordSave={handleSavePassword} prevStep={goToPrevStep} />,

@@ -1,10 +1,9 @@
 import { EducationProgram } from 'features/jsos/JsosExtractor'
 import React, { useState } from 'react'
-import Space from '../Space'
-import Button from '../Button'
+import Space from 'components/Space'
+import Button from 'components/Button'
 import { CircularProgress, FormControlLabel, Radio } from '@material-ui/core'
-import styled from '@emotion/styled'
-import { keyframes } from '@emotion/core'
+import ErrorMsg from 'components/ErrorMsg'
 
 export type ProgramSelectionProps = {
   onSubmit: (selected: EducationProgram) => Promise<void>,
@@ -15,20 +14,6 @@ export type ProgramSelectionProps = {
     dark: string
   }
 }
-
-//TODO: extract it
-const showAnim = keyframes`
-  0% { height: 0; opacity: 0; }
-  100% { height: 14px; opacity: 1; }
-`
-
-const ErrorMsg = styled.p`
-  margin: 0;
-  text-align: center;
-  font-size: 14px;
-  color: #ff487f;
-  animation: ${showAnim} 0.1s ease-in-out;
-`
 
 const ProgramSelection = ({onSubmit, options, color}: ProgramSelectionProps) => {
   const [apiError, setApiError] = useState('')
