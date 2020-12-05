@@ -323,9 +323,7 @@ const ConfigurationPage = () => {
   const [mailDataLogin, setMailDataLogin] = useState({ login: '', password: '' })
   const [availableEducationalPrograms, setAvailableEducationalPrograms] = useState<EducationProgram[]>([])
 
-  const goToNextStep = () => setActiveStepIndex(activeStepIndex + 1)
   const goNextBy = (n: number) => setActiveStepIndex(activeStepIndex + n)
-  const goToPrevStep = () => setActiveStepIndex(activeStepIndex - 1)
   const goPrevBy = (n: number) => setActiveStepIndex(activeStepIndex - n)
 
   const handleJsosLogin = async (login: string, password: string): Promise<void> => {
@@ -336,7 +334,7 @@ const ConfigurationPage = () => {
     setAvailableEducationalPrograms(activeEducationPrograms)
 
     if (activeEducationPrograms.length > 1) {
-      goToNextStep()
+      goNextBy(1)
     } else if (activeEducationPrograms.length === 1) {
       await fetchCourses(activeEducationPrograms[0])
       goNextBy(2)
@@ -347,7 +345,7 @@ const ConfigurationPage = () => {
 
   const handleEducationProgramSelection = async (program: EducationProgram) => {
     await fetchCourses(program)
-    goToNextStep()
+    goNextBy(1)
   }
 
   const fetchCourses = async (educationProgram: EducationProgram) => {
@@ -381,7 +379,7 @@ const ConfigurationPage = () => {
     dispatch(addTeamsLinks(teamsLinks))
     dispatch(updateUser({ indeks: login }))
 
-    goToNextStep()
+    goNextBy(1)
   }
 
   const handleSavePassword = async (hasAgreed: boolean) => {
@@ -389,7 +387,7 @@ const ConfigurationPage = () => {
       await PasswordManager.saveJsosCredentials(jsosDataLogin.login, jsosDataLogin.password)
       await PasswordManager.saveSmailCredentials(mailDataLogin.login, mailDataLogin.password)
     }
-    goToNextStep()
+    goNextBy(1)
   }
 
   const jsosFields = {
@@ -407,28 +405,28 @@ const ConfigurationPage = () => {
   }
 
   return [
-    <StartStep key={0} nextStep={goToNextStep} />,
+    <StartStep key={0} nextStep={() => goNextBy(1)} />,
     <JsosStep
       key={1}
       onSubmit={handleJsosLogin}
       fields={jsosFields}
-      prevStep={goToPrevStep}
+      prevStep={() => goPrevBy(1)}
       validationSchema={jsosValidationSchema}
     />,
     <EducationProgramSelectionStep
       key={2}
       options={availableEducationalPrograms}
-      prevStep={goToPrevStep}
+      prevStep={() => goPrevBy(1)}
       onSelect={handleEducationProgramSelection}
     />,
     <MailStep
       key={3}
       onSubmit={handleMailLogin}
       fields={mailFields}
-      prevStep={availableEducationalPrograms.length > 1 ? goToPrevStep : () => goPrevBy(2)}
+      prevStep={availableEducationalPrograms.length > 1 ? () => goPrevBy(1) : () => goPrevBy(2)}
       validationSchema={mailValidationSchema}
     />,
-    <SavePasswordStep key={4} onPasswordSave={handleSavePassword} prevStep={goToPrevStep} />,
+    <SavePasswordStep key={4} onPasswordSave={handleSavePassword} prevStep={() => goPrevBy(1)} />,
     <CongratulationsStep key={5} onConfigurationExit={handleExitConfiguration} />,
   ][activeStepIndex]
 }

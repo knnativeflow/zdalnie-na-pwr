@@ -1,9 +1,9 @@
-import { EducationProgram } from 'features/jsos/JsosExtractor'
 import React, { useState } from 'react'
+import { CircularProgress, FormControlLabel, Radio } from '@material-ui/core'
 import Space from 'components/Space'
 import Button from 'components/Button'
-import { CircularProgress, FormControlLabel, Radio } from '@material-ui/core'
 import ErrorMsg from 'components/ErrorMsg'
+import { EducationProgram } from 'features/jsos/JsosExtractor'
 
 export type ProgramSelectionProps = {
   onSubmit: (selected: EducationProgram) => Promise<void>
