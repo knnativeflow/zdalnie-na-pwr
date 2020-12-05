@@ -17,14 +17,10 @@ export class ExtractedCourse {
 }
 
 export class EducationProgram {
-  constructor(
-    readonly name: string,
-    readonly id: string
-  ) {}
+  constructor(readonly name: string, readonly id: string) {}
 }
 
 class JsosExtractor {
-
   public async fetchActiveEducationPrograms(): Promise<EducationProgram[]> {
     const { selector } = await jsosAuth.requestWithAuthorization({
       method: HttpMethod.GET,
@@ -38,20 +34,14 @@ class JsosExtractor {
         .filter((_, element) => selector(element).text().includes('Aktywny'))
         .each((_, el) => {
           const value = selector(el).attr('value')
-          if (!!value) {
-            activeEducationPrograms.push(
-              new EducationProgram(
-                selector(el).text(),
-                value
-              )
-            )
+          if (value) {
+            activeEducationPrograms.push(new EducationProgram(selector(el).text(), value))
           }
         })
 
       return activeEducationPrograms
-    } else {
-      throw new Error('Błąd podczas pobierania toków studiów.')
     }
+    throw new Error('Błąd podczas pobierania toków studiów.')
   }
 
   public async fetchCourseList(educationProgram: EducationProgram): Promise<ICourse[]> {
@@ -99,13 +89,17 @@ class JsosExtractor {
     element: CheerioElement
   ): { isTN: boolean; isTP: boolean; start: string; end: string } {
     const dateColumn = selector(element).find('td').eq(3)
-    if(!dateColumn.text().trim().length ||  dateColumn.text().includes('Bez terminu')) {
+    if (!dateColumn.text().trim().length || dateColumn.text().includes('Bez terminu')) {
       return { start: 'Bez terminu', end: 'Bez terminu', isTP: false, isTN: false }
     }
 
     const day = dateColumn.text().split(',')?.[0].trim()
     // @ts-ignore
-    const [, hours] = dateColumn.html().replace(/<sup>/g, ':').replace(/<\/sup>/g, '').split(',')
+    const [, hours] = dateColumn
+      .html()
+      .replace(/<sup>/g, ':')
+      .replace(/<\/sup>/g, '')
+      .split(',')
     const [isTP, isTN] = [hours.includes('TP'), hours.includes('TN')]
     const [startHour, endHour] = hours.replace(/TP|TN/, '').trim().split('-')
     return {

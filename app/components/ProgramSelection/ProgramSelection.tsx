@@ -6,7 +6,7 @@ import { CircularProgress, FormControlLabel, Radio } from '@material-ui/core'
 import ErrorMsg from 'components/ErrorMsg'
 
 export type ProgramSelectionProps = {
-  onSubmit: (selected: EducationProgram) => Promise<void>,
+  onSubmit: (selected: EducationProgram) => Promise<void>
   options: Array<EducationProgram>
   color: {
     light: string
@@ -15,7 +15,7 @@ export type ProgramSelectionProps = {
   }
 }
 
-const ProgramSelection = ({onSubmit, options, color}: ProgramSelectionProps) => {
+const ProgramSelection = ({ onSubmit, options, color }: ProgramSelectionProps) => {
   const [apiError, setApiError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [selected, setSelected] = useState<EducationProgram | null>(null)
@@ -25,7 +25,7 @@ const ProgramSelection = ({onSubmit, options, color}: ProgramSelectionProps) => 
   }
 
   const handleSubmit = async () => {
-    if(selected) {
+    if (selected) {
       try {
         setIsLoading(true)
         await onSubmit(selected)
@@ -37,20 +37,26 @@ const ProgramSelection = ({onSubmit, options, color}: ProgramSelectionProps) => 
     }
   }
 
-  return(
+  return (
     <div>
-      {
-        options.map((option) => (
-          <FormControlLabel
-            onChange={() => handleSelectionChange(option)}
-            checked={selected?.id === option.id}
-            control={<Radio />}
-            label={option.name}
-          />
-        ))
-      }
+      {options.map((option) => (
+        <FormControlLabel
+          onChange={() => handleSelectionChange(option)}
+          checked={selected?.id === option.id}
+          control={<Radio />}
+          label={option.name}
+          key={option.id}
+        />
+      ))}
       <Space size={1} />
-      <Button glow color={color.main} variant="primary" onClick={handleSubmit} fullWidth disabled={isLoading || !selected}>
+      <Button
+        glow
+        color={color.main}
+        variant="primary"
+        onClick={handleSubmit}
+        fullWidth
+        disabled={isLoading || !selected}
+      >
         {isLoading ? <CircularProgress size="1em" color="inherit" /> : 'Zapisz i pobierz kursy'}
       </Button>
       <Space size={0.5} />

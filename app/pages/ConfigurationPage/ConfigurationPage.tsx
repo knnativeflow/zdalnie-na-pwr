@@ -74,8 +74,8 @@ const BackButtonWrapper = styled.div`
 type StepWithLoginProps = Omit<LoginFormProps, 'color'> & { prevStep: () => void }
 
 type SelectionProps<T> = {
-  options: Array<T>,
-  prevStep: () => void,
+  options: Array<T>
+  prevStep: () => void
   onSelect: (selected: T) => Promise<void>
 }
 
@@ -171,7 +171,7 @@ const JsosStep = ({ onSubmit, fields, validationSchema, prevStep }: StepWithLogi
   </Box>
 )
 
-const EducationProgramSelectionStep = ({prevStep, options, onSelect}: SelectionProps<EducationProgram>) => (
+const EducationProgramSelectionStep = ({ prevStep, options, onSelect }: SelectionProps<EducationProgram>) => (
   <Box>
     <StyledSidebar>
       <SidebarContent>
@@ -335,9 +335,9 @@ const ConfigurationPage = () => {
     const activeEducationPrograms = await jsosExtractor.fetchActiveEducationPrograms()
     setAvailableEducationalPrograms(activeEducationPrograms)
 
-    if(activeEducationPrograms.length > 1) {
+    if (activeEducationPrograms.length > 1) {
       goToNextStep()
-    } else if(activeEducationPrograms.length === 1) {
+    } else if (activeEducationPrograms.length === 1) {
       await fetchCourses(activeEducationPrograms[0])
       goNextBy(2)
     } else {

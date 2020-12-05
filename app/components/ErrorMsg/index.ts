@@ -1,1 +1,1 @@
-export {default} from './ErrorMsg'
+export { default } from './ErrorMsg'
