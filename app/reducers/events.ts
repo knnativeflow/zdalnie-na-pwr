@@ -12,8 +12,8 @@ const eventsReducer = (state = INIT_STATE, action: ActionEvents) => {
     case CLEAR_EVENTS:
       return INIT_STATE
     case ADD_EVENT_ZOOM_LINKS:
-      const { zoomLinks, overwriteExisting } = action.payload
       return state.map((event) => {
+        const { zoomLinks, overwriteExisting } = action.payload
         const foundLink = zoomLinks.find(
           (zoomLink) =>
             // TODO: think about how recognize different name the same course

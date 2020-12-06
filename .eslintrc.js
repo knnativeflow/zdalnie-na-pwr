@@ -13,10 +13,8 @@ module.exports = {
     'jsx-a11y/click-events-have-key-events': 'off',
     'jsx-a11y/no-static-element-interactions': 'off',
     'jsx-a11y/anchor-is-valid': 'off',
-    '@typescript-eslint/no-use-before-define': 'off',
     'class-methods-use-this': 'off',
     'max-classes-per-file': 'off',
-    'no-case-declarations': 'warn',
     'no-nested-ternary': 'off',
   },
   parserOptions: {

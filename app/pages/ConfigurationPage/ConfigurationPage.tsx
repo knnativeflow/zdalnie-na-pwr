@@ -326,6 +326,26 @@ const ConfigurationPage = () => {
   const goNextBy = (n: number) => setActiveStepIndex(activeStepIndex + n)
   const goPrevBy = (n: number) => setActiveStepIndex(activeStepIndex - n)
 
+  const fetchCourses = async (educationProgram: EducationProgram) => {
+    const courses = await jsosExtractor.fetchCourseList(educationProgram)
+    dispatch(addCourses(courses))
+
+    const iCalendarString = await jsosExtractor.downloadCalendar(educationProgram)
+    const events = iCalendar.getEventsFromString(iCalendarString)
+
+    const eventsWithCode = events.map((event) => {
+      const courseEvent = courses.find((course) => course.name.startsWith(event.name) && course.type === event.type)
+
+      if (courseEvent) {
+        return { ...event, code: courseEvent.classesCode, name: courseEvent.name }
+      }
+
+      return event
+    })
+
+    dispatch(addEvents(eventsWithCode))
+  }
+
   const handleJsosLogin = async (login: string, password: string): Promise<void> => {
     await jsosAuth.signIn(login, password)
 
@@ -346,26 +366,6 @@ const ConfigurationPage = () => {
   const handleEducationProgramSelection = async (program: EducationProgram) => {
     await fetchCourses(program)
     goNextBy(1)
-  }
-
-  const fetchCourses = async (educationProgram: EducationProgram) => {
-    const courses = await jsosExtractor.fetchCourseList(educationProgram)
-    dispatch(addCourses(courses))
-
-    const iCalendarString = await jsosExtractor.downloadCalendar(educationProgram)
-    const events = iCalendar.getEventsFromString(iCalendarString)
-
-    const eventsWithCode = events.map((event) => {
-      const courseEvent = courses.find((course) => course.name.startsWith(event.name) && course.type === event.type)
-
-      if (courseEvent) {
-        return { ...event, code: courseEvent.classesCode, name: courseEvent.name }
-      }
-
-      return event
-    })
-
-    dispatch(addEvents(eventsWithCode))
   }
 
   const handleMailLogin = async (login: string, password: string): Promise<void> => {
