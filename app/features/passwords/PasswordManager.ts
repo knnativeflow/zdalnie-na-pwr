@@ -4,6 +4,17 @@ import os from 'os'
 const JSOS = 'JSOS'
 const SMAIL = 'SMAIL'
 
+export interface ICredentials {
+  account: string
+  password: string
+}
+
+export enum OperatingSystem {
+  WINDOWS = 'Windows_NT',
+  LINUX = 'Linux',
+  MACOS = 'Darwin',
+}
+
 class PasswordManager {
   checkOS(): OperatingSystem {
     const type = os.type()
@@ -41,16 +52,4 @@ class PasswordManager {
     })
   }
 }
-
-export interface ICredentials {
-  account: string
-  password: string
-}
-
-export enum OperatingSystem {
-  WINDOWS = 'Windows_NT',
-  LINUX = 'Linux',
-  MACOS = 'Darwin',
-}
-
 export default new PasswordManager()

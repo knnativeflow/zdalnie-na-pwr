@@ -23,7 +23,7 @@ export interface IRequestOptions {
   resolveWithFullResponse?: boolean
   followAllRedirects?: boolean
   json?: boolean
-  form?: object
+  form?: Record<string, string>
   addCsrfToken?: boolean
 }
 
@@ -183,7 +183,7 @@ class JsosAuth {
           Jednak jak wiesz, jesteś jednym z tysięcy użytkowników próbujących się do niego dostać w tej chwili ;) \n
           Daj biedakowi chwilę wytchnienia i spróbuj ponownie za jakiś czas.
           `)
-        } else if(isBadPassword) {
+        } else if (isBadPassword) {
           throw new Error(`Błędny login lub hasło.`)
         } else {
           console.error('JsosAuth.ts', 'retry', error?.message, error)
@@ -194,13 +194,13 @@ class JsosAuth {
     return retryer()
   }
 
-  public async logout(): Promise<any> {
+  public async logout(): Promise<void> {
     const logoutOptionsRequest = {
       method: HttpMethod.GET,
       url: ' https://jsos.pwr.edu.pl/index.php/site/logout',
     }
 
-    return request(logoutOptionsRequest)
+    await request(logoutOptionsRequest)
   }
 }
 

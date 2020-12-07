@@ -16,9 +16,36 @@ export class ExtractedCourse {
   ) {}
 }
 
+export class EducationProgram {
+  constructor(readonly name: string, readonly id: string) {}
+}
+
 class JsosExtractor {
-  public async fetchCourseList(): Promise<ICourse[]> {
-    await this.switchToActiveStudentIfNecessary()
+  public async fetchActiveEducationPrograms(): Promise<EducationProgram[]> {
+    const { selector } = await jsosAuth.requestWithAuthorization({
+      method: HttpMethod.GET,
+      url: 'https://jsos.pwr.edu.pl/index.php/student/zajecia',
+    })
+
+    if (selector) {
+      const activeEducationPrograms: EducationProgram[] = []
+
+      selector('#wyborPK option')
+        .filter((_, element) => selector(element).text().includes('Aktywny'))
+        .each((_, el) => {
+          const value = selector(el).attr('value')
+          if (value) {
+            activeEducationPrograms.push(new EducationProgram(selector(el).text(), value))
+          }
+        })
+
+      return activeEducationPrograms
+    }
+    throw new Error('Błąd podczas pobierania toków studiów.')
+  }
+
+  public async fetchCourseList(educationProgram: EducationProgram): Promise<ICourse[]> {
+    await this.switchToActiveStudent(educationProgram)
     const { selector } = await jsosAuth.requestWithAuthorization({
       method: HttpMethod.GET,
       url: 'https://jsos.pwr.edu.pl/index.php/student/zajecia',
@@ -62,13 +89,17 @@ class JsosExtractor {
     element: CheerioElement
   ): { isTN: boolean; isTP: boolean; start: string; end: string } {
     const dateColumn = selector(element).find('td').eq(3)
-    if(!dateColumn.text().trim().length ||  dateColumn.text().includes('Bez terminu')) {
+    if (!dateColumn.text().trim().length || dateColumn.text().includes('Bez terminu')) {
       return { start: 'Bez terminu', end: 'Bez terminu', isTP: false, isTN: false }
     }
 
     const day = dateColumn.text().split(',')?.[0].trim()
     // @ts-ignore
-    const [, hours] = dateColumn.html().replace(/<sup>/g, ':').replace(/<\/sup>/g, '').split(',')
+    const [, hours] = dateColumn
+      .html()
+      .replace(/<sup>/g, ':')
+      .replace(/<\/sup>/g, '')
+      .split(',')
     const [isTP, isTN] = [hours.includes('TP'), hours.includes('TN')]
     const [startHour, endHour] = hours.replace(/TP|TN/, '').trim().split('-')
     return {
@@ -79,8 +110,8 @@ class JsosExtractor {
     }
   }
 
-  public async downloadCalendar(): Promise<string> {
-    await this.switchToActiveStudentIfNecessary()
+  public async downloadCalendar(educationProgram: EducationProgram): Promise<string> {
+    await this.switchToActiveStudent(educationProgram)
 
     const response = await jsosAuth.requestWithAuthorization({
       method: HttpMethod.GET,
@@ -89,32 +120,15 @@ class JsosExtractor {
     return response.body
   }
 
-  private async switchToActiveStudentIfNecessary() {
-    const { selector } = await jsosAuth.requestWithAuthorization({
-      method: HttpMethod.GET,
-      url: 'https://jsos.pwr.edu.pl/index.php/student/zajecia',
+  private async switchToActiveStudent({ id }: EducationProgram) {
+    await jsosAuth.requestWithAuthorization({
+      form: {
+        idSluchacza: id,
+      },
+      method: HttpMethod.POST,
+      addCsrfToken: true,
+      url: 'https://jsos.pwr.edu.pl/index.php/site/zmienPK',
     })
-    if (selector) {
-      const selectedOption = selector('#wyborPK option').filter((_, element) => !!selector(element).attr('selected'))
-      const isCurrentStudentActive = selector(selectedOption).text().includes('Aktywny')
-
-      if(!isCurrentStudentActive) {
-        const activeStudents = selector('#wyborPK option')
-          .filter((_, element) => selector(element).text().includes('Aktywny'))
-          .map((_, el) => selector(el).attr('value'))
-
-        const activeStudentId = activeStudents[0]
-
-        await jsosAuth.requestWithAuthorization({
-          form: {
-            idSluchacza: activeStudentId,
-          },
-          method: HttpMethod.POST,
-          addCsrfToken: true,
-          url: 'https://jsos.pwr.edu.pl/index.php/site/zmienPK',
-        })
-      }
-    }
   }
 }
 

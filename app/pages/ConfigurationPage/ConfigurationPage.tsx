@@ -7,6 +7,7 @@ import { shell } from 'electron'
 
 import studentMail from 'features/studentMail'
 import { jsosAuth, jsosExtractor } from 'features/jsos'
+import { EducationProgram } from 'features/jsos/JsosExtractor'
 import iCalendar from 'features/iCalendar'
 import PasswordManager from 'features/passwords'
 import { addEvents, addZoomLinks } from 'actions/events'
@@ -19,6 +20,7 @@ import { THEME } from 'base/theme/theme'
 import { FaChevronLeft } from 'react-icons/all'
 import Text from 'components/Text'
 import Space from 'components/Space'
+import ProgramSelection from 'components/ProgramSelection'
 
 import img1 from 'assets/images/step1.png'
 import img2 from 'assets/images/step2.png'
@@ -70,6 +72,12 @@ const BackButtonWrapper = styled.div`
 `
 
 type StepWithLoginProps = Omit<LoginFormProps, 'color'> & { prevStep: () => void }
+
+type SelectionProps<T> = {
+  options: Array<T>
+  prevStep: () => void
+  onSelect: (selected: T) => Promise<void>
+}
 
 type GoBackProps = {
   count: number
@@ -157,6 +165,22 @@ const JsosStep = ({ onSubmit, fields, validationSchema, prevStep }: StepWithLogi
           wewnątrz aplikacji i nie różni się od logowania przez przeglądarkę. Twoje dane obsługane są tylko na twoim
           komputerze oraz serwerze Politechniki.
         </FooterInfo>
+      </SidebarContent>
+    </StyledSidebar>
+    <ConfigurationMockup color={THEME.colors.palette.purple.light} src={img2} />
+  </Box>
+)
+
+const EducationProgramSelectionStep = ({ prevStep, options, onSelect }: SelectionProps<EducationProgram>) => (
+  <Box>
+    <StyledSidebar>
+      <SidebarContent>
+        <GoBackButton color={THEME.colors.palette.purple} count={1} onClick={prevStep} />
+        <CenterContent>
+          <h2>Wybierz tok studiów:</h2>
+          <Space size={1.5} />
+          <ProgramSelection onSubmit={onSelect} options={options} color={THEME.colors.palette.purple} />
+        </CenterContent>
       </SidebarContent>
     </StyledSidebar>
     <ConfigurationMockup color={THEME.colors.palette.purple.light} src={img2} />
@@ -297,18 +321,16 @@ const ConfigurationPage = () => {
   const [activeStepIndex, setActiveStepIndex] = useState(0)
   const [jsosDataLogin, setJsosDataLogin] = useState({ login: '', password: '' })
   const [mailDataLogin, setMailDataLogin] = useState({ login: '', password: '' })
+  const [availableEducationalPrograms, setAvailableEducationalPrograms] = useState<EducationProgram[]>([])
 
-  const goToNextStep = () => setActiveStepIndex(activeStepIndex + 1)
-  const goToPrevStep = () => setActiveStepIndex(activeStepIndex - 1)
+  const goNextBy = (n: number) => setActiveStepIndex(activeStepIndex + n)
+  const goPrevBy = (n: number) => setActiveStepIndex(activeStepIndex - n)
 
-  const handleJsosLogin = async (login: string, password: string): Promise<void> => {
-    await jsosAuth.signIn(login, password)
-
-    setJsosDataLogin({ login, password })
-    const courses = await jsosExtractor.fetchCourseList()
+  const fetchCourses = async (educationProgram: EducationProgram) => {
+    const courses = await jsosExtractor.fetchCourseList(educationProgram)
     dispatch(addCourses(courses))
 
-    const iCalendarString = await jsosExtractor.downloadCalendar()
+    const iCalendarString = await jsosExtractor.downloadCalendar(educationProgram)
     const events = iCalendar.getEventsFromString(iCalendarString)
 
     const eventsWithCode = events.map((event) => {
@@ -322,8 +344,28 @@ const ConfigurationPage = () => {
     })
 
     dispatch(addEvents(eventsWithCode))
+  }
 
-    goToNextStep()
+  const handleJsosLogin = async (login: string, password: string): Promise<void> => {
+    await jsosAuth.signIn(login, password)
+
+    setJsosDataLogin({ login, password })
+    const activeEducationPrograms = await jsosExtractor.fetchActiveEducationPrograms()
+    setAvailableEducationalPrograms(activeEducationPrograms)
+
+    if (activeEducationPrograms.length > 1) {
+      goNextBy(1)
+    } else if (activeEducationPrograms.length === 1) {
+      await fetchCourses(activeEducationPrograms[0])
+      goNextBy(2)
+    } else {
+      throw new Error('Brak aktywnego toku studiów.')
+    }
+  }
+
+  const handleEducationProgramSelection = async (program: EducationProgram) => {
+    await fetchCourses(program)
+    goNextBy(1)
   }
 
   const handleMailLogin = async (login: string, password: string): Promise<void> => {
@@ -337,7 +379,7 @@ const ConfigurationPage = () => {
     dispatch(addTeamsLinks(teamsLinks))
     dispatch(updateUser({ indeks: login }))
 
-    goToNextStep()
+    goNextBy(1)
   }
 
   const handleSavePassword = async (hasAgreed: boolean) => {
@@ -345,7 +387,7 @@ const ConfigurationPage = () => {
       await PasswordManager.saveJsosCredentials(jsosDataLogin.login, jsosDataLogin.password)
       await PasswordManager.saveSmailCredentials(mailDataLogin.login, mailDataLogin.password)
     }
-    goToNextStep()
+    goNextBy(1)
   }
 
   const jsosFields = {
@@ -363,23 +405,29 @@ const ConfigurationPage = () => {
   }
 
   return [
-    <StartStep key={0} nextStep={goToNextStep} />,
+    <StartStep key={0} nextStep={() => goNextBy(1)} />,
     <JsosStep
       key={1}
       onSubmit={handleJsosLogin}
       fields={jsosFields}
-      prevStep={goToPrevStep}
+      prevStep={() => goPrevBy(1)}
       validationSchema={jsosValidationSchema}
     />,
-    <MailStep
+    <EducationProgramSelectionStep
       key={2}
+      options={availableEducationalPrograms}
+      prevStep={() => goPrevBy(1)}
+      onSelect={handleEducationProgramSelection}
+    />,
+    <MailStep
+      key={3}
       onSubmit={handleMailLogin}
       fields={mailFields}
-      prevStep={goToPrevStep}
+      prevStep={availableEducationalPrograms.length > 1 ? () => goPrevBy(1) : () => goPrevBy(2)}
       validationSchema={mailValidationSchema}
     />,
-    <SavePasswordStep key={3} onPasswordSave={handleSavePassword} prevStep={goToPrevStep} />,
-    <CongratulationsStep key={4} onConfigurationExit={handleExitConfiguration} />,
+    <SavePasswordStep key={4} onPasswordSave={handleSavePassword} prevStep={() => goPrevBy(1)} />,
+    <CongratulationsStep key={5} onConfigurationExit={handleExitConfiguration} />,
   ][activeStepIndex]
 }
 

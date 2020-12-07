@@ -10,7 +10,8 @@ import { Synchronization } from './features/synchronization'
 const redux = configuredStore()
 
 initSentry()
-new Synchronization(redux)
+// @ts-ignore
+const sync = new Synchronization(redux)
 
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer
 
