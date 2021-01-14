@@ -7,7 +7,7 @@ import Button from 'components/Button'
 import LoginForm from 'components/LoginForm'
 
 import Space from 'components/Space'
-import studentMail from 'features/studentMail'
+import gmailStudentMail from 'features/gmailStudentMail'
 import { THEME } from 'base/theme/theme'
 import PasswordManager from 'features/passwords'
 import { mailValidationSchema } from 'pages/ConfigurationPage/validationsSchemas'
@@ -33,7 +33,7 @@ const SmailPasswordChangeModal = (props: Props): JSX.Element => {
   const submitText = 'Zapisz'
 
   const onSubmit = async (login: string, password: string) => {
-    await studentMail.login(login, password)
+    await gmailStudentMail.login(login, password)
     await PasswordManager.saveSmailCredentials(login, password)
     onSuccess()
   }

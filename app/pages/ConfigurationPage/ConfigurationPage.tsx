@@ -5,13 +5,13 @@ import styled from '@emotion/styled'
 import { css } from '@emotion/core'
 import { shell } from 'electron'
 
-import studentMail from 'features/studentMail'
+import gmailStudentMail from 'features/gmailStudentMail'
 import { jsosAuth, jsosExtractor } from 'features/jsos'
 import { EducationProgram } from 'features/jsos/JsosExtractor'
 import iCalendar from 'features/iCalendar'
 import PasswordManager from 'features/passwords'
 import { addEvents, addZoomLinks } from 'actions/events'
-import { addCourses, addTeamsLinks } from 'actions/courses'
+import { addCourses } from 'actions/courses'
 import { updateUser } from 'actions/user'
 import LoginForm from 'components/LoginForm'
 import { LoginFormProps } from 'components/LoginForm/LoginForm'
@@ -369,14 +369,12 @@ const ConfigurationPage = () => {
   }
 
   const handleMailLogin = async (login: string, password: string): Promise<void> => {
-    await studentMail.login(login, password)
+    await gmailStudentMail.login(login, password)
     setMailDataLogin({ login, password })
 
-    const zoomLinks = await studentMail.getZoomLinks()
-    const teamsLinks = await studentMail.getTeamsLinks()
+    const zoomLinks = await gmailStudentMail.getZoomLinks()
 
     dispatch(addZoomLinks(zoomLinks))
-    dispatch(addTeamsLinks(teamsLinks))
     dispatch(updateUser({ indeks: login }))
 
     goNextBy(1)
