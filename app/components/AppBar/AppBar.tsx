@@ -8,11 +8,11 @@ import moment from 'moment'
 
 import routes from 'constants/routes.json'
 import { MENU_BAR_HEIGHT } from 'components/MenuBar/MenuBar.styled'
-import { SmailRefresher } from 'features/synchronization'
 import { addZoomLinks } from 'actions/events'
 import { RootState } from 'store'
 import { setFetchStatusMail } from 'actions/mail'
 import { parseDateToString } from 'utils/date'
+import { GmailStudentMailRefresher } from 'features/synchronization'
 
 const AppBarWrapper = styled.div<{ isFullscreen: boolean }>`
   background: #41aaff;
@@ -124,7 +124,7 @@ const AppBar = () => {
   const refreshSmail = async () => {
     try {
       dispatch(setFetchStatusMail({ isLoading: true, error: '' }))
-      const zoomLinks = await SmailRefresher.refresh()
+      const zoomLinks = await GmailStudentMailRefresher.refresh()
       dispatch(addZoomLinks(zoomLinks, true))
       dispatch(setFetchStatusMail({ isLoading: false, lastScan: parseDateToString(new Date()), error: '' }))
     } catch (error) {

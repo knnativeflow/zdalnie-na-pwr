@@ -236,4 +236,4 @@ class StudentMail {
 
 const studentMail = new StudentMail()
 
-export default studentMail
+export default studentMail // unused, it should be removed in the future
