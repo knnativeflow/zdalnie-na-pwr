@@ -7,7 +7,6 @@ import { Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions } 
 import { setShownStatusGoogleSettingsMessage } from 'actions/app'
 import Button from 'components/Button'
 import { THEME } from 'base/theme/theme'
-import ExternalLink from 'components/ExternalLink'
 import routes from 'constants/routes.json'
 
 interface Props {
@@ -34,13 +33,9 @@ const ChangeGoogleSettingsModal = (props: Props) => {
           <span role="img" aria-label="juhu" style={{ color: '#000' }}>
             😁
           </span>
-          . Ze względu wysokie wymagania Google związane z RODO w tym posiadanie polityki prywatności, przed ponownym
+          . Ze względu na wysokie wymagania Google związane z RODO w tym posiadanie polityki prywatności, przed ponownym
           zalogowaniem się do poczty studenckiej w aplikacji trzeba zmienić ustawienia Google/Gmail w dwóch miejsach,
           żeby ominąć ograniczenia tworzone przez Google.
-        </DialogContentText>
-        <DialogContentText>
-          O bezpieczeństwie tych rozwiązań możecie przeczytać na naszym fanpage'u{' '}
-          <ExternalLink url="https://facebook.com/knnativeflow">@knnativeflow</ExternalLink>.
         </DialogContentText>
         <DialogContentText>
           1. Włączenie protokołu IMAP dla konta studenckiego Gmail. Opcja znajduje się w ustawieniach poczty (nie konta

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import React, { useState, PropsWithChildren } from 'react'
 import { useDispatch } from 'react-redux'
 import { FormControlLabel, Radio } from '@material-ui/core'
@@ -13,6 +14,9 @@ import PasswordManager from 'features/passwords'
 import { addEvents, addZoomLinks } from 'actions/events'
 import { addCourses } from 'actions/courses'
 import { updateUser } from 'actions/user'
+import { setShownStatusGoogleSettingsMessage } from 'actions/app'
+import { setFetchStatusMail } from 'actions/mail'
+import { parseDateToString } from 'utils/date'
 import LoginForm from 'components/LoginForm'
 import { LoginFormProps } from 'components/LoginForm/LoginForm'
 import Button from 'components/Button'
@@ -187,13 +191,51 @@ const EducationProgramSelectionStep = ({ prevStep, options, onSelect }: Selectio
   </Box>
 )
 
+const GoogleSettingsStep = ({ prevStep, onSubmit }: { prevStep: () => void; onSubmit: () => void }) => (
+  <Box>
+    <StyledSidebar>
+      <SidebarContent>
+        <GoBackButton color={THEME.colors.palette.blue} count={2} onClick={prevStep} />
+        <CenterContent>
+          <h2>Zmień ustawienia poczty Gmail i konta Google</h2>
+          <Space size={1.5} />
+          <Text size="14px" color="#2B2B2B">
+            1. Włączenie protokołu IMAP dla konta studenckiego Gmail. Opcja znajduje się w ustawieniach poczty (nie
+            konta Google) w zakładce "Przekazywanie i POP/IMAP".
+          </Text>
+          <Space size={1.5} />
+          <Text size="14px" color="#2B2B2B">
+            2. Włączenie dostępu dla mniej bezpiecznych aplikacji. Opcja znajduje się w ustawieniach studenckiego konta
+            Google. Zakładka "Bezpieczeństwo", opcja "Dostęp do mniej bezpiecznych aplikacji".
+          </Text>
+          <Space size={1.5} />
+          <Text size="14px" color="#2B2B2B">
+            Bez zmiany ustawień w Gmailu i Google'u aplikacja nie będzie mogła poprawienia zalogować się do konta
+            pocztowego. Efektem będzie ograniczenie funkcjonalności aplikacji.
+          </Text>
+          <Space size={2} />
+          <Button onClick={onSubmit} glow color={THEME.colors.palette.teal.main} variant="primary" fullWidth>
+            Ustawienia zmienione!
+          </Button>
+        </CenterContent>
+        <FooterInfo color={THEME.colors.palette.blue.light}>
+          Ze względu na wysokie wymagania Google związane z RODO w tym posiadanie polityki prywatności, przed
+          zalogowaniem się do poczty studenckiej w aplikacji trzeba zmienić ustawienia Google/Gmail, żeby ominąć
+          ograniczenia tworzone przez Google.
+        </FooterInfo>
+      </SidebarContent>
+    </StyledSidebar>
+    <ConfigurationMockup color={THEME.colors.palette.blue.light} src={img3} />
+  </Box>
+)
+
 const MailStep = ({ onSubmit, fields, validationSchema, prevStep }: StepWithLoginProps) => (
   <Box>
     <StyledSidebar>
       <SidebarContent>
         <GoBackButton color={THEME.colors.palette.blue} count={2} onClick={prevStep} />
         <CenterContent>
-          <h2>Zaloguj się do poczty studenckiej</h2>
+          <h2>Zaloguj się do poczty studenckiej Gmail</h2>
           <Space size={1.5} />
           <LoginForm color={THEME.colors.palette.blue} {...{ onSubmit, fields, validationSchema }} />
         </CenterContent>
@@ -376,6 +418,7 @@ const ConfigurationPage = () => {
 
     dispatch(addZoomLinks(zoomLinks))
     dispatch(updateUser({ indeks: login }))
+    dispatch(setFetchStatusMail({ isLoading: false, lastScan: parseDateToString(new Date()), error: '' }))
 
     goNextBy(1)
   }
@@ -400,6 +443,7 @@ const ConfigurationPage = () => {
 
   const handleExitConfiguration = () => {
     dispatch(updateUser({ configured: true }))
+    dispatch(setShownStatusGoogleSettingsMessage(true))
   }
 
   return [
@@ -417,15 +461,20 @@ const ConfigurationPage = () => {
       prevStep={() => goPrevBy(1)}
       onSelect={handleEducationProgramSelection}
     />,
-    <MailStep
+    <GoogleSettingsStep
       key={3}
+      prevStep={availableEducationalPrograms.length > 1 ? () => goPrevBy(1) : () => goPrevBy(2)}
+      onSubmit={() => goNextBy(1)}
+    />,
+    <MailStep
+      key={4}
       onSubmit={handleMailLogin}
       fields={mailFields}
-      prevStep={availableEducationalPrograms.length > 1 ? () => goPrevBy(1) : () => goPrevBy(2)}
+      prevStep={() => goPrevBy(1)}
       validationSchema={mailValidationSchema}
     />,
-    <SavePasswordStep key={4} onPasswordSave={handleSavePassword} prevStep={() => goPrevBy(1)} />,
-    <CongratulationsStep key={5} onConfigurationExit={handleExitConfiguration} />,
+    <SavePasswordStep key={5} onPasswordSave={handleSavePassword} prevStep={() => goPrevBy(1)} />,
+    <CongratulationsStep key={6} onConfigurationExit={handleExitConfiguration} />,
   ][activeStepIndex]
 }
 

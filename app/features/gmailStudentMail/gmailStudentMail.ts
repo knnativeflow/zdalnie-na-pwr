@@ -58,7 +58,6 @@ class GmailStudentMail {
   }
 
   public async login(login: string, password: string) {
-    console.log('logowanie', login, password)
     try {
       const config = this.configImapFactory(login, password)
       await imap.connect(config)
