@@ -16,15 +16,19 @@ export default class Synchronization {
   constructor(redux: Store) {
     this.redux = redux
     setInterval(async () => this.refreshSmailIfNecessary(), SMAIL_REFRESH_PERIOD)
-    void this.refreshSmail()
+    this.refreshSmailIfNecessary()
   }
 
   private refreshSmailIfNecessary() {
-    const { events } = this.redux.store.getState()
+    const {
+      events,
+      user: { configured },
+      app: { wasShownGoogleSettingsMessage },
+    } = this.redux.store.getState()
     const isLessThen10Minutes = (e: IEvent) => moment.duration(moment().diff(moment(e.start))).minutes() < 10
     const upcomingEvents = events.filter(isLessThen10Minutes)
     const haveDefineZoomLink = upcomingEvents.every((e) => e.platforms.zoom)
-    if (!haveDefineZoomLink) {
+    if (!haveDefineZoomLink && wasShownGoogleSettingsMessage && configured) {
       void this.refreshSmail()
     }
   }
