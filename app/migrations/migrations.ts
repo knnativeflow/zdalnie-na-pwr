@@ -90,6 +90,13 @@ const migrations = {
       return { ...event, platforms }
     }),
   }),
+  3: (state: IStoreV1) => ({
+    ...state,
+    user: {
+      configured: false,
+      indeks: state.user.indeks || '',
+    },
+  }),
 }
 
 export default migrations

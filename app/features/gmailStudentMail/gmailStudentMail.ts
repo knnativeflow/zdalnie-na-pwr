@@ -73,10 +73,16 @@ class GmailStudentMail {
     }
 
     return imap.connect(this.config).then((connection) => {
+      moment.locale('en')
+
       return connection
         .openBox('INBOX')
         .then(() => {
-          const searchQuery = ['1:15', ['SUBJECT', 'Planowany termin']]
+          const searchQuery = [
+            ['SUBJECT', 'Planowany termin'],
+            ['SINCE', moment().subtract(1, 'weeks').format('MMMM DD, YYYY')],
+          ]
+
           const fetchOptions = {
             bodies: ['HEADER.FIELDS (FROM TO SUBJECT DATE)'],
             struct: true,
@@ -117,6 +123,9 @@ class GmailStudentMail {
             return event ? [...events, event] : events
           }, [])
         )
+        .finally(() => {
+          moment.locale('pl')
+        })
     })
   }
 }

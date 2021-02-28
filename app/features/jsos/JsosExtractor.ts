@@ -47,8 +47,12 @@ class JsosExtractor {
   public async fetchCourseList(educationProgram: EducationProgram): Promise<ICourse[]> {
     await this.switchToActiveStudent(educationProgram)
     const { selector } = await jsosAuth.requestWithAuthorization({
-      method: HttpMethod.GET,
+      method: HttpMethod.POST,
       url: 'https://jsos.pwr.edu.pl/index.php/student/zajecia',
+      form: {
+        YII_CSRF_TOKEN: jsosAuth.csrfToken.value,
+        idSemestru: '787',
+      },
     })
     if (selector) {
       return selector('.dane-content tbody tr')

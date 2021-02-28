@@ -166,7 +166,7 @@ const JsosStep = ({ onSubmit, fields, validationSchema, prevStep }: StepWithLogi
         </CenterContent>
         <FooterInfo color={THEME.colors.palette.purple.light}>
           Aktualnie jedyną informacją pobieraną z JSOS jest siatka zajęć oraz lista kursów. Cały proces wykonywany jest
-          wewnątrz aplikacji i nie różni się od logowania przez przeglądarkę. Twoje dane obsługane są tylko na twoim
+          wewnątrz aplikacji i nie różni się od logowania przez przeglądarkę. Twoje dane obsługiwane są tylko na twoim
           komputerze oraz serwerze Politechniki.
         </FooterInfo>
       </SidebarContent>
@@ -212,6 +212,11 @@ const GoogleSettingsStep = ({ prevStep, onSubmit }: { prevStep: () => void; onSu
           <Text size="14px" color="#2B2B2B">
             Bez zmiany ustawień w Gmailu i Google'u aplikacja nie będzie mogła poprawienia zalogować się do konta
             pocztowego. Efektem będzie ograniczenie funkcjonalności aplikacji.
+          </Text>
+          <Space size={1.5} />
+          <Text fontWeight="bold" size="14px" color={THEME.colors.error}>
+            Uwaga, ustawienia dla niektórych kont po zakończeniu semestru wróciły do poprzednich ustawień. Jeżeli w
+            kolejnym kroku wystąpi problem z logowaniem sprawdź ponownie ustawienia.
           </Text>
           <Space size={2} />
           <Button onClick={onSubmit} glow color={THEME.colors.palette.teal.main} variant="primary" fullWidth>
