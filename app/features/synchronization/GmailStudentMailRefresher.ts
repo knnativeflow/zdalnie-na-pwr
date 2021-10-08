@@ -1,4 +1,5 @@
 import { history } from 'store'
+import retry from 'async-retry'
 import PasswordManager from 'features/passwords'
 import { SmailErrors } from 'features/studentMail/StudentMail'
 import { IEventZoomLink } from 'domain/event'
@@ -7,7 +8,7 @@ import routes from 'constants/routes.json'
 import gmailStudentMail from 'features/gmailStudentMail'
 
 class GmailStudentMailRefresher {
-  async refresh(): Promise<IEventZoomLink[]> {
+  private async getZoomLink(): Promise<IEventZoomLink[]> {
     try {
       console.log('Refreshing gmail student mail.')
       const { account, password } = await PasswordManager.getSmailCredentials()
@@ -20,6 +21,12 @@ class GmailStudentMailRefresher {
       }
       throw error
     }
+  }
+
+  async refresh(): Promise<IEventZoomLink[]> {
+    return retry(this.getZoomLink, {
+      retries: 3,
+    })
   }
 }
 
