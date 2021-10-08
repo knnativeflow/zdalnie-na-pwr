@@ -31,7 +31,10 @@ class JsosExtractor {
       const activeEducationPrograms: EducationProgram[] = []
 
       selector('#wyborPK option')
-        .filter((_, element) => selector(element).text().includes('Aktywny'))
+        .filter(
+          (_, element) =>
+            selector(element).text().includes('Aktywny') || selector(element).text().includes('Urlopowany')
+        )
         .each((_, el) => {
           const value = selector(el).attr('value')
           if (value) {
