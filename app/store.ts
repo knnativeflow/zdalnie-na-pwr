@@ -22,7 +22,7 @@ const shouldIncludeLogger = !excludeLoggerEnvs.includes(process.env.NODE_ENV || 
 
 const persistConfig = {
   key: 'root',
-  version: 4,
+  version: 5,
   storage,
   blacklist: ['router'],
   // @ts-ignore

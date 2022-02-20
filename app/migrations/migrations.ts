@@ -104,6 +104,13 @@ const migrations = {
       indeks: state.user.indeks || '',
     },
   }),
+  5: (state: IStoreV1) => ({
+    ...state,
+    user: {
+      configured: false,
+      indeks: state.user.indeks || '',
+    },
+  }),
 }
 
 export default migrations

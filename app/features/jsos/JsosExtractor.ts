@@ -54,7 +54,7 @@ class JsosExtractor {
       url: 'https://jsos.pwr.edu.pl/index.php/student/zajecia',
       form: {
         YII_CSRF_TOKEN: jsosAuth.csrfToken.value,
-        idSemestru: '807',
+        idSemestru: '808',
       },
     })
     if (selector) {
